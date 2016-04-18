@@ -1398,13 +1398,13 @@ int main() {
 
     cout << endl;
 
-    cout << mycmp("123", "123") << endl;
-    cout << mycmp("", "123") << endl;
-    cout << mycmp("123", "") << endl;
-    cout << mycmp(NULL, "123") << endl;
-    cout << mycmp("123", NULL) << endl;
-    cout << mycmp("123", "1234567") << endl;
-    cout << mycmp("123qwerty", "123") << endl;
+    cout << mycmp("123", "123") << " ";
+    cout << mycmp("", "123") << " ";
+    cout << mycmp("123", "") << " ";
+    cout << mycmp(NULL, "123") << " ";
+    cout << mycmp("123", NULL) << " ";
+    cout << mycmp("123", "1234567") << " ";
+    cout << mycmp("123qwerty", "123") << " ";
     cout << mycmp(NULL, NULL) << endl;
 
     cout << endl;
@@ -1534,9 +1534,9 @@ int main() {
     cout << "// MATH" << endl;
     cout << "/////////////////////////////////" << endl;
 
-    cout << my_sqrt(5) << endl;
-    cout << my_sqrt(7) << endl;
-    cout << my_sqrt(9) << endl;
+    cout << my_sqrt(5) << " ";
+    cout << my_sqrt(7) << " ";
+    cout << my_sqrt(9) << " ";
     cout << my_sqrt(17) << endl;
 
     cout << endl;
@@ -1573,23 +1573,23 @@ int main() {
 
 	cout << endl;
 
-    cout << mult(0,0) << endl;
-    cout << mult(0,1) << endl;
-    cout << mult(1,0) << endl;
-    cout << mult(1,1) << endl;
-    cout << mult(1,-1) << endl;
-    cout << mult(-1,1) << endl;
-    cout << mult(0,-1) << endl;
-    cout << mult(-1,0) << endl;
-    cout << mult(2,1) << endl;
-    cout << mult(1,2) << endl;
+    cout << mult(0,0) <<  " ";
+    cout << mult(0,1) <<  " ";
+    cout << mult(1,0) <<  " ";
+    cout << mult(1,1) <<  " ";
+    cout << mult(1,-1) <<  " ";
+    cout << mult(-1,1) <<  " ";
+    cout << mult(0,-1) <<  " ";
+    cout << mult(-1,0) <<  " ";
+    cout << mult(2,1) <<  " ";
+    cout << mult(1,2) <<  " ";
     cout << mult(9,1000) << endl;
 
     cout << endl;
 
-    cout << myatoi("-32 hello") << endl;
-    cout << myatoi("   -32 hello ") << endl;
-    cout << myatoi(" 32 hello ") << endl;
+    cout << myatoi("-32 hello") <<  " ";
+    cout << myatoi("   -32 hello ") <<  " ";
+    cout << myatoi(" 32 hello ") <<  " ";
     cout << myatoi(" +64 hello ") << endl;
 
     cout << endl;
