@@ -1,89 +1,75 @@
-
-/**
-
-**/
-
-
-
-/**
-    HINTS:
-    1 philosopher use 1 and 5 forks
-    2 philosopher use 1 and 2 forks
-    3 philosopher use 2 and 3 forks
-    4 philosopher use 3 and 4 forks
-    5 philosopher use 4 and 5 forks
-**/
-
-#include <algorithm>
-#include <chrono>
-#include <iostream>
-#include <memory>
 #include <mutex>
 #include <string>
-#include <thread>
+#include <iostream>
 #include <vector>
-using namespace std;
+#include <thread>
+#include <chrono>
+#include <algorithm>
 
-class Chopstick {
-public:
-    Chopstick(){};
-    mutex m;
+std::mutex cout_mutex;
+
+struct fork {
+    fork(){};
+    std::mutex m;
 };
 
-int main() {
-    auto eat = [](Chopstick* leftChopstick, Chopstick* rightChopstick, int philosopherNumber, int leftChopstickNumber, int rightChopstickNumber) {
-        if (leftChopstick == rightChopstick)
-            throw ("Left and right chopsticks should not be the same!");
+struct philosopher {
+    std::string name;
+    size_t left;
+    size_t right;
 
-        lock(leftChopstick->m, rightChopstick->m);                // ensures there are no deadlocks
+    philosopher(const std::string &name_, size_t left_, size_t right_)
+        : name(name_), left(left_), right(right_){}
 
-        lock_guard<mutex> a(leftChopstick->m, adopt_lock);
-        cout <<  "   Philosopher " + std::string(1, '0' + philosopherNumber) + " picked " + std::string(1, '0' + leftChopstickNumber) + " chopstick.\n";
+    void eat(std::vector<fork> &table_)
+    {
+        {
+            std::unique_lock<std::mutex>  cout_lock(cout_mutex);
+            std::cout << "begin from " << std::this_thread::get_id() << std::endl;
+        }
 
-        lock_guard<mutex> b(rightChopstick->m, adopt_lock);
-        cout << "   Philosopher " + std::string(1, '0' + philosopherNumber) + " picked " + std::string(1, '0' + rightChopstickNumber) + " chopstick.\n";
+        std::unique_lock<std::mutex> l(table_[left].m);
+        std::unique_lock<std::mutex> r(table_[right].m);
 
-        cout << "Philosopher " +  std::string(1, '0' + philosopherNumber) + " eats.\n";
+        {
+            std::unique_lock<std::mutex>  cout_lock(cout_mutex);
+            std::cout << name << " is eating.\n";
+        }
 
-        std::chrono::milliseconds timeout(1400);
-        std::this_thread::sleep_for(timeout);
-    };
+        std::this_thread::sleep_for(std::chrono::seconds(1));
 
-    static const int numPhilosophers = 5;
+        {
+            std::unique_lock<std::mutex>  cout_lock(cout_mutex);
+            std::cout << name << " is done eating.\n";
+        }
 
-    // 5 utencils on the left and right of each philosopher. Use them to acquire locks.
-    vector< Chopstick* > chopsticks(numPhilosophers);
-    for (int i = 0; i < numPhilosophers; ++i) {
-        chopsticks[i] = new Chopstick();
+        std::this_thread::sleep_for(std::chrono::seconds(1));
+
+        {
+            std::unique_lock<std::mutex>  cout_lock(cout_mutex);
+            std::cout << "end from " << std::this_thread::get_id() << std::endl;
+        }
+    }
+};
+
+int main()
+{
+    const int THREAD = 5;
+    std::vector<fork> table(THREAD);
+    std::vector<philosopher> philosophers;
+    philosophers.emplace_back("Judith", 0, 1);
+    philosophers.emplace_back("Gilles", 1, 2);
+    philosophers.emplace_back("Karl  ", 2, 3);
+    philosophers.emplace_back("Emma  ", 3, 4);
+    philosophers.emplace_back("Michel", 0, 4);
+
+    std::vector<std::thread> handles(THREAD);
+
+    for (auto i = 0; i < THREAD; ++i) {
+        handles[i] = std::thread(&philosopher::eat, &philosophers[i], std::ref(table));
     }
 
-    // This is where we create philosophers, each of 5 tasks represents one philosopher.
-    vector<thread> tasks(numPhilosophers);
-
-    tasks[0] = thread(eat,
-            chopsticks[0],                          // left chopstick:  #1
-            chopsticks[numPhilosophers - 1],        // right chopstick: #5
-            0 + 1,                                        // philosopher number
-            1,                                            // left Chopstick Number
-            numPhilosophers                               // right Chopstick Number
-        );
-
-    for (int i = 1; i < numPhilosophers; ++i) {
-        tasks[i] = (thread(eat,
-                chopsticks[i - 1],                  // left chopstick
-                chopsticks[i],                      // right chopstick
-                i + 1,                                    // philosopher number
-                i,                                        // left Chopstick Number
-                i + 1                                     // right Chopstick Number
-                )
-            );
+    for (auto i = 0; i < THREAD; ++i) {
+        handles[i].join();
     }
-
-    // May eat!
-    for_each(tasks.begin(), tasks.end(), mem_fn(&thread::join));
-
-    for(auto data : chopsticks) { delete data; data = nullptr; }
-    chopsticks.clear();
-
-    return 0;
 }
