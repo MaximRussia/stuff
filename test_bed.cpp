@@ -353,8 +353,40 @@ void rotateList(node* &head, int v) {
 }
 
 /////////////////////////////////
-// BIN
+// STRINGS
 /////////////////////////////////
+
+char firstUniqueChar(string s) {
+    if(s.empty()) return '\0';
+
+    char buff[256] = {0};
+
+    for(size_t i = 0; i < s.size(); ++i) {
+        ++buff[s[i]];
+    }
+
+    for(size_t i = 0; i < s.size(); ++i) {
+        if(buff[s[i]] == 1) return s[i];
+    }
+
+    return '\0';
+}
+
+string removeChars(string str, string rem){
+    if(str.empty() || rem.empty()) return str;
+
+    bool flags[65535] = {false};
+
+    for (int i = 0; i < rem.size(); ++i){
+        flags[rem[i]] = true;
+    }
+
+    size_t dst = 0;
+    for (int i = 0; i < str.size(); ++i){
+        if (!flags[str[i]]) { str[dst++] = str[i];}
+    }
+    return str.substr(0, dst);
+}
 
 string dec2bin(int dec) {
     string res;
@@ -379,6 +411,77 @@ int bin2dec(string s){
 
     return res;
 }
+
+int myatoi(string str) {
+    if(str.empty()) return 0;
+
+    int res = 0;
+    int i = 0;
+
+    /// skip spaces
+    while(str[i] == ' ') {
+        i++;
+    }
+
+    /// get sign
+    int sign = 1;
+    if(!isdigit(str[i])) {
+        if(str[i] == '-') {
+            sign = 0;
+        } else if(str[i] == '+') {
+            sign = 1;
+        } else {
+            return 0;
+        }
+        i++;
+    }
+
+    /// main convert loop
+    while(i < str.size()) {
+        if(!isdigit(str[i])) {
+            break;
+        }
+        res = res * 10 + str[i] - '0';
+        i++;
+    }
+
+    return sign > 0 ? res : -res;
+}
+
+void reverse(string &str, size_t l, size_t r) {
+
+    for(size_t i = l, j = r; i < j; i++, j--) {
+        str[i] ^= str[j] ^= str[i] ^= str[j];
+    }
+}
+
+/// "123 456 789"
+string reverseWords(string str) {
+    if(str.size() < 2) return str;
+
+    reverse(str, 0, str.size()-1);
+
+    size_t begin = 0;
+    size_t i = 0;
+
+    while(i < str.size()) {
+        if(str[i] == ' ') {
+            reverse(str, begin, i-1);
+            begin = i+1;
+        }
+        if(i == str.size()-1) {
+            reverse(str, begin, i);
+        }
+        i++;
+    }
+
+    return str;
+}
+
+/////////////////////////////////
+// BIN
+/////////////////////////////////
+
 
 int swp(int v) {
     int mask1 = 0xaaaaaa; /// 10101010
@@ -544,42 +647,6 @@ int mult(int m, int n) {
     }
 
     return sign < 0 ? -res : res;
-}
-
-int myatoi(string str) {
-    if(str.empty()) return 0;
-
-    int res = 0;
-    int i = 0;
-
-    /// skip spaces
-    while(str[i] == ' ') {
-        i++;
-    }
-
-    /// get sign
-    int sign = 1;
-    if(!isdigit(str[i])) {
-        if(str[i] == '-') {
-            sign = 0;
-        } else if(str[i] == '+') {
-            sign = 1;
-        } else {
-            return 0;
-        }
-        i++;
-    }
-
-    /// main convert loop
-    while(i < str.size()) {
-        if(!isdigit(str[i])) {
-            break;
-        }
-        res = res * 10 + str[i] - '0';
-        i++;
-    }
-
-    return sign > 0 ? res : -res;
 }
 
 int my_sqrt(int n) {
@@ -1087,7 +1154,7 @@ int MCS(vector<int> v) {
 Partition problem is to determine whether a given set can be partitioned
 into two subsets such that the sum of elements in both subsets is same.
 **/
-bool findPartition(int arr[], int n) {
+int findPartition(vector<int> &arr, int n) {
 
     int sum = 0;
     for (int i = 0; i < n; i++)
@@ -1106,9 +1173,60 @@ bool findPartition(int arr[], int n) {
         sum -= arr[j];
     }
 
-    printf("from %d\n", i);
+    return sum == 0 ? i : -1;
+}
 
-    return sum == 0;
+/////////////////////////
+// GRAPHS
+/////////////////////////
+
+// This class represents a directed graph using adjacency list representation
+class Graph {
+    int V;    // No. of vertices
+    vector<vector<int>> adj;    // an array containing adjacency lists
+public:
+    Graph(int V);  // Constructor
+    void addEdge(int v, int w); // function to add an edge to graph
+    void BFS(int s, int e);  // prints BFS traversal from a given source s
+};
+
+Graph::Graph(int V) {
+    this->V = V;
+    adj.resize(V);
+}
+
+void Graph::addEdge(int v, int w) {
+    adj[v].push_back(w); // Add w to v's list.
+}
+
+void Graph::BFS(int s, int e) {
+    bool visited[V];
+
+    memset(visited, 0, sizeof(visited[0]) * V);
+
+    queue<int> q;
+
+    visited[s] = true;
+    q.push(s);
+
+    while(!q.empty()) {
+        s = q.front();
+        cout << s << " ";
+        q.pop();
+
+        for(int i = 0; i < adj[s].size(); ++i) {
+            if(e == adj[s][i]) {
+                cout << " -> " << e << endl;
+                return;
+            }
+            if(!visited[adj[s][i]]) {
+                visited[adj[s][i]] = true;
+                q.push(adj[s][i]);
+            }
+        }
+    }
+
+    cout << "no way" << endl;
 }
 
 /////////////////////////////////
@@ -1226,59 +1344,6 @@ void PriorityQueue::buildHeap() {
         --midIdx;
     }
     return;
-}
-
-/////////////////////////
-// GRAPHS
-/////////////////////////
-
-// This class represents a directed graph using adjacency list representation
-class Graph {
-    int V;    // No. of vertices
-    vector<vector<int>> adj;    // an array containing adjacency lists
-public:
-    Graph(int V);  // Constructor
-    void addEdge(int v, int w); // function to add an edge to graph
-    void BFS(int s, int e);  // prints BFS traversal from a given source s
-};
-
-Graph::Graph(int V) {
-    this->V = V;
-    adj.resize(V);
-}
-
-void Graph::addEdge(int v, int w) {
-    adj[v].push_back(w); // Add w to v's list.
-}
-
-void Graph::BFS(int s, int e) {
-    bool visited[V];
-
-    memset(visited, 0, sizeof(visited[0]) * V);
-
-    queue<int> q;
-
-    visited[s] = true;
-    q.push(s);
-
-    while(!q.empty()) {
-        s = q.front();
-        cout << s << " ";
-        q.pop();
-
-        for(int i = 0; i < adj[s].size(); ++i) {
-            if(e == adj[s][i]) {
-                cout << " -> " << e << endl;
-                return;
-            }
-            if(!visited[adj[s][i]]) {
-                visited[adj[s][i]] = true;
-                q.push(adj[s][i]);
-            }
-        }
-    }
-
-    cout << "no way" << endl;
 }
 
 ////////////////////////
@@ -1503,6 +1568,28 @@ int main() {
     cout << endl;
 
     cout << "/////////////////////////////////" << endl;
+    cout << "// STRING" << endl;
+    cout << "/////////////////////////////////" << endl;
+
+    cout << firstUniqueChar("asdefrgtb") <<  endl;
+    cout << removeChars("qwegfhrtnd", "derfh") <<  endl;
+    cout << reverseWords("123 456 789") << endl;
+
+    cout << endl;
+
+    cout << dec2bin(35) << endl;
+    cout << bin2dec("010101") << endl;
+
+    cout << endl;
+
+    cout << myatoi("-32 hello") <<  " ";
+    cout << myatoi("   -32 hello ") <<  " ";
+    cout << myatoi(" 32 hello ") <<  " ";
+    cout << myatoi(" +64 hello ") << endl;
+
+    cout << endl;
+
+    cout << "/////////////////////////////////" << endl;
     cout << "// BIN" << endl;
     cout << "/////////////////////////////////" << endl;
 
@@ -1581,27 +1668,20 @@ int main() {
 
     cout << endl;
 
-    cout << myatoi("-32 hello") <<  " ";
-    cout << myatoi("   -32 hello ") <<  " ";
-    cout << myatoi(" 32 hello ") <<  " ";
-    cout << myatoi(" +64 hello ") << endl;
-
-    cout << endl;
-
-    cout << Factorial<5>::value << endl;
-    cout << fact(5) << endl;
+    cout << Factorial<5>::value <<  " ";
+    cout << fact(5) <<  " ";
     cout << fact2(5) << endl;
 
     cout << endl;
 
-    cout << Fib<40>::value << endl;
-    cout << fib(40) << endl;
+    cout << Fib<40>::value <<  " ";
+    cout << fib(40) <<  " ";
     cout << fib2(40) << endl;
 
     cout << endl;
 
-    cout << GCD<6, 4>::value << endl;
-    cout << gcd(6, 4) << endl;
+    cout << GCD<6, 4>::value <<  " ";
+    cout << gcd(6, 4) <<  " ";
     cout << gcd2(6, 4) << endl;
 
     cout << endl;
@@ -1625,19 +1705,19 @@ int main() {
 
     vector<int> a = {6,5,4,7,8,3,2,3,4};
     selection_sort_t(a);
-    for(auto i : a) cout << i << endl;
+    for(auto i : a) cout << i <<  " ";
 
     cout << endl;
 
     a = {6,5,4,7,8,3,2,3,4};
     insertion_sort_t(a);
-    for(auto i : a) cout << i << endl;
+    for(auto i : a) cout << i <<  " ";
 
     cout << endl;
 
     a = {6,5,4,7,8,3,2,3,4};
     quick_sort_t(a, 0, a.size()-1);
-    for(auto i : a) cout << i << endl;
+    for(auto i : a) cout << i <<  " ";
 
     cout << endl;
 
@@ -1712,10 +1792,28 @@ int main() {
 
     cout << endl;
 
-	int arr2[] = {0, 4, -1, 1, -2, 2};
-	cout << findPartition(arr2, sizeof(arr2)/sizeof(arr2[0])) << endl;
+    vector<int> arr2 = {0, 4, -1, 1, -2, 2};
+	cout << findPartition(arr2, arr2.size()) << endl;
 
 	cout << endl;
+
+    cout << "/////////////////////////////////" << endl;
+    cout << "// GRAPH" << endl;
+    cout << "/////////////////////////////////" << endl;
+
+    Graph g(5);
+    g.addEdge(0, 1);
+    g.addEdge(0, 2);
+    g.addEdge(1, 2);
+    g.addEdge(2, 0);
+    g.addEdge(2, 3);
+    g.addEdge(3, 3);
+    g.addEdge(1, 4);
+
+    cout << "Following is Breadth First Traversal : \n";
+    g.BFS(2, 4);
+
+    cout << endl;
 
     cout << "/////////////////////////////////" << endl;
     cout << "// HEAP" << endl;
@@ -1734,24 +1832,6 @@ int main() {
     h.dequeue();
     cout << h.get_max() << endl;
     h.print();
-
-    cout << endl;
-
-    cout << "/////////////////////////////////" << endl;
-    cout << "// GRAPH" << endl;
-    cout << "/////////////////////////////////" << endl;
-
-    Graph g(5);
-    g.addEdge(0, 1);
-    g.addEdge(0, 2);
-    g.addEdge(1, 2);
-    g.addEdge(2, 0);
-    g.addEdge(2, 3);
-    g.addEdge(3, 3);
-    g.addEdge(1, 4);
-
-    cout << "Following is Breadth First Traversal : \n";
-    g.BFS(2, 4);
 
     cout << endl;
 
