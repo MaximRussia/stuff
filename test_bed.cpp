@@ -372,19 +372,23 @@ char firstUniqueChar(string s) {
     return '\0';
 }
 
-string removeChars(string str, string rem){
+string removeChars(string str, string rem) {
     if(str.empty() || rem.empty()) return str;
 
-    bool flags[65535] = {false};
-
-    for (int i = 0; i < rem.size(); ++i){
-        flags[rem[i]] = true;
+    bool buff[65535] = {false};
+    for(size_t i = 0; i < rem.size(); i++) {
+        buff[rem[i]] = true;
     }
 
-    size_t dst = 0;
-    for (int i = 0; i < str.size(); ++i){
-        if (!flags[str[i]]) { str[dst++] = str[i];}
+    int dst = 0;
+
+    for(size_t i = 0; i < str.size(); i++) {
+        if(!buff[str[i]]) {
+            str[dst] = str[i];
+            dst++;
+        }
     }
+
     return str.substr(0, dst);
 }
 
