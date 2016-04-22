@@ -528,38 +528,6 @@ int fib2(int n) {
     return res;
 }
 
-///1
-///11
-///121
-///1331
-///14641
-
-int Pascal_1(int row, int column) {
-    if(row < 0) return 0;
-    if(row == 0) return 1;
-    if(column == 0 || column == row-1) return 1;
-
-    return Pascal_1(row-1, column-1) + Pascal_1(row-1, column);
-}
-
-vector<vector<int>> Pascal_2(int row) {
-    if(row < 0) return {{}};
-
-    vector<vector<int>> res;
-    res.push_back({{1}});
-    if(row == 0) return res;
-
-    for(int i = 1; i < row; i++) {
-        res.push_back({{1}});
-        for(int j = 1; j < i; j++) {
-            res[i].push_back(res[i-1][j-1] + res[i-1][j]);
-        }
-        res[i].push_back({1});
-    }
-
-    return res;
-}
-
 int mult(int m, int n) {
     if(m == 0 || n == 0) return 0;
     int sign = 1;
@@ -612,47 +580,6 @@ int myatoi(string str) {
     }
 
     return sign > 0 ? res : -res;
-}
-
-int MCS(vector<int> v) {
-    int curr = 0;
-    int buff = 0;
-
-    for(int i = 0; i < v.size(); i++) {
-        buff += v[i];
-        if(buff < 0) buff = 0;
-        else if(buff > curr) curr = buff;
-    }
-
-    return curr;
-}
-
-/**
-Partition problem is to determine whether a given set can be partitioned 
-into two subsets such that the sum of elements in both subsets is same.
-**/
-bool findPartition(int arr[], int n) {
-
-    int sum = 0;
-    for (int i = 0; i < n; i++)
-       sum += arr[i];
-
-    if (sum%2 != 0) return false;
-
-    int i = n-1;
-    int buff_sum = sum;
-    for(; i >= 0; i--) {
-        buff_sum -= arr[i];
-        if(buff_sum == 0) break;
-    }
-
-    for(int j = 0; j <= i; j++) {
-        sum -= arr[j];
-    }
-
-    printf("from %d\n", i);
-
-    return sum == 0;
 }
 
 int my_sqrt(int n) {
@@ -834,122 +761,6 @@ namespace INTERVIEW {
 	}
 }
 
-/////////////////////////////////
-// HEAP
-/////////////////////////////////
-
-class PriorityQueue {
-    vector<int> pq_keys;
-    void shiftRight(int low, int high);
-    void shiftLeft(int low, int high);
-    void buildHeap();
-public:
-    PriorityQueue(){}
-    PriorityQueue(vector<int>& items) {
-        pq_keys = items;
-        buildHeap();
-    }
-    /*Insert a new item into the priority queue*/
-    void enqueue(int item);
-    /*Get the maximum element from the priority queue*/
-    int dequeue();
-    /*Just for testing*/
-    void print();
-    int get_max();
-};
-
-void PriorityQueue::enqueue(int item) {
-    pq_keys.push_back(item);
-    shiftLeft(0, pq_keys.size() - 1);
-    return;
-}
-
-int PriorityQueue::dequeue() {
-    assert(pq_keys.size() != 0);
-    int last = pq_keys.size() - 1;
-    int tmp = pq_keys[0];
-    pq_keys[0] = pq_keys[last];
-    pq_keys[last] = tmp;
-    pq_keys.pop_back();
-    shiftRight(0, last-1);
-    return tmp;
-}
-
-int PriorityQueue::get_max() {
-    assert(pq_keys.size() != 0);
-    return pq_keys[0];
-}
-
-void PriorityQueue::print() {
-    int size = pq_keys.size();
-    for (int i = 0; i < size; ++i) {
-        cout << pq_keys[i] << " ";
-    }
-    cout << endl;
-}
-
-void PriorityQueue::shiftLeft(int low, int high) {
-
-    while (high > low) {
-        int parentIdx = (high-1)/2;
-        /*if child is bigger than parent we need to swap*/
-        if (pq_keys[high] > pq_keys[parentIdx]) {
-            swap(pq_keys[high], pq_keys[parentIdx]);
-            /*Make parent index the child and shift towards left*/
-            high = parentIdx;
-        }
-        else {
-            break;
-        }
-    }
-    return;
-}
-
-void PriorityQueue::shiftRight(int low, int high) {
-
-    while ((low*2)+1 <= high) {
-        int leftChild = (low*2)+1;
-        int rightChild = leftChild + 1;
-        int swapIdx = low;
-        /*Check if low is less than left child*/
-        if (pq_keys[swapIdx] < pq_keys[leftChild]) {
-            swapIdx = leftChild;
-        }
-        /*If right child exists check if it is less than current low*/
-        if ((rightChild <= high) && (pq_keys[swapIdx] < pq_keys[rightChild])) {
-            swapIdx = rightChild;
-        }
-        /*Make the biggest element of low, left and right child the low*/
-        if (swapIdx != low) {
-            swap(pq_keys[low], pq_keys[swapIdx]);
-            /*
-            Keep shifting right and ensure that swapIdx satisfies
-            heap property aka left and right child of it is smaller than
-            itself
-            */
-            low = swapIdx;
-        }
-        else {
-            break;
-        }
-    }
-    return;
-}
-
-void PriorityQueue::buildHeap() {
-    /*
-    Start with middle element. Middle element is chosen in
-    such a way that the last element of array is either its
-    left child or right child
-    */
-    int size = pq_keys.size();
-    int midIdx = (size-2)/2;
-    while (midIdx >= 0) {
-        shiftRight(midIdx, size-1);
-        --midIdx;
-    }
-    return;
-}
 /////////////////////////////////
 // TEMPLATES
 /////////////////////////////////
@@ -1227,10 +1038,199 @@ int lengthOfLongestSubstring(string s) {
   return maxLen;
 }
 
+///1
+///11
+///121
+///1331
+///14641
+
+int Pascal_1(int row, int column) {
+    if(row < 0) return 0;
+    if(row == 0) return 1;
+    if(column == 0 || column == row-1) return 1;
+
+    return Pascal_1(row-1, column-1) + Pascal_1(row-1, column);
+}
+
+vector<vector<int>> Pascal_2(int row) {
+    if(row < 0) return {{}};
+
+    vector<vector<int>> res;
+    res.push_back({{1}});
+    if(row == 0) return res;
+
+    for(int i = 1; i < row; i++) {
+        res.push_back({{1}});
+        for(int j = 1; j < i; j++) {
+            res[i].push_back(res[i-1][j-1] + res[i-1][j]);
+        }
+        res[i].push_back({1});
+    }
+
+    return res;
+}
+
+int MCS(vector<int> v) {
+    int curr = 0;
+    int buff = 0;
+
+    for(int i = 0; i < v.size(); i++) {
+        buff += v[i];
+        if(buff < 0) buff = 0;
+        else if(buff > curr) curr = buff;
+    }
+
+    return curr;
+}
+
+/**
+Partition problem is to determine whether a given set can be partitioned
+into two subsets such that the sum of elements in both subsets is same.
+**/
+bool findPartition(int arr[], int n) {
+
+    int sum = 0;
+    for (int i = 0; i < n; i++)
+       sum += arr[i];
+
+    if (sum%2 != 0) return false;
+
+    int i = n-1;
+    int buff_sum = sum;
+    for(; i >= 0; i--) {
+        buff_sum -= arr[i];
+        if(buff_sum == 0) break;
+    }
+
+    for(int j = 0; j <= i; j++) {
+        sum -= arr[j];
+    }
+
+    printf("from %d\n", i);
+
+    return sum == 0;
+}
+
+/////////////////////////////////
+// HEAP
+/////////////////////////////////
+
+class PriorityQueue {
+    vector<int> pq_keys;
+    void shiftRight(int low, int high);
+    void shiftLeft(int low, int high);
+    void buildHeap();
+public:
+    PriorityQueue(){}
+    PriorityQueue(vector<int>& items) {
+        pq_keys = items;
+        buildHeap();
+    }
+    /*Insert a new item into the priority queue*/
+    void enqueue(int item);
+    /*Get the maximum element from the priority queue*/
+    int dequeue();
+    /*Just for testing*/
+    void print();
+    int get_max();
+};
+
+void PriorityQueue::enqueue(int item) {
+    pq_keys.push_back(item);
+    shiftLeft(0, pq_keys.size() - 1);
+    return;
+}
+
+int PriorityQueue::dequeue() {
+    assert(pq_keys.size() != 0);
+    int last = pq_keys.size() - 1;
+    int tmp = pq_keys[0];
+    pq_keys[0] = pq_keys[last];
+    pq_keys[last] = tmp;
+    pq_keys.pop_back();
+    shiftRight(0, last-1);
+    return tmp;
+}
+
+int PriorityQueue::get_max() {
+    assert(pq_keys.size() != 0);
+    return pq_keys[0];
+}
+
+void PriorityQueue::print() {
+    int size = pq_keys.size();
+    for (int i = 0; i < size; ++i) {
+        cout << pq_keys[i] << " ";
+    }
+    cout << endl;
+}
+
+void PriorityQueue::shiftLeft(int low, int high) {
+
+    while (high > low) {
+        int parentIdx = (high-1)/2;
+        /*if child is bigger than parent we need to swap*/
+        if (pq_keys[high] > pq_keys[parentIdx]) {
+            swap(pq_keys[high], pq_keys[parentIdx]);
+            /*Make parent index the child and shift towards left*/
+            high = parentIdx;
+        }
+        else {
+            break;
+        }
+    }
+    return;
+}
+
+void PriorityQueue::shiftRight(int low, int high) {
+
+    while ((low*2)+1 <= high) {
+        int leftChild = (low*2)+1;
+        int rightChild = leftChild + 1;
+        int swapIdx = low;
+        /*Check if low is less than left child*/
+        if (pq_keys[swapIdx] < pq_keys[leftChild]) {
+            swapIdx = leftChild;
+        }
+        /*If right child exists check if it is less than current low*/
+        if ((rightChild <= high) && (pq_keys[swapIdx] < pq_keys[rightChild])) {
+            swapIdx = rightChild;
+        }
+        /*Make the biggest element of low, left and right child the low*/
+        if (swapIdx != low) {
+            swap(pq_keys[low], pq_keys[swapIdx]);
+            /*
+            Keep shifting right and ensure that swapIdx satisfies
+            heap property aka left and right child of it is smaller than
+            itself
+            */
+            low = swapIdx;
+        }
+        else {
+            break;
+        }
+    }
+    return;
+}
+
+void PriorityQueue::buildHeap() {
+    /*
+    Start with middle element. Middle element is chosen in
+    such a way that the last element of array is either its
+    left child or right child
+    */
+    int size = pq_keys.size();
+    int midIdx = (size-2)/2;
+    while (midIdx >= 0) {
+        shiftRight(midIdx, size-1);
+        --midIdx;
+    }
+    return;
+}
+
 /////////////////////////
 // GRAPHS
 /////////////////////////
-
 
 // This class represents a directed graph using adjacency list representation
 class Graph {
@@ -1567,16 +1567,6 @@ int main() {
 
     cout << endl;
 
-    vector<int> v = {-2, -3, 4, -1, -2, 1, 5, -3};
-    cout << MCS(v) << endl;
-
-    cout << endl;
-
-	int arr2[] = {0, 4, -1, 1, -2, 2};
-	cout << findPartition(arr2, sizeof(arr2)/sizeof(arr2[0])) << endl;
-
-	cout << endl;
-
     cout << mult(0,0) <<  " ";
     cout << mult(0,1) <<  " ";
     cout << mult(1,0) <<  " ";
@@ -1595,25 +1585,6 @@ int main() {
     cout << myatoi("   -32 hello ") <<  " ";
     cout << myatoi(" 32 hello ") <<  " ";
     cout << myatoi(" +64 hello ") << endl;
-
-    cout << endl;
-
-    for(int i = 0; i < 6; i++) {
-        for(int j = 0; j < i; j++) {
-            cout << Pascal_1(i,j);
-        }
-        cout << endl;
-    }
-
-    cout << endl;
-
-    auto res = Pascal_2(5);
-
-    for(auto i : res) {
-        for(auto j : i)
-            cout << j;
-        cout << endl;
-    }
 
     cout << endl;
 
@@ -1645,26 +1616,6 @@ int main() {
     INTERVIEW::SEARCH_ENGINE::revert(s, 0, 4);
     cout << s << endl;
     cout << INTERVIEW::SEARCH_ENGINE::my_sqrt(10) << endl;
-
-    cout << endl;
-
-    cout << "/////////////////////////////////" << endl;
-    cout << "// HEAP" << endl;
-    cout << "/////////////////////////////////" << endl;
-
-    PriorityQueue h;
-    h.enqueue(3);
-    h.enqueue(2);
-    h.enqueue(15);
-    h.enqueue(5);
-    h.enqueue(4);
-    h.enqueue(45);
-    cout << h.get_max() << endl;
-    h.print();
-
-    h.dequeue();
-    cout << h.get_max() << endl;
-    h.print();
 
     cout << endl;
 
@@ -1734,6 +1685,55 @@ int main() {
     cout << endl;
 
     cout << lengthOfLongestSubstring("abcabcbb") << endl;
+
+    cout << endl;
+
+    for(int i = 0; i < 6; i++) {
+        for(int j = 0; j < i; j++) {
+            cout << Pascal_1(i,j);
+        }
+        cout << endl;
+    }
+
+    cout << endl;
+
+    auto res = Pascal_2(5);
+
+    for(auto i : res) {
+        for(auto j : i)
+            cout << j;
+        cout << endl;
+    }
+
+    cout << endl;
+
+    vector<int> v = {-2, -3, 4, -1, -2, 1, 5, -3};
+    cout << MCS(v) << endl;
+
+    cout << endl;
+
+	int arr2[] = {0, 4, -1, 1, -2, 2};
+	cout << findPartition(arr2, sizeof(arr2)/sizeof(arr2[0])) << endl;
+
+	cout << endl;
+
+    cout << "/////////////////////////////////" << endl;
+    cout << "// HEAP" << endl;
+    cout << "/////////////////////////////////" << endl;
+
+    PriorityQueue h;
+    h.enqueue(3);
+    h.enqueue(2);
+    h.enqueue(15);
+    h.enqueue(5);
+    h.enqueue(4);
+    h.enqueue(45);
+    cout << h.get_max() << endl;
+    h.print();
+
+    h.dequeue();
+    cout << h.get_max() << endl;
+    h.print();
 
     cout << endl;
 
