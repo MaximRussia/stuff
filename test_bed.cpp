@@ -627,6 +627,10 @@ int MCS(vector<int> v) {
     return curr;
 }
 
+/**
+Partition problem is to determine whether a given set can be partitioned 
+into two subsets such that the sum of elements in both subsets is same.
+**/
 bool findPartition(int arr[], int n) {
 
     int sum = 0;
