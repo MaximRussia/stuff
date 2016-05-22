@@ -42,7 +42,7 @@ void mycat(char **res, const char *str) {
     char *ptr = *res;
     size_t size_res = strlen(*res);
     size_t size_str = strlen(str);
-    size_t size = strlen(*res) + strlen(str) + 1;
+    size_t size = size_res + size_str + 1;
     ptr = (char*)realloc(*res, size);
     ptr += size_res;
     while((*ptr++ = *str++) != '\0');
@@ -53,7 +53,7 @@ void mycat_mem(char **res, const char *str) {
     char *ptr = *res;
     size_t size_res = strlen(*res);
     size_t size_str = strlen(str);
-    size_t size = strlen(*res) + strlen(str) + 1;
+    size_t size = size_res + size_str + 1;
     ptr = (char*)realloc(*res, size);
     ptr += size_res;
     memcpy(ptr, str, size_str);
