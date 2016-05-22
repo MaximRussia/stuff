@@ -29,14 +29,34 @@ void mycpy(char **res, const char *str) {
     while((*ptr++ = *str++) != '\0');
 }
 
+void mycpy_mem(char **res, const char *str) {
+    if(!str) return;
+    size_t size = strlen(str)*sizeof(*str)+1;
+    if(!*res) *res = (char*)malloc(size);
+    char *ptr = *res;
+    memcpy(ptr, str, size);
+}
+
 void mycat(char **res, const char *str) {
     if(!str) return;
     char *ptr = *res;
     size_t size_res = strlen(*res);
     size_t size_str = strlen(str);
-    ptr = (char*)realloc(*res, size_res + size_str + 1);
+    size_t size = strlen(*res) + strlen(str) + 1;
+    ptr = (char*)realloc(*res, size);
     ptr += size_res;
     while((*ptr++ = *str++) != '\0');
+}
+
+void mycat_mem(char **res, const char *str) {
+    if(!str) return;
+    char *ptr = *res;
+    size_t size_res = strlen(*res);
+    size_t size_str = strlen(str);
+    size_t size = strlen(*res) + strlen(str) + 1;
+    ptr = (char*)realloc(*res, size);
+    ptr += size_res;
+    memcpy(ptr, str, size_str);
 }
 
 void mysprintf(char **res, const char *fmt, const char *str) {
@@ -1455,15 +1475,15 @@ int main() {
     cout << "/////////////////////////////////" << endl;
 
     char *str = NULL;
-    mycpy(&str, "HELLO WORLD");
+    mycpy_mem(&str, "HELLO WORLD");
     mycpy(&str, str+6);
-    mycat(&str, " GOODBYE");
+    mycat_mem(&str, " GOODBYE");
     mycat(&str, "-BYE");
+    mycat_mem(&str, "-BYE");
     mycat(&str, "-BYE");
+    mycat_mem(&str, "-BYE");
     mycat(&str, "-BYE");
-    mycat(&str, "-BYE");
-    mycat(&str, "-BYE");
-    mycat(&str, "-BYE");
+    mycat_mem(&str, "-BYE");
     mycat(&str, "-BYE");
     mysprintf(&str, "%s!", str);
     puts(str);
@@ -1878,6 +1898,7 @@ int main() {
 
     cout << endl;
 
+    cout << "Press any key ... " << endl;
     cin.get();
 
     return 0;
