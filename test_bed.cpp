@@ -483,23 +483,21 @@ void reverse(string &str, size_t l, size_t r) {
 string reverseWords(string str) {
     if(str.size() < 2) return str;
 
-    reverse(str, 0, str.size()-1);
+	reverse(str, 0, str.size()-1);
 
-    size_t begin = 0;
-    size_t i = 0;
+    int prevIndex = 0;
+	// reverse spaces
+	for(int i = 0; i < str.size(); i++) {
+		if(str[i] == ' ') {
+			reverse(str, prevIndex, i-1);
+			prevIndex = i+1;
+		}
+	}
 
-    while(i < str.size()) {
-        if(str[i] == ' ') {
-            reverse(str, begin, i-1);
-            begin = i+1;
-        }
-        if(i == str.size()-1) {
-            reverse(str, begin, i);
-        }
-        i++;
-    }
+	// reverse 'last space' to end
+	reverse(str, prevIndex, str.size()-1);
 
-    return str;
+	return str;
 }
 
 /////////////////////////////////
