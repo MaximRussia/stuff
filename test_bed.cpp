@@ -436,6 +436,68 @@ int bin2dec(string s){
     return res;
 }
 
+/*****
+Implement atof()
+So given a string like "2.23" your function should return double 2.23. This might seem easy in the first place but this is a highly ambiguous question. Also it has some interesting test cases. So overall a good discussion can revolve around this question. We are not going to support here scientific notation like 1.45e10 etc. We will also not support hex and octal strings just for the sake of simplicity. But these are good assumption to state upfront. Let's write code for this.
+double atof(char* num) {
+     if (!num || !*num) return 0;
+
+     double integerPart = 0;
+     double fractionPart = 0;
+     int divisorForFraction = 1;
+     int sign = 1;
+     bool inFraction = false;
+
+     //Take care of +/- sign
+     if (*num == '-') {
+         ++num;
+         sign = -1;
+     }
+     else if (*num == '+') {
+         ++num;
+     }
+
+     while (*num != '\0') {
+         if (*num >= '0' && *num <= '9') {
+             if (inFraction) {
+                 //See how are we converting a character to integer
+                 fractionPart = fractionPart*10 + (*num - '0');
+                 divisorForFraction *= 10;
+             }
+             else {
+                 integerPart = integerPart*10 + (*num - '0');
+             }
+         }
+         else if (*num == '.') {
+             if (inFraction)
+                 return sign * (integerPart + fractionPart/divisorForFraction);
+             else
+                 inFraction = true;
+         }
+         else {
+             return sign * (integerPart + fractionPart/divisorForFraction);
+         }
+         ++num;
+     }
+     return sign * (integerPart + fractionPart/divisorForFraction);
+ }
+
+Fun time - Breaking the code
+1. Pass NULL/empty string
+2. Pass string with +ve and -ve sign, +2.0/-5.5
+3. Pass pure character string. What is expected?
+4. Pass mix of character and numbers, 2.33abc/2abc/2.abc
+5. Check what happens if string passed results in overflow/underflow, our code doesn't take care of it
+6. String with leading/trailing zeroes, +0000.002/-1.0000
+7. Pass all zeroes, 0.000/000
+8. What happens if there are more than one decimal point like 1.234.5/1..2?
+9. Also look for some corner cases like +.1/-.2/etc. These are all valid cases.
+Complexity of the code
+Constant space and O(N) run time considering length of string is N.
+Similar problems
+1. Write atoi(char* str)
+******/
+
 int myatoi(string str) {
     if(str.empty()) return 0;
 
