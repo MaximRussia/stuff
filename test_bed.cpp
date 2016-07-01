@@ -991,55 +991,49 @@ void quick_sort_t(vector<T> &A, int start, int end){
 }
 
 template<class T>
-void merge_t(vector<T> &A, long lb, long split, long ub) {
-	// Слияние упорядоченных частей массива в буфер temp
-	// с дальнейшим переносом содержимого temp в a[lb]...a[ub]
-
-  	// текущая позиция чтения из первой последовательности a[lb]...a[split]
-  	long pos1 = lb;
-
-  	// текущая позиция чтения из второй последовательности a[split+1]...a[ub]
-  	long pos2 = split+1;
+void merge_t(vector<T> &A, long l, long mid, long r) {
+	  // Слияние упорядоченных частей массива в буфер temp
+	  // с дальнейшим переносом содержимого temp в a[l]...a[r]
+  	// текущая позиция чтения из первой последовательности a[l]...a[mid]
+  	long ll = l;
+    long size = r-l+1;
+  	// текущая позиция чтения из второй последовательности a[mid+1]...a[r]
+  	long rr = mid+1;
 
   	// текущая позиция записи в temp
-  	long pos3 = 0;  
-
-  	T *temp = new T[ub-lb+1];
+  	long tt = 0;
+  	T *temp = new T[size];
 
   	// идет слияние, пока есть хоть один элемент в каждой последовательности
-  	while (pos1 <= split && pos2 <= ub) {
-    		if (A[pos1] < A[pos2])
-      			temp[pos3++] = A[pos1++];
+  	while (ll <= mid && rr <= r) {
+    		if (A[ll] < A[rr])
+      			temp[tt++] = A[ll++];
     		else
-      			temp[pos3++] = A[pos2++];
+      			temp[tt++] = A[rr++];
   	}
 
-  	// одна последовательность закончилась - копировать остаток другой в конец буфера 
-  	while (pos2 <= ub)   // пока вторая последовательность непуста 
-    		temp[pos3++] = A[pos2++];
- 	while (pos1 <= split)  // пока первая последовательность непуста
-    		temp[pos3++] = A[pos1++];
+  	// одна последовательность закончилась - копировать остаток другой в конец буфера
+  	while (rr <= r)   // пока вторая последовательность непуста
+    		temp[tt++] = A[rr++];
+ 	while (ll <= mid)  // пока первая последовательность непуста
+    		temp[tt++] = A[ll++];
 
-  	// скопировать буфер temp в a[lb]...a[ub]
-  	for (pos3 = 0; pos3 < ub-lb+1; pos3++)
-    		A[lb+pos3] = temp[pos3];
+  	// скопировать буфер temp в a[l]...a[r]
+  	for (int i = 0; i < size; i++)
+    		A[l+i] = temp[i];
 
   	delete[] temp;
 }
 
-// a - сортируемый массив, его левая граница lb, правая граница ub
+// a - сортируемый массив, его левая граница l, правая граница r
 template<class T>
-void merge_sort_t(vector<T> &A, long lb, long ub) { 
-	long split;                   // индекс, по которому делим массив
+void merge_sort_t(vector<T> &A, long l, long r) {
+	if (l >= r) return;
 
-	if (lb < ub) {                // если есть более 1 элемента
-
-    		split = (lb + ub)/2;
-
-    		merge_sort_t(A, lb, split);       // сортировать левую половину 
-    		merge_sort_t(A, split+1, ub);// сортировать правую половину 
-    		merge_t(A, lb, split, ub);    // слить результаты в общий массив
-  	}
+  int mid = (l + r)/2;
+  merge_sort_t(A, l, mid);       // сортировать левую половину
+  merge_sort_t(A, mid+1, r);// сортировать правую половину
+  merge_t(A, l, mid, r);    // слить результаты в общий массив
 }
 
 template<typename T>
@@ -1892,6 +1886,7 @@ int main() {
     merge_sort_t(a, 0, a.size()-1);
     for(auto i : a) cout << i <<  " ";
 
+    cout << endl;
     cout << endl;
 
     a = {2,3,4,5,6,7,8,9};
