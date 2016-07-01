@@ -436,6 +436,28 @@ int bin2dec(string s){
     return res;
 }
 
+int hex2num(char ch) {
+	if(ch >= '0' && ch <= '9') return ch - '0';
+	if(ch >= 'a' && ch <= 'f') return 10 + ch - 'a';
+	if(ch >= 'A' && ch <= 'F') return 10 + ch - 'A';
+	return -1;
+}
+
+int base2dec(string str, int base) {
+	if(str.empty()) return -1;
+
+	int res = 0;
+	if(str[0] == '0' && str[1] == 'x') {
+		str = str.substr(2);
+	}
+
+	for(int i = 0; i < str.size(); i++) {
+		res += hex2num(str[i]) * pow(base, str.size() - 1 - i);
+	}
+
+	return res;
+}
+
 /*****
 Implement atof()
 So given a string like "2.23" your function should return double 2.23. This might seem easy in the first place but this is a highly ambiguous question. Also it has some interesting test cases. So overall a good discussion can revolve around this question. We are not going to support here scientific notation like 1.45e10 etc. We will also not support hex and octal strings just for the sake of simplicity. But these are good assumption to state upfront. Let's write code for this.
@@ -1704,7 +1726,7 @@ int main() {
     cout << endl;
 
     cout << "/////////////////////////////////" << endl;
-    cout << "// STRING" << endl;
+    cout << "// STRINGS" << endl;
     cout << "/////////////////////////////////" << endl;
 
     cout << firstUniqueChar("asdefrgtb") <<  endl;
@@ -1715,6 +1737,15 @@ int main() {
 
     cout << dec2bin(35) << endl;
     cout << bin2dec("010101") << endl;
+
+	cout << endl;
+
+	cout << base2dec("010101", 2) << endl;
+	cout << base2dec("0x1", 16) << endl;
+	cout << base2dec("1", 16) << endl;
+	cout << base2dec("0xAAA", 16) << endl;
+	cout << base2dec("0xEEE", 16) << endl;
+	cout << base2dec("0xABC", 16) << endl;
 
     cout << endl;
 
