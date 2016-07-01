@@ -968,6 +968,58 @@ void quick_sort_t(vector<T> &A, int start, int end){
     quick_sort_t(A, i, end);
 }
 
+template<class T>
+void merge_t(vector<T> &A, long lb, long split, long ub) {
+	// Слияние упорядоченных частей массива в буфер temp
+	// с дальнейшим переносом содержимого temp в a[lb]...a[ub]
+
+  	// текущая позиция чтения из первой последовательности a[lb]...a[split]
+  	long pos1 = lb;
+
+  	// текущая позиция чтения из второй последовательности a[split+1]...a[ub]
+  	long pos2 = split+1;
+
+  	// текущая позиция записи в temp
+  	long pos3 = 0;  
+
+  	T *temp = new T[ub-lb+1];
+
+  	// идет слияние, пока есть хоть один элемент в каждой последовательности
+  	while (pos1 <= split && pos2 <= ub) {
+    		if (A[pos1] < A[pos2])
+      			temp[pos3++] = A[pos1++];
+    		else
+      			temp[pos3++] = A[pos2++];
+  	}
+
+  	// одна последовательность закончилась - копировать остаток другой в конец буфера 
+  	while (pos2 <= ub)   // пока вторая последовательность непуста 
+    		temp[pos3++] = A[pos2++];
+ 	while (pos1 <= split)  // пока первая последовательность непуста
+    		temp[pos3++] = A[pos1++];
+
+  	// скопировать буфер temp в a[lb]...a[ub]
+  	for (pos3 = 0; pos3 < ub-lb+1; pos3++)
+    		A[lb+pos3] = temp[pos3];
+
+  	delete[] temp;
+}
+
+// a - сортируемый массив, его левая граница lb, правая граница ub
+template<class T>
+void merge_sort_t(vector<T> &A, long lb, long ub) { 
+	long split;                   // индекс, по которому делим массив
+
+	if (lb < ub) {                // если есть более 1 элемента
+
+    		split = (lb + ub)/2;
+
+    		merge_sort_t(A, lb, split);       // сортировать левую половину 
+    		merge_sort_t(A, split+1, ub);// сортировать правую половину 
+    		merge_t(A, lb, split, ub);    // слить результаты в общий массив
+  	}
+}
+
 template<typename T>
 size_t bin_search_t(vector<T> &v, T n) {
     if(v.empty()) return 0;
@@ -1801,6 +1853,12 @@ int main() {
 
     a = {6,5,4,7,8,3,2,3,4};
     quick_sort_t(a, 0, a.size()-1);
+    for(auto i : a) cout << i <<  " ";
+
+    cout << endl;
+
+    a = {6,5,4,7,8,3,2,3,4};
+    merge_sort_t(a, 0, a.size()-1);
     for(auto i : a) cout << i <<  " ";
 
     cout << endl;
