@@ -969,60 +969,49 @@ void insertion_sort_t(vector<T> &v) {
 
 
 template<typename T>
-void quick_sort_t(vector<T> &A, int start, int end){
-    if(start >= end) return;
+void quick_sort_t(vector<T> &A, int l, int r){
+    if(l >= r) return;
 
-    int i = start, j = end;
-    int mid = A[((i + j) >> 1)];
+    int ll = l, rr = r;
+    int mid = A[((ll + rr) >> 1)];
 
-    while(j > i){
-        while (A[i] < mid) i++;
-        while (A[j] > mid) j--;
+    while(ll <= rr){
+        while (A[ll] < mid) ll++;
+        while (A[rr] > mid) rr--;
 
-        if(i <= j){
-            swap(A[i], A[j]);
-            i++;
-            j--;
+        if(ll <= rr){
+            swap(A[ll], A[rr]);
+            ll++;
+            rr--;
         }
     }
 
-    quick_sort_t(A, start, j);
-    quick_sort_t(A, i, end);
+    quick_sort_t(A, l, rr);
+    quick_sort_t(A, ll, r);
 }
 
 template<class T>
 void merge_t(vector<T> &A, long l, long mid, long r) {
-	  // Слияние упорядоченных частей массива в буфер temp
-	  // с дальнейшим переносом содержимого temp в a[l]...a[r]
-  	// текущая позиция чтения из первой последовательности a[l]...a[mid]
   	long ll = l;
     long size = r-l+1;
-  	// текущая позиция чтения из второй последовательности a[mid+1]...a[r]
   	long rr = mid+1;
+  	vector<T> temp;
 
-  	// текущая позиция записи в temp
-  	long tt = 0;
-  	T *temp = new T[size];
-
-  	// идет слияние, пока есть хоть один элемент в каждой последовательности
   	while (ll <= mid && rr <= r) {
-    		if (A[ll] < A[rr])
-      			temp[tt++] = A[ll++];
-    		else
-      			temp[tt++] = A[rr++];
+    	if (A[ll] < A[rr])
+      		temp.push_back(A[ll++]);
+    	else
+      		temp.push_back(A[rr++]);
   	}
 
-  	// одна последовательность закончилась - копировать остаток другой в конец буфера
-  	while (rr <= r)   // пока вторая последовательность непуста
-    		temp[tt++] = A[rr++];
- 	while (ll <= mid)  // пока первая последовательность непуста
-    		temp[tt++] = A[ll++];
+ 	while (ll <= mid) 
+    		temp.push_back(A[ll++]);
 
-  	// скопировать буфер temp в a[l]...a[r]
+  	while (rr <= r) 
+    		temp.push_back(A[rr++]);
+
   	for (int i = 0; i < size; i++)
     		A[l+i] = temp[i];
-
-  	delete[] temp;
 }
 
 // a - сортируемый массив, его левая граница l, правая граница r
