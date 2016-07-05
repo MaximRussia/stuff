@@ -676,12 +676,6 @@ public:
 int gcd(int u, int v) {
     if(v == 0) return u;
 
-    return gcd(v, u%v);
-}
-
-int gcd2(int u, int v) {
-    if(v == 0) return u;
-
     while(v) {
         int tmp = u%v;
         u = v;
@@ -689,6 +683,12 @@ int gcd2(int u, int v) {
 
     }
     return u;
+}
+
+int gcd2(int u, int v) {
+    if(v == 0) return u;
+
+    return gcd2(v, u%v);
 }
 
 template<int N>
@@ -715,14 +715,7 @@ public:
     };
 };
 
-int fib(int n)
-{
-   if (n <= 1)
-      return n;
-   return fib(n-1) + fib(n-2);
-}
-
-int fib2(int n) {
+int fib(int n) {
     if(n < 1) return 0;
     if(n < 3) return 1;
 
@@ -735,6 +728,13 @@ int fib2(int n) {
         A[1] = res;
     }
     return res;
+}
+
+int fib2(int n)
+{
+   if (n <= 1)
+      return n;
+   return fib2(n-1) + fib2(n-2);
 }
 
 int mult(int m, int n) {
@@ -770,6 +770,20 @@ int my_sqrt(int n) {
     }
 
     return l-1;
+}
+
+int PowN(int m, int n) {
+    if( m == 0) return 0;
+    if(n <= 1 ) return m;
+    
+    int mm = m;
+    int nn = n;
+    
+    while( nn /= 2) mm *= mm;
+        
+    if(n & 1 != 0) mm *= m;
+    
+    return mm;
 }
 
 bool isPrime(int n) {
