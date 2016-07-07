@@ -119,6 +119,26 @@ void preorder(tnode* &root) {
     preorder(root->right);
 }
 
+void iterativePreorder(tnode* &root) {
+    if (!root) {
+    	return;
+    }
+ 
+    stack<tnode*> q;
+    q.push(root);
+ 
+    while (!q.empty()) {
+        tnode *node = q.top();
+        cout << node->v << " ";
+        q.pop();
+ 
+        if (node->right)
+            q.push(node->right);
+        if (node->left)
+            q.push(node->left);
+    }
+}
+
 void inorder(tnode* &root) {
     if(!root)  {
         return;
@@ -129,6 +149,31 @@ void inorder(tnode* &root) {
     inorder(root->right);
 }
 
+void iterativeInorder(tnode* &root) {
+    if(!root)  {
+        return;
+    }
+
+	stack<tnode*> s;
+  	tnode *current = root;
+  	bool done = false;
+  	while (!done) {
+    	if (current) {
+      	s.push(current);
+      	current = current->left;
+    } else {
+	      	if (s.empty()) {
+	        	done = true;
+	      	} else {
+	        	current = s.top();
+	        	s.pop();
+	        	cout << current->v << " ";
+	        	current = current->right;
+	      	}
+    	}
+  	}
+}
+
 void postorder(tnode* &root) {
     if(!root)  {
         return;
@@ -137,6 +182,44 @@ void postorder(tnode* &root) {
     postorder(root->left);
     postorder(root->right);
     cout << root->v << " ";
+}
+
+void iterativePostorder(tnode* &root) {
+  if (!root) return;
+
+  stack<tnode*> s;
+  stack<tnode*> output;
+
+  s.push(root);
+  while (!s.empty()) {
+    tnode *curr = s.top();
+    output.push(curr);
+    s.pop();
+    if (curr->left)
+      s.push(curr->left);
+    if (curr->right)
+      s.push(curr->right);
+  }
+  while (!output.empty()) {
+    cout << output.top()->v << " ";
+    output.pop();
+  }
+}
+
+
+tnode* LowestCommonAcessor(tnode* root, int n1, int n2) {
+    // Base case
+    if (!root) return NULL;
+ 
+    if (root->v == n1 || root->v == n2)
+        return root;
+ 
+    tnode *left_lca  = LowestCommonAcessor(root->left, n1, n2);
+    tnode *right_lca = LowestCommonAcessor(root->right, n1, n2);
+ 
+    if (left_lca && right_lca)  return root;
+ 
+    return (left_lca) ? left_lca : right_lca;
 }
 
 //////////////////////
@@ -1475,16 +1558,26 @@ int main() {
 
     cout << "inorder :" << endl;
     inorder(root);
+    cout << endl;
+    iterativeInorder(root);
 
     cout << endl;
 
     cout << "postorder :" << endl;
     postorder(root);
+    cout << endl;
+    iterativePostorder(root);
 
     cout << endl;
 
     cout << "preorder :" << endl;
     preorder(root);
+    cout << endl;
+    iterativePreorder(root);
+
+    cout << endl;
+
+    cout << "lca :" << endl << LowestCommonAcessor(root, 4, 5)->v << endl;
 
     cout << endl;
 
