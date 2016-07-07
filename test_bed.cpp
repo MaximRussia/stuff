@@ -123,19 +123,16 @@ void iterativePreorder(tnode* &root) {
     if (!root) {
     	return;
     }
- 
+
     stack<tnode*> q;
     q.push(root);
- 
+
     while (!q.empty()) {
-        tnode *node = q.top();
+        tnode *node = q.top(); q.pop();
         cout << node->v << " ";
-        q.pop();
- 
-        if (node->right)
-            q.push(node->right);
-        if (node->left)
-            q.push(node->left);
+
+        if (node->right) q.push(node->right);
+        if (node->left) q.push(node->left);
     }
 }
 
@@ -158,19 +155,19 @@ void iterativeInorder(tnode* &root) {
   	tnode *current = root;
   	bool done = false;
   	while (!done) {
-    	if (current) {
-      	s.push(current);
-      	current = current->left;
-    } else {
-	      	if (s.empty()) {
-	        	done = true;
-	      	} else {
-	        	current = s.top();
-	        	s.pop();
-	        	cout << current->v << " ";
-	        	current = current->right;
-	      	}
-    	}
+        if (current) {
+            s.push(current);
+            current = current->left;
+        } else {
+            if (s.empty()) {
+                done = true;
+            } else {
+                current = s.top();
+                s.pop();
+                cout << current->v << " ";
+                current = current->right;
+            }
+        }
   	}
 }
 
@@ -185,40 +182,39 @@ void postorder(tnode* &root) {
 }
 
 void iterativePostorder(tnode* &root) {
-  if (!root) return;
+    if (!root) return;
 
-  stack<tnode*> s;
-  stack<tnode*> output;
+    stack<tnode*> s;
+    stack<tnode*> output;
 
-  s.push(root);
-  while (!s.empty()) {
-    tnode *curr = s.top();
-    output.push(curr);
-    s.pop();
-    if (curr->left)
-      s.push(curr->left);
-    if (curr->right)
-      s.push(curr->right);
-  }
-  while (!output.empty()) {
-    cout << output.top()->v << " ";
-    output.pop();
-  }
+    s.push(root);
+    while (!s.empty()) {
+        tnode *curr = s.top(); s.pop();
+        output.push(curr);
+
+        if (curr->left) s.push(curr->left);
+        if (curr->right) s.push(curr->right);
+    }
+
+    while (!output.empty()) {
+        cout << output.top()->v << " ";
+        output.pop();
+    }
 }
 
 
 tnode* LowestCommonAcessor(tnode* root, int n1, int n2) {
     // Base case
     if (!root) return NULL;
- 
+
     if (root->v == n1 || root->v == n2)
         return root;
- 
+
     tnode *left_lca  = LowestCommonAcessor(root->left, n1, n2);
     tnode *right_lca = LowestCommonAcessor(root->right, n1, n2);
- 
+
     if (left_lca && right_lca)  return root;
- 
+
     return (left_lca) ? left_lca : right_lca;
 }
 
@@ -858,14 +854,14 @@ int my_sqrt(int n) {
 int PowN(int m, int n) {
     if( m == 0) return 0;
     if(n <= 1 ) return m;
-    
+
     int mm = m;
     int nn = n;
-    
+
     while( nn /= 2) mm *= mm;
-        
+
     if(n & 1 != 0) mm *= m;
-    
+
     return mm;
 }
 
@@ -1101,10 +1097,10 @@ void merge_t(vector<T> &A, long l, long mid, long r) {
       		temp.push_back(A[rr++]);
   	}
 
- 	while (ll <= mid) 
+ 	while (ll <= mid)
     		temp.push_back(A[ll++]);
 
-  	while (rr <= r) 
+  	while (rr <= r)
     		temp.push_back(A[rr++]);
 
   	for (int i = 0; i < size; i++)
