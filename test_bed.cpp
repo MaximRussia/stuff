@@ -203,19 +203,19 @@ void iterativePostorder(tnode* &root) {
 }
 
 
-tnode* LowestCommonAcessor(tnode* root, int n1, int n2) {
-    // Base case
-    if (!root) return NULL;
+tnode* LowestCommonAcessor(tnode* root, int value1, int value2 ){
+    while( root != NULL ){
+        int value = root->v;
 
-    if (root->v == n1 || root->v == n2)
-        return root;
-
-    tnode *left_lca  = LowestCommonAcessor(root->left, n1, n2);
-    tnode *right_lca = LowestCommonAcessor(root->right, n1, n2);
-
-    if (left_lca && right_lca)  return root;
-
-    return (left_lca) ? left_lca : right_lca;
+        if( value > value1 && value > value2 ){
+            root = root->left;
+        } else if( value < value1 && value < value2 ){
+            root = root->right;
+        } else {
+            return root;
+        }
+    }
+    return NULL; // only if empty tree
 }
 
 //////////////////////
@@ -231,7 +231,7 @@ void BFS(tnode* &root) {
     while(!q.empty()) {
         tnode* n = q.front(); q.pop();
 
-        cout << n->v  << " ";
+        cout << n->v << " ";
         if(n->left) q.push(n->left);
         if(n->right) q.push(n->right);
     }
@@ -309,8 +309,8 @@ void removenode(node* &head) {
     }
 
     node *tmp = head->next;
-    head->v = head->next->v;
-    head->next = head->next->next;
+    head->v = tmp->v;
+    head->next = tmp->next;
     delete tmp;
 }
 
@@ -361,17 +361,20 @@ void clean(node* &head) {
     head = NULL;
 }
 
-void revert_inplace(node*& head) {
-    if (!head) return;
-    node* prev = NULL;
-    node* first = head;
-    while (first) {
-        node* next = first->next;
-        first->next = prev;
-        prev = first;
-        first = next;
-    }
-    head = prev;
+void revert_inplace(node* &head) {
+	if(!head || !head->next) return;
+
+	node* prev = NULL;
+	node* move = head;
+
+	while(move) {
+		node* next = move->next;
+		move->next = prev;
+		prev = move;
+		move = next;
+	}
+
+	head = prev;
 }
 
 bool revert_inplace_ptr(node** head) {
@@ -379,13 +382,13 @@ bool revert_inplace_ptr(node** head) {
 	if(!(*head)->next) return true;
 
 	node* prev = NULL;
-	node* first = (*head);
+	node* move = (*head);
 
-	while(first) {
-		node* next = first ->next;
-        first->next = prev;
-		prev = first;
-		first = next;
+	while(move) {
+		node* next = move ->next;
+		move->next = prev;
+		prev = move;
+		move = next;
 	}
 
 	(*head) = prev;
@@ -394,11 +397,15 @@ bool revert_inplace_ptr(node** head) {
 
 void reverse_inpalce_rec(node*& head) {
     if (!head || !head->next) return;
+
     node* prev = head->next;
-    node* first = head->next;
+    node* move = head->next;
+
     reverse_inpalce_rec(prev);
-    first->next = head;
+
+    move->next = head;
     head->next = NULL;
+
     head = prev;
 }
 
@@ -1113,7 +1120,7 @@ void merge_sort_t(vector<T> &A, long l, long r) {
 	if (l >= r) return;
 
   int mid = (l + r)/2;
-  merge_sort_t(A, l, mid);       // сортировать левую половину
+  merge_sort_t(A, l, mid);  // сортировать левую половину
   merge_sort_t(A, mid+1, r);// сортировать правую половину
   merge_t(A, l, mid, r);    // слить результаты в общий массив
 }
@@ -1199,18 +1206,18 @@ void breakets_1(string s, int left, int right, int pairs) {
         breakets_1(s+")", left, right+1, pairs);
 }
 
-void printPermute(string a, int l, int r) {
+void printPermute(string s, int l, int r) {
     if (l == r) {
-        cout << a << endl;
+        cout << s << endl;
         return;
     }
 
-    cout << "call " << a << " " << l << " " << r << endl;
+    cout << "call " << s << " " << l << " " << r << endl;
 
     for (int i = l; i <= r; i++) {
-        swap(a[l], a[i]);
-        printPermute(a, l+1, r);
-        swap(a[l], a[i]); //backtrack
+        swap(s[l], s[i]);
+        printPermute(s, l+1, r);
+        swap(s[l], s[i]); //backtrack
     }
 }
 
@@ -1287,9 +1294,7 @@ string longestPalindrome2(string s) {
 
 int countCoinChange1(int S[], int m, int n ) {
     if (n == 0) return 1;
-
     if (n < 0) return 0;
-
     if (m <= 0 && n >= 1) return 0;
 
     return countCoinChange1( S, m - 1, n ) + countCoinChange1( S, m, n - S[m-1] );
@@ -1573,7 +1578,7 @@ int main() {
 
     cout << endl;
 
-    cout << "lca :" << endl << LowestCommonAcessor(root, 4, 5)->v << endl;
+    cout << "lca :" << endl << LowestCommonAcessor(root, 3, 7)->v << endl;
 
     cout << endl;
 
