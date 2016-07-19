@@ -100,6 +100,7 @@ struct tnode {
 void insert(tnode* &root, int v) {
     if(!root) {
         root = new tnode(v);
+        return;
     }
 
     if(v < root->v) insert(root->left, v);
@@ -308,10 +309,10 @@ void removenode(node* &head) {
         return;
     }
 
-    node *tmp = head->next;
-    head->v = tmp->v;
-    head->next = tmp->next;
-    delete tmp;
+    node *rm = head->next;
+    head->v = rm->v;
+    head->next = rm->next;
+    delete rm;
 }
 
 void printKthLast(node* &head, int k) {
@@ -450,12 +451,12 @@ void rotateList(node* &head, int v) {
     last->next = head;
     head = first;
 
-    node *forNull = head;
-    while(forNull->next != head) {
-        forNull = forNull->next;
+    node *for_null = head;
+    while(for_null->next != head) {
+        for_null = for_null->next;
     }
 
-    forNull->next = NULL;
+    for_null->next = NULL;
 }
 
 /////////////////////////////////
