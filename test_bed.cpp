@@ -1,4 +1,3 @@
-
 #include <iostream>
 #include <stack>
 #include <queue>
@@ -6,16 +5,10 @@
 #include <string>
 #include <map>
 #include <cmath>
-#include <sstream>
-#include <iterator>
 #include <algorithm>
 #include <cstring>
 #include <climits>
-#include <cassert>
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdarg.h>
-
+#include <cstdio>
 using namespace std;
 
 ////////////////////////
