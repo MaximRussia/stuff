@@ -196,7 +196,7 @@ tnode* LowestCommonAcessor(tnode* root, int value1, int value2 ){
     while( root ){
         if( root->v > value1 && root->v > value2 ){
             root = root->left;
-        } else if( root->v < root->v && root->v < value2 ){
+        } else if( root->v < value1 && root->v < value2 ){
             root = root->right;
         } else {
             return root;
