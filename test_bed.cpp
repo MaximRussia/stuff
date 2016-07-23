@@ -44,12 +44,12 @@ void mycat(char **res, const char *str) {
 void mycat_mem(char **res, const char *str) {
     if(!str) return;
     char *ptr = *res;
-    size_t size_res = strlen(*res);
-    size_t size_str = strlen(str);
-    size_t size = size_res + size_str + 1;
-    ptr = (char*)realloc(*res, size);
-    ptr += size_res;
-    memcpy(ptr, str, size_str);
+    size_t len_res = strlen(*res);
+    size_t len_str = strlen(str);
+    size_t size = len_res + len_str;
+    ptr = (char*)realloc(*res, size * sizeof(*str));
+    ptr += len_res;
+    memcpy(ptr, str, len_str+1);
 }
 
 void mysprintf(char **res, const char *fmt, const char *str) {
@@ -1494,7 +1494,6 @@ int main() {
 
     char *str = NULL;
     mycpy_mem(&str, "HELLO WORLD");
-    mycpy(&str, str+6);
     mycat_mem(&str, " GOODBYE");
     mycat(&str, "-BYE");
     mycat_mem(&str, "-BYE");
