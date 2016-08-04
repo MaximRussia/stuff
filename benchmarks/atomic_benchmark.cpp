@@ -86,8 +86,6 @@ void bench_lock_guard(int Threads){
 }
 
 void bench_atomic(int Threads){
-    std::mutex mutex;
-
     TICK();
 
     for(int i = 0; i < REPEAT; ++i){
