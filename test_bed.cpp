@@ -1101,15 +1101,14 @@ void merge_t(vector<T> &A, long l, long mid, long r) {
     		A[l+i] = temp[i];
 }
 
-// a - сортируемый массив, его левая граница l, правая граница r
 template<class T>
 void merge_sort_t(vector<T> &A, long l, long r) {
 	if (l >= r) return;
 
   int mid = (l + r)/2;
-  merge_sort_t(A, l, mid);  // сортировать левую половину
-  merge_sort_t(A, mid+1, r);// сортировать правую половину
-  merge_t(A, l, mid, r);    // слить результаты в общий массив
+  merge_sort_t(A, l, mid);  
+  merge_sort_t(A, mid+1, r);
+  merge_t(A, l, mid, r); 
 }
 
 template<typename T>
@@ -1279,6 +1278,7 @@ string longestPalindrome2(string s) {
     return res;
 }
 
+// backtracking
 int countCoinChange1(int S[], int m, int n ) {
     if (n == 0) return 1;
     if (n < 0) return 0;
@@ -1287,6 +1287,7 @@ int countCoinChange1(int S[], int m, int n ) {
     return countCoinChange1( S, m - 1, n ) + countCoinChange1( S, m, n - S[m-1] );
 }
 
+// dynamic
 int countCoinChange2(int S[], int m, int n ) {
     int i, j, x, y;
     int table[n+1][m];
@@ -1309,26 +1310,21 @@ int countCoinChange2(int S[], int m, int n ) {
 }
 
 int lengthOfLongestSubstring(string s) {
-  int n = s.length();
-  int i = 0, j = 0;
-  int maxLen = 0;
-  bool exist[256] = { false };
-  while (j < n) {
-    if (exist[s[j]]) {
-      maxLen = max(maxLen, j-i);
-      while (s[i] != s[j]) {
-        exist[s[i]] = false;
-        i++;
-      }
-      i++;
-      j++;
-    } else {
-      exist[s[j]] = true;
-      j++;
+    if(s.empty()) return 0;
+    int prev = 0;
+
+    map<char, int> hash;
+    for(int i = 0; i < s.size(); i++) {
+        if(hash.find(s[i]) == hash.end()) {
+            hash[s[i]] = i;
+        } else {
+            prev = max(prev, (int)hash.size());
+            i = hash[s[i]];
+            hash.clear();
+        }
     }
-  }
-  maxLen = max(maxLen, n-i);
-  return maxLen;
+
+    return max(prev, (int)hash.size());
 }
 
 ///1
@@ -1337,6 +1333,7 @@ int lengthOfLongestSubstring(string s) {
 ///1331
 ///14641
 
+// backtracking
 int Pascal_1(int row, int column) {
     if(row < 0) return 0;
     if(row == 0) return 1;
@@ -1345,6 +1342,7 @@ int Pascal_1(int row, int column) {
     return Pascal_1(row-1, column-1) + Pascal_1(row-1, column);
 }
 
+// dynamic
 vector<vector<int>> Pascal_2(int row) {
     if(row < 0) return {{}};
 
