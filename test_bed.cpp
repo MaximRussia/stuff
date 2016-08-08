@@ -489,8 +489,8 @@ string dec2bin(int dec) {
     string res;
 
     while(dec) {
-        res = (dec%2 == 0 ? "0" : "1") + res;
-        dec /= 2;
+        res = (dec&1 ? "0" : "1") + res;
+        dec >>= 1;
     }
 
     return res;
@@ -1626,7 +1626,7 @@ int main() {
 
     cout << endl;
 
-    cout << dec2bin(35) << endl;
+    cout << dec2bin(21) << endl;
     cout << bin2dec("010101") << endl;
 
 	cout << endl;
