@@ -1,13 +1,14 @@
 #include <iostream>
-#include <stack>
-#include <queue>
 #include <vector>
-#include <string>
-#include <map>
-#include <cmath>
+#include <utility>
 #include <algorithm>
+#include <map>
+#include <set>
+#include <queue>
+#include <stack>
 #include <cstring>
-#include <climits>
+#include <cmath>
+#include <cstdlib>
 #include <cstdio>
 using namespace std;
 
@@ -123,6 +124,8 @@ void iterativePreorder(tnode* &root) {
         if (node->right) q.push(node->right);
         if (node->left) q.push(node->left);
     }
+
+    cout << endl;
 }
 
 void inorder(tnode* &root) {
@@ -158,6 +161,8 @@ void iterativeInorder(tnode* &root) {
             }
         }
   	}
+
+    cout << endl;
 }
 
 void postorder(tnode* &root) {
@@ -189,8 +194,29 @@ void iterativePostorder(tnode* &root) {
         cout << output.top()->v << " ";
         output.pop();
     }
+
+    cout << endl;
 }
 
+int getheight(tnode* root) {
+    if(!root) return 1;
+    return max(getheight(root->right), getheight(root->left)) + 1;
+}
+
+int isBST(tnode* root) {
+  if (!root) return 1;
+
+  if (root->left != NULL && root->left->v > root->v)
+    return 0;
+
+  if (root->right != NULL && root->right->v < root->v)
+    return 0;
+
+  if (!isBST(root->left) || !isBST(root->right))
+    return 0;
+
+  return 1;
+}
 
 tnode* LowestCommonAcessor(tnode* root, int value1, int value2 ){
     while( root ){
@@ -222,6 +248,8 @@ void BFS(tnode* &root) {
         if(n->left) q.push(n->left);
         if(n->right) q.push(n->right);
     }
+
+    cout << endl;
 }
 
 void DFS(tnode* &root) {
@@ -239,6 +267,8 @@ void DFS(tnode* &root) {
         if(n->left) q.push(n->left);
         if(n->right) q.push(n->right);
     }
+
+    cout << endl;
 }
 
 void insertarray(tnode* &root,int arr[], int start, int end) {
@@ -281,7 +311,10 @@ void insert(node* &head, int v) {
 }
 
 void print(node* &head) {
-    if(!head) return;
+    if(!head) { 
+        cout << endl;
+        return;
+    }
 
     cout << head->v << " ";
     print(head->next);
@@ -327,7 +360,7 @@ void printKthLast(node* &head, int k) {
         second = second->next;
     }
 
-    cout << second->v << " ";
+    cout << second->v << endl;
 
 
 }
@@ -416,38 +449,233 @@ void selectSort(node* &head) {
     }
 }
 
-void rotateList(node* &head, int v) {
-    if(v <= 0 || !head) return;
+/////////////////////////////////
+// ARRAYS
+/////////////////////////////////
+int mostFrequentInt(const vector<int> &v) {
+	if(v.empty()) return -999999;
 
-    node* first = head;
+	int res = 0;
+	int cnt = 0;
+	map<int, int> hash;
 
-    while(first && v) {
-        v--;
-        first = first->next;
+	for(int i = 0; i < v.size(); i++) {
+		if(hash.find(v[i]) == hash.end()) {
+			hash[v[i]] = 1;
+		} else {
+			int buff = ++hash[v[i]];
+			if(buff > cnt) {
+				cnt = buff;
+				res = v[i];
+			}
+		}
+	}
+
+	return res;
+}
+
+vector<pair<int, int>> pairOfSumm(const vector<int> &v, int summ) {
+	vector<pair<int, int>> res;
+	if(v.empty()) res;
+
+	map<int, int> hash;
+	for(int i = 0; i < v.size(); i++) {
+		if(hash.find(v[i]) != hash.end()) {
+			res.push_back(pair<int,int>(v[i], hash[v[i]]));
+		} else {
+			hash[summ - v[i]] = v[i];
+		}
+	}
+
+	return res;
+}
+
+int findElementOnlyOnce(const vector<int> &v) {
+	if(v.empty()) return -1;
+
+	map<int, int> hash;
+
+	for(int i = 0; i < v.size(); i++) {
+		if(hash.find(v[i]) == hash.end()) {
+			hash[v[i]] = 1;
+		} else {
+			hash[v[i]]++;
+		}
+	}
+
+	for(auto i : hash) {
+		if(i.second == 1) return i.first;
+	}
+
+	return -1;
+}
+
+vector<int> findCommonElements(const vector<int> &v1, const vector<int> &v2) {
+	if(v1.empty() || v2.empty()) return {};
+
+	vector<int> res;
+	map<int,int> hash;
+
+	for(int i = 0; i < v1.size(); i++) {
+		hash[v1[i]] = v1[i];
+	}
+
+	for(int i = 0; i < v2.size(); i++) {
+		if(hash.find(v2[i]) != hash.end()) {
+			res.push_back(v2[i]);
+		}
+	}
+
+	return res;
+}
+
+int max_profit(vector<int> v) {
+	int max_profit = 0;
+	int min_cost = 99999999;
+
+	for(auto i : v) {
+		min_cost = min(min_cost, i);
+		max_profit = max(i - min_cost, max_profit);
+	}
+
+	return max_profit;
+}
+
+/*
+	CALCULATE SOME MULTIPLY/STATISTICS IN VERY LARGE DATA
+	[1,2,3] -> [2*3, 1*3, 1*2] -> [6, 3, 2]
+*/
+vector<int> multiply(vector<int> v) {
+	
+	vector<int> res(v.size());
+	for(int i = 0; i < res.size(); i++)
+		res[i] = 1;
+
+	int product = 1;
+
+	for(int i = 0; i < v.size(); i++) {
+		res[i] *= product;
+		product *= v[i];
+	}
+
+	product = 1;
+	for(int i = v.size()-1; i >= 0; i--) {
+		res[i] *= product;
+		product *= v[i];
+	}
+
+	return res;
+}
+
+int mostContSubsiquence(vector<int> v) {
+
+	int prev = 0, curr = 0, res = 0;
+	for(int i = 0; i < v.size(); i++) {
+		curr += v[i];
+		if(curr > prev) {
+			res = curr;
+		} else {
+			curr = 0;
+		}
+
+		prev = curr;
+	}
+
+	return res;
+}
+
+/**
+Partition problem is to determine whether a given set can be partitioned
+into two subsets such that the sum of elements in both subsets is same.
+**/
+int findPartition(vector<int> &arr, int n) {
+
+    int sum = 0;
+    for (int i = 0; i < n; i++)
+       sum += arr[i];
+
+    if (sum%2 != 0) return false;
+
+    int i = n-1;
+    int buff_sum = sum;
+    for(; i >= 0; i--) {
+        buff_sum -= arr[i];
+        if(buff_sum == 0) break;
     }
 
-    if(!first) return;
-
-    node* last = head;
-
-    while(last->next) {
-        last = last->next;
+    for(int j = 0; j <= i; j++) {
+        sum -= arr[j];
     }
 
-    last->next = head;
-    head = first;
-
-    node *for_null = head;
-    while(for_null->next != head) {
-        for_null = for_null->next;
-    }
-
-    for_null->next = NULL;
+    return sum == 0 ? i : -1;
 }
 
 /////////////////////////////////
 // STRINGS
 /////////////////////////////////
+
+bool isAnagram(string s1, string s2) {
+	if(s1.empty() || s2.empty()) return false;
+	if(s1.size() != s2.size()) return false;
+
+	int buff[26] = {0};
+
+	for(int i = 0; i < s1.size(); i++) {
+		buff[s1[i]]++;
+	}
+
+	for(int i = 0; i < s2.size(); i++) {
+		buff[s1[i]]--;
+	}
+
+	for(int i = 0; i < 26; i++) {
+		if(buff[i] != 0) return false;
+	}
+
+	return true;
+}
+
+char firstNonRepeated(string str) {
+	if(str.empty()) return '\0';
+
+	int buff[256] = {0};
+	for(int i = 0; i < str.size(); i++) {
+		buff[str[i]]++;
+	}
+
+	for(int i = 0; i < str.size(); i++) {
+		if(buff[str[i]] == 1) return str[i];
+	}
+
+	return '\0';
+}
+
+string revertIter(string s) {
+	for(int i = 0, j = s.size()-1; i < j; i++, j--) {
+		swap(s[i], s[j]);
+	}
+
+	return s;
+}
+
+string revertRec(string s, int l, int r) {
+	if(l >= r) return s;
+
+	swap(s[l], s[r]);
+	l++;
+	r--;
+
+	return revertRec(s, l, r);
+}
+
+void revertRec2(string &s, int l, int r) {
+	if(l >= r) return;
+
+	swap(s[l], s[r]);
+	l++;
+	r--;
+	revertRec2(s, l, r);
+}
 
 char firstUniqueChar(string s) {
     if(s.empty()) return '\0';
@@ -600,23 +828,16 @@ int myatoi(string str) {
     int i = 0;
 
     /// skip spaces
-    while(str[i] == ' ') {
-        i++;
-    }
+    while(str[i] == ' ') i++;
 
     /// get sign
     int sign = 1;
-    if(!isdigit(str[i])) {
-        if(str[i] == '-') {
-            sign = 0;
-        } else if(str[i] == '+') {
-            sign = 1;
-        } else {
-            return 0;
-        }
-        i++;
-    }
+    if(str[i] == '-') {
+		sign = -1;
+		i++;
+	}
 
+   
     /// main convert loop
     while(i < str.size()) {
         if(!isdigit(str[i])) {
@@ -626,13 +847,13 @@ int myatoi(string str) {
         i++;
     }
 
-    return sign > 0 ? res : -res;
+    return sign*res;
 }
 
 void reverse(string &str, size_t l, size_t r) {
 
     for(size_t i = l, j = r; i < j; i++, j--) {
-        str[i] ^= str[j] ^= str[i] ^= str[j];
+        swap(str[i], str[j]);
     }
 }
 
@@ -655,6 +876,24 @@ string reverseWords(string str) {
 	reverse(str, prevIndex, str.size()-1);
 
 	return str;
+}
+
+int lengthOfLongestSubstring(string s) {
+    if(s.empty()) return 0;
+    int prev = 0;
+
+    map<char, int> hash;
+    for(int i = 0; i < s.size(); i++) {
+        if(hash.find(s[i]) == hash.end()) {
+            hash[s[i]] = i;
+        } else {
+            prev = max(prev, (int)hash.size());
+            i = hash[s[i]];
+            hash.clear();
+        }
+    }
+
+    return max(prev, (int)hash.size());
 }
 
 /////////////////////////////////
@@ -698,6 +937,7 @@ bool isPowerOfN2(int i, int n) {
 
     return i == pow(n, round((log(i) / log(n))));
 }
+
 /////////////////////////////////
 // MATH
 /////////////////////////////////
@@ -825,7 +1065,7 @@ int mult(int m, int n) {
         res += m;
     }
 
-    return sign < 0 ? -res : res;
+    return sign*res;
 }
 
 int my_sqrt(int n) {
@@ -845,14 +1085,15 @@ int my_sqrt(int n) {
     return l-1;
 }
 
+// n^m
 int PowN(int m, int n) {
-    if( m == 0) return 0;
-    if(n <= 1 ) return m;
+	if(m <= 0) return 1;
+	if(m == 1) return n;
 
     int mm = m;
     int nn = n;
 
-    while( nn /= 2) mm *= mm;
+    while(nn /= 2) mm *= mm;
 
     if(n & 1 != 0) mm *= m;
 
@@ -913,118 +1154,13 @@ void sieveOfEratosthenes(int n) {
     for (int p=2; p<=n; p++)
        if (prime[p])
           cout << p << " ";
-}
 
-/////////////////////////////////
-// INTERVIEW
-/////////////////////////////////
-
-namespace INTERVIEW {
-	namespace E_COMERCE {
-
-	    /*
-            0) 2 EGGS AND 100 FLOORS
-	    */
-
-	    /*
-            CALCULATE MOST PROFIT DEAL IN VERY LARGE ARRAY OF DEALS
-	    */
-		int MAXPROFIT(vector<int> v) {
-			int max_profit = 0;
-			int min_cost = 99999999;
-
-			for(auto i : v) {
-				min_cost = min(min_cost, i);
-				int diff = i - min_cost;
-				max_profit = max(diff, min_cost);
-			}
-
-			return max_profit;
-		}
-
-        /*
-            CALCULATE SOME MULTIPLY/STATISTICS IN VERY LARGE DATA
-
-            [1,2,3] -> [2*3, 1*3, 1*2]
-        */
-		vector<int> MULTIPLY(vector<int> v) {
-			vector<int> res(v.size());
-			res = {1};
-
-			int product = 1;
-
-			for(int i = 0; i < v.size(); i++) {
-				res[i] *= product;
-				product *= v[i];
-			}
-
-			product = 1;
-			for(int i = v.size()-1; i >= 0; i++) {
-				res[i] *= product;
-				product *= v[i];
-			}
-
-			return res;
-		}
-
-		/*
-            CALCULATE INTERSECTION OF RECTANGLES FOR STATISTIC DIAGRAMM
-		*/
-
-		/*
-            return !(y1 > (y0 + h0) || x1 > (x0 + w0) || (y1 + h1) < y0 || (x1 + w1) < x0)
-		*/
-	}
-
-	namespace SEARCH_ENGINE {
-        /*
-            Write a function that computes the Nth fibonacci number
-            1) recursive
-            2) dynamic
-            3) iteration
-        */
-
-        int fib(int n) {
-            return ::fib2(n);
-        }
-
-
-        /*
-            SIMULATE 5 SIDE-DICE BY 7 SIDE-DICE
-            res += _7_side_dice(); / 5 times
-            return res % 5;
-        */
-
-        /*
-            SIMULATE 7 SIDE-DICE BY 5 SIDE-DICE
-            res += _5_side_dice(); / 7 times
-            return res % 7;
-        */
-
-        /*
-            WRITE A FUNCTION FOR REVERSE STRING RECURSIVE
-        */
-        void revert(string& s, int l, int r) {
-            if(l > r) return;
-
-            swap(s[l], s[r]);
-            revert(s, l+1, r-1);
-        }
-
-        /*
-            WRITE MY SQROOT
-            // or use binary search
-        */
-        int my_sqrt(int i) {
-            return ::my_sqrt(i);
-        }
-	}
+    cout << endl;
 }
 
 /////////////////////////////////
 // TEMPLATES
 /////////////////////////////////
-
 
 template<typename T>
 void selection_sort_t(vector<T> &v) {
@@ -1309,24 +1445,6 @@ int countCoinChange2(int S[], int m, int n ) {
     return table[n][m-1];
 }
 
-int lengthOfLongestSubstring(string s) {
-    if(s.empty()) return 0;
-    int prev = 0;
-
-    map<char, int> hash;
-    for(int i = 0; i < s.size(); i++) {
-        if(hash.find(s[i]) == hash.end()) {
-            hash[s[i]] = i;
-        } else {
-            prev = max(prev, (int)hash.size());
-            i = hash[s[i]];
-            hash.clear();
-        }
-    }
-
-    return max(prev, (int)hash.size());
-}
-
 ///1
 ///11
 ///121
@@ -1359,45 +1477,6 @@ vector<vector<int>> Pascal_2(int row) {
     }
 
     return res;
-}
-
-int MCS(vector<int> v) {
-    int curr = 0;
-    int buff = 0;
-
-    for(int i = 0; i < v.size(); i++) {
-        buff += v[i];
-        if(buff < 0) buff = 0;
-        else if(buff > curr) curr = buff;
-    }
-
-    return curr;
-}
-
-/**
-Partition problem is to determine whether a given set can be partitioned
-into two subsets such that the sum of elements in both subsets is same.
-**/
-int findPartition(vector<int> &arr, int n) {
-
-    int sum = 0;
-    for (int i = 0; i < n; i++)
-       sum += arr[i];
-
-    if (sum%2 != 0) return false;
-
-    int i = n-1;
-    int buff_sum = sum;
-    for(; i >= 0; i--) {
-        buff_sum -= arr[i];
-        if(buff_sum == 0) break;
-    }
-
-    for(int j = 0; j <= i; j++) {
-        sum -= arr[j];
-    }
-
-    return sum == 0 ? i : -1;
 }
 
 /////////////////////////
@@ -1484,12 +1563,87 @@ void Graph::DFS(int s, int e) {
     cout << "no way" << endl;
 }
 
+
+/// 'A'..'z' implementation
+map<string, vector<string>> generateGraph(vector<string> &dict) {
+    map<string, vector<string>> graph;
+
+    set<char> cached; /// cache characters
+    for(auto word : dict) {
+        for(auto ch : word) {
+            cached.insert(ch);
+        }
+    }
+
+    cout << "cached size : " << cached.size() << endl;
+
+    for(int i = 0; i < dict.size(); i++) {
+        for(int j = 0; j < dict[i].size(); j++) {
+
+            /// remove 1 character
+            string remove = dict[i].substr(0, j) + dict[i].substr(j+1, dict[i].size()-1);
+            if(find(dict.begin(), dict.end(), remove) != dict.end()) {
+                graph[dict[i]].push_back(remove);
+            }
+
+            /// change 1 character
+             for(auto ch : cached) {
+                string change = dict[i].substr(0, j) + string(1, ch) + dict[i].substr(j+1, dict[i].size()-1);
+                if(find(dict.begin(), dict.end(), change) != dict.end() && change != dict[i]) {
+                    graph[dict[i]].push_back(change);
+                }
+            }
+
+            /// add 1 character
+            for(auto ch : cached) {
+                string add = dict[i].substr(0, j) + string(1, ch) + dict[i].substr(j, dict[i].size()-1);
+                if(find(dict.begin(), dict.end(), add) != dict.end()) {
+                    graph[dict[i]].push_back(add);
+                }
+            }
+        }
+    }
+
+    return graph;
+}
+
+vector<string> transformWord(map<string, vector<string>> &graph, string start, string goal) {
+    vector<vector<string>> paths(1);
+    paths[0].push_back(start);
+    vector<string> extended;
+
+    /// Breadth First Search
+    while(!paths.empty()) {
+        vector<string> currentPath = paths.back();
+        paths.pop_back();
+
+        string currentWord = currentPath[currentPath.size()-1];
+        if(currentWord == goal) {
+            return currentPath;
+        }
+        else if(find(extended.begin(), extended.end(), currentWord) != extended.end()) {
+            continue;
+        }
+
+        extended.push_back(currentWord);
+        vector<string> transforms = graph[currentWord];
+        for(auto word : transforms) {
+            if(find(currentPath.begin(), currentPath.end(), word) == currentPath.end()) {
+                currentPath.push_back(word);
+                paths.push_back(currentPath);
+            }
+        }
+    }
+
+    cout << "path is empty" << endl;
+    return vector<string>();
+}
+
 int main() {
 
     cout << "/////////////////////////////////" << endl;
     cout << "// MEMORY" << endl;
     cout << "/////////////////////////////////" << endl;
-
     char *str = NULL;
     mycpy_mem(&str, "HELLO WORLD");
     mycat_mem(&str, " GOODBYE");
@@ -1503,9 +1657,6 @@ int main() {
     mysprintf(&str, "%s!", str);
     puts(str);
     myfree(&str);
-
-    cout << endl;
-
     cout << mycmp("123", "123") << " ";
     cout << mycmp("", "123") << " ";
     cout << mycmp("123", "") << " ";
@@ -1515,7 +1666,7 @@ int main() {
     cout << mycmp("123qwerty", "123") << " ";
     cout << mycmp(NULL, NULL) << endl;
 
-    cout << endl;
+    cout << endl << endl;
 
     cout << "/////////////////////////////////" << endl;
     cout << "// TREE" << endl;
@@ -1534,37 +1685,27 @@ int main() {
     cout << "BFS :" << endl;
     BFS(root);
 
-    cout << endl;
-
     cout << "DFS :" << endl;
     DFS(root);
 
-    cout << endl;
-
-    cout << "inorder :" << endl;
-    inorder(root);
-    cout << endl;
-    iterativeInorder(root);
-
-    cout << endl;
-
-    cout << "postorder :" << endl;
-    postorder(root);
-    cout << endl;
-    iterativePostorder(root);
-
-    cout << endl;
-
     cout << "preorder :" << endl;
-    preorder(root);
-    cout << endl;
+    preorder(root); cout << endl;
     iterativePreorder(root);
 
-    cout << endl;
+    cout << "inorder :" << endl;
+    inorder(root); cout << endl;
+    iterativeInorder(root);
 
-    cout << "lca :" << endl << LowestCommonAcessor(root, 3, 7)->v << endl;
+    cout << "postorder :" << endl;
+    postorder(root); cout << endl;
+    iterativePostorder(root);
 
-    cout << endl;
+ 	cout << getheight(root) << endl;
+	cout << isBST(root) << endl;
+
+    cout << "lca :" << LowestCommonAcessor(root, 3, 7)->v << endl;
+
+    cout << endl << endl;
 
     cout << "/////////////////////////////////" << endl;
     cout << "// LIST" << endl;
@@ -1578,74 +1719,87 @@ int main() {
 
     print(head);
 
-    cout << endl;
-
-    cout << "rotate :" << endl;
-    rotateList(head, 5);
-    print(head);
-
-    cout << endl;
+    printKthLast(head, 7);
 
     cout << "remove node :" << endl;
     removenode(head->next->next->next);
     print(head);
 
-    cout << endl;
-
     cout << "revert inplace :" << endl;
     revert_inplace(head);
     print(head);
-
-    cout << endl;
 
     cout << "revert inplace ptr:" << endl;
     revert_inplace_ptr(&head);
     print(head);
 
-    cout << endl;
-
     cout << "reverse inpalce rec :" << endl;
     reverse_inpalce_rec(head);
     print(head);
-
-    cout << endl;
 
     cout << "sort :" << endl;
     selectSort(head);
     print(head);
 
-    cout << endl;
+    cout << endl << endl;
+
+	cout << "/////////////////////////////////" << endl;
+    cout << "// ARRAYS" << endl;
+    cout << "/////////////////////////////////" << endl;
+
+	cout << mostFrequentInt({1,1,2,2,3,3,4,4,4,5,5,6,6,7,7,7,7}) << endl;
+
+	auto res = pairOfSumm({1,2,3,4,5,6,7,5}, 10);
+	for(auto i : res) cout << i.first << " " << i.second << endl;
+
+	cout << findElementOnlyOnce({1,1,2,2,3,3,4,5,5,6,6,7,8,9,9}) << endl;
+
+	auto res1 = findCommonElements({1,2,3,4,5,6,7}, {8,9,0,3,4,5});
+	for(auto i : res1) cout << i << " "; cout << endl;
+	
+	cout << max_profit({2,3,4,1,5,6,8,2,3}) << endl;
+	
+	auto res2 = multiply({1,2,3}); 
+	for(auto i : res2) cout << i << " "; 
+	
+	cout << endl;
+
+    vector<int> v = {1, 2, 3, 4, -1, 7, 7, 7};
+    cout << mostContSubsiquence(v) << endl;
+
+    vector<int> arr2 = {0, 4, -1, 1, -2, 2};
+	cout << findPartition(arr2, arr2.size()) << endl;
+
+    cout << endl << endl;
 
     cout << "/////////////////////////////////" << endl;
     cout << "// STRINGS" << endl;
     cout << "/////////////////////////////////" << endl;
 
-    cout << firstUniqueChar("asdefrgtb") <<  endl;
-    cout << removeChars("qwegfhrtnd", "derfh") <<  endl;
+	cout << isAnagram("qwerty", "erwqyt") << endl;
+	cout << firstNonRepeated("qwertqwefrt") << endl;
+	cout << revertIter("1234qwerty") << endl;
+	cout << revertRec("1234qwerty", 0, 9) << endl;
+	string str1 = "1234qwerty";
+	revertRec2(str1, 0, 9);
+	cout << str1 << endl;
+    cout << removeChars("hello world goodby", "hlrg") <<  endl;
     cout << reverseWords("123 456 789") << endl;
-
-    cout << endl;
-
+    cout << lengthOfLongestSubstring("abcabcbb") << endl;
     cout << dec2bin(21) << endl;
     cout << bin2dec("010101") << endl;
-
-	cout << endl;
-
 	cout << base2dec("010101", 2) << endl;
 	cout << base2dec("0x1", 16) << endl;
 	cout << base2dec("1", 16) << endl;
 	cout << base2dec("0xAAA", 16) << endl;
 	cout << base2dec("0xEEE", 16) << endl;
 	cout << base2dec("0xABC", 16) << endl;
-
-    cout << endl;
-
     cout << myatoi("-32 hello") <<  " ";
     cout << myatoi("   -32 hello ") <<  " ";
     cout << myatoi(" 32 hello ") <<  " ";
     cout << myatoi(" +64 hello ") << endl;
 
-    cout << endl;
+    cout << endl << endl;
 
     cout << "/////////////////////////////////" << endl;
     cout << "// BIN" << endl;
@@ -1675,13 +1829,15 @@ int main() {
         cout << i << " : " << isPowerOfN2(i, 3) << endl;
     }
 
-    cout << endl;
-
-    cout << endl;
+    cout << endl << endl;
 
     cout << "/////////////////////////////////" << endl;
     cout << "// MATH" << endl;
     cout << "/////////////////////////////////" << endl;
+
+	cout << PowN(2, 3) << endl;
+	cout << PowN(3, 2) << endl;
+	cout << PowN(4, 2) << endl;
 
     cout << my_sqrt(5) << " ";
     cout << my_sqrt(7) << " ";
@@ -1702,15 +1858,8 @@ int main() {
         cout << i << " : " << nextPrime(i) << endl;
     }
 
-    cout << endl;
-
     sieveOfEratosthenes(15);
 
-    cout << endl;
-
-    cout << "-----------" << endl;
-
-    cout << endl;
 
     cout << mult(0,0) <<  " ";
     cout << mult(0,1) <<  " ";
@@ -1724,36 +1873,17 @@ int main() {
     cout << mult(1,2) <<  " ";
     cout << mult(9,1000) << endl;
 
-    cout << endl;
-
     cout << Factorial<5>::value <<  " ";
     cout << fact(5) <<  " ";
     cout << fact2(5) << endl;
-
-    cout << endl;
 
     cout << Fib<40>::value <<  " ";
     cout << fib(40) <<  " ";
     cout << fib2(40) << endl;
 
-    cout << endl;
-
     cout << GCD<6, 4>::value <<  " ";
     cout << gcd(6, 4) <<  " ";
     cout << gcd2(6, 4) << endl;
-
-    cout << endl;
-
-    cout << "/////////////////////////////////" << endl;
-    cout << "// INTERVIEW" << endl;
-    cout << "/////////////////////////////////" << endl;
-
-    cout << INTERVIEW::SEARCH_ENGINE::fib(6) << endl;
-    string s = "asdfg";
-    cout << "revert " << s << " : " ;
-    INTERVIEW::SEARCH_ENGINE::revert(s, 0, 4);
-    cout << s << endl;
-    cout << INTERVIEW::SEARCH_ENGINE::my_sqrt(10) << endl;
 
     cout << endl;
 
@@ -1827,12 +1957,6 @@ int main() {
     cout << countCoinChange1(coins, 3, 4) << endl;
     cout << countCoinChange2(coins, 3, 4) << endl;
 
-    cout << endl;
-
-    cout << lengthOfLongestSubstring("abcabcbb") << endl;
-
-    cout << endl;
-
     for(int i = 0; i < 6; i++) {
         for(int j = 0; j < i; j++) {
             cout << Pascal_1(i,j);
@@ -1842,23 +1966,13 @@ int main() {
 
     cout << endl;
 
-    auto res = Pascal_2(5);
+    auto res3 = Pascal_2(5);
 
-    for(auto i : res) {
+    for(auto i : res3) {
         for(auto j : i)
             cout << j;
         cout << endl;
     }
-
-    cout << endl;
-
-    vector<int> v = {-2, -3, 4, -1, -2, 1, 5, -3};
-    cout << MCS(v) << endl;
-
-    cout << endl;
-
-    vector<int> arr2 = {0, 4, -1, 1, -2, 2};
-	cout << findPartition(arr2, arr2.size()) << endl;
 
 	cout << endl;
 
@@ -1875,13 +1989,22 @@ int main() {
     g.addEdge(3, 3);
     g.addEdge(1, 4);
 
-    cout << "Following is Breadth First Traversal : ";
+    cout << "Following is BFS : ";
     g.BFS(0, 4);
-    cout << endl << endl;
 
-    cout << "Following is Depth First Traversal : ";
+    cout << "Following is DFS : ";
     g.DFS(0, 4);
-    cout << endl << endl;
+
+ 	vector<string> dict = {"cat", "bat", "bet", "bed", "at", "ad", "ed"};
+	map<string, vector<string>> graph = generateGraph(dict);
+	for (auto x : graph) {
+		std::cout << x.first << " : ";
+		for (auto v : x.second) cout << v << " ";
+		cout << std::endl ;
+	}
+
+	vector<string> res4 = transformWord(graph, "cat", "bed");
+	for(string v : res4) cout << v << endl;
 
     cout << "Press any key ... " << endl;
     cin.get();
