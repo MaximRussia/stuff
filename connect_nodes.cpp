@@ -1,97 +1,143 @@
+
 #include <iostream>
+#include <vector>
+#include <utility>
+#include <algorithm>
+#include <map>
+#include <set>
+#include <queue>
 #include <stack>
+#include <cstring>
+#include <cmath>
+using namespace std;
 
-struct leaf {
-    public:
-        int value;
-        leaf* right;
-        leaf* left;
-        leaf* neighbor;
-
-        leaf(int v, leaf* r, leaf* l) :
-            value(v), right(r), left(l), neighbor(nullptr) {};
+struct tnode {
+    int v;
+    tnode* right;
+    tnode* left;
+    tnode* n;
+    tnode() : v(0), right(NULL), left(NULL), n(NULL){}
+    tnode(int v) : v(v), right(NULL), left(NULL), n(NULL){}
 };
 
-void find_neighbors(leaf* node, std::stack<leaf*> & stack)
-{
-    if (node == nullptr) {
-        return;
-    };
+void insertarray(tnode* &root, const vector<int> &v, int start, int end) {
+    if (start > end) return;
+    // same as (start+end)/2, avoids overflow.
+    int mid = start + (end - start) / 2;
+    root = new tnode(v[mid]);
+    insertarray(root->left, v, start, mid-1);
+    insertarray(root->right, v, mid+1, end);
+};
 
-    if (!stack.empty()) {
-        node->neighbor = stack.top();
-        stack.pop();
-    };
+void connectNeibours(tnode* root) {
+    if(!root) return;
 
-    find_neighbors(node->right, stack);
-    find_neighbors(node->left, stack);
-    stack.push(node);
+    queue<tnode*> q1;
+    queue<tnode*> q2;
+    vector<tnode*> v;
+    q1.push(root);
+
+    while(!q1.empty() || !q2.empty()) {
+        if(!q1.empty()) {
+            while(!q1.empty()) {
+                tnode* node = q1.front(); q1.pop();
+                v.push_back(node);
+                if(node->left) q2.push(node->left);
+                if(node->right) q2.push(node->right);
+            }
+        } else if(!q2.empty()) {
+            while(!q2.empty()) {
+                tnode* node = q2.front(); q2.pop();
+                v.push_back(node);
+                if(node->left) q1.push(node->left);
+                if(node->right) q1.push(node->right);
+            }
+        }
+
+        if(v.size() > 1) {
+            for(int i = 0 ; i < v.size()-1; i++) {
+                v[i]->n = v[i+1];
+            }
+        }
+
+        v.clear();
+    }
 }
 
-void show_leaf(leaf* node)
-{
-	if (node == nullptr) {
-		return;
-	};
+void printLevelByLevelNeibours(tnode* &root) {
+    if(!root)  { cout << "empty" << endl; return; }
 
-	std::cout << "Node: " << node->value << " neighbor: " << (node->neighbor != nullptr ? node->neighbor->value : 0) << std::endl;
+    queue<tnode*> q1;
+    queue<tnode*> q2;
+    q1.push(root);
 
-	show_leaf(node->right);
-	show_leaf(node->left);
+    while(!q1.empty() || !q2.empty()) {
+        if(!q1.empty()) {
+            while(!q1.empty()) {
+                tnode* node = q1.front(); q1.pop();
+                if(node->n != NULL)
+                    cout << "[" << node->v << "->" << node->n->v << "]";
+                else
+                    cout << "[" << node->v << "->" << "null" << "]";
+                if(node->left) q2.push(node->left);
+                if(node->right) q2.push(node->right);
+            }
+        } else if(!q2.empty()) {
+            while(!q2.empty()) {
+                tnode* node = q2.front(); q2.pop();
+                if(node->n != NULL)
+                    cout << "[" << node->v << "->" << node->n->v << "]";
+                else
+                    cout << "[" << node->v << "->" << "null" << "]";
+
+                if(node->left) q1.push(node->left);
+                if(node->right) q1.push(node->right);
+            }
+        }
+
+        cout << endl;
+    }
 }
 
-int main()
-{
-	leaf* tree0 = new leaf(1, nullptr, nullptr);
+void printLevelByLevel(tnode* &root) {
+    if(!root)  { cout << "empty" << endl; return; }
 
-	leaf* tree1 =
-		new leaf(
-			1,
-			new leaf(3, nullptr, nullptr),
-			new leaf(2, nullptr, nullptr)
-		);
+    queue<tnode*> q1;
+    queue<tnode*> q2;
+    q1.push(root);
 
-	leaf* tree2 =
-		new leaf(
-			1,
-			new leaf(
-				3,
-				new leaf(7, nullptr, nullptr),
-				new leaf(6, nullptr, nullptr)
-			),
-			new leaf(
-				2,
-				nullptr,
-				new leaf(4, nullptr, nullptr)
-			)
-		);
+    while(!q1.empty() || !q2.empty()) {
+        if(!q1.empty()) {
+            while(!q1.empty()) {
+                tnode* node = q1.front(); q1.pop();
+                cout << node->v << " ";
+                if(node->left) q2.push(node->left);
+                if(node->right) q2.push(node->right);
+            }
+        } else if(!q2.empty()) {
+            while(!q2.empty()) {
+                tnode* node = q2.front(); q2.pop();
+                cout << node->v << " ";
+                if(node->left) q1.push(node->left);
+                if(node->right) q1.push(node->right);
+            }
+        }
 
-	std::stack<leaf*> stack0;
-	find_neighbors(tree0, stack0);
-	std::cout << "Tree #0" << std::endl;
-	std::cout << "(1)" << std::endl;
-	show_leaf(tree0);
-	std::cout << std::endl;
+        cout << endl;
+    }
+}
 
-	std::stack<leaf*> stack1;
-	find_neighbors(tree1, stack1);
-	std::cout << "Tree #1" << std::endl;
-	std::cout << "   (1)" << std::endl;
-	std::cout << "  /   \\" << std::endl;
-	std::cout << "(2)   (3)" << std::endl;
-	show_leaf(tree1);
-	std::cout << std::endl;
 
-	std::stack<leaf*> stack2;
-	find_neighbors(tree2, stack2);
-	std::cout << "Tree #2" << std::endl;
-	std::cout << "    (1)" << std::endl;
-	std::cout << "    / \\" << std::endl;
-	std::cout << "  (2)  (3)" << std::endl;
-	std::cout << "  /    / \\" << std::endl;
-	std::cout << "(4)  (6)  (7)" << std::endl;
-	show_leaf(tree2);
-	std::cout << std::endl;
+int main() {
 
-	return 0;
+    tnode* root = NULL;
+
+    insertarray(root, {1,2,3,4,5,6,7,8,9}, 0, 8);
+
+    connectNeibours(root);
+
+    printLevelByLevel(root);
+    printLevelByLevelNeibours(root);
+
+    return 0;
 }
