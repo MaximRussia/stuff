@@ -744,17 +744,19 @@ int hex2num(char ch) {
 	return -1;
 }
 
-int base2dec(string str, int base) {
-	if(str.empty()) return -1;
+int base2dec(string s, int base) {
+	if(s.empty()) return -1;
 
-	int res = 0;
-	if(str[0] == '0' && str[1] == 'x') {
-		str = str.substr(2);
+	if(s[0] == '0' && s[1] == 'x') {
+		s = s.substr(2);
 	}
 
-	for(int i = 0; i < str.size(); i++) {
-		res += hex2num(str[i]) * pow(base, str.size() - 1 - i);
-	}
+    int res = 0;
+    int pwr = 0;
+    for(int i = s.size()-1; i >= 0; i--) {
+        res += hex2num(s[i])*pow(base, pwr);
+        pwr++;
+    }
 
 	return res;
 }
@@ -1835,9 +1837,9 @@ int main() {
 	cout << base2dec("010101", 2) << endl;
 	cout << base2dec("0x1", 16) << endl;
 	cout << base2dec("1", 16) << endl;
-	cout << base2dec("0xAAA", 16) << endl;
-	cout << base2dec("0xEEE", 16) << endl;
-	cout << base2dec("0xABC", 16) << endl;
+	cout << base2dec("0xA", 16) << endl;
+	cout << base2dec("0xE", 16) << endl;
+	cout << base2dec("0xF", 16) << endl;
     cout << myatoi("-32 hello") <<  " ";
     cout << myatoi("   -32 hello ") <<  " ";
     cout << myatoi(" 32 hello ") <<  " ";
