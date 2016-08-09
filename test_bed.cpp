@@ -96,6 +96,44 @@ void insert(tnode* &root, int v) {
     else insert(root->right, v);
 }
 
+void BFS(tnode* &root) {
+    if(!root)  {
+        return;
+    }
+
+    queue<tnode*> q;
+    q.push(root);
+
+    while(!q.empty()) {
+        tnode* n = q.front(); q.pop();
+
+        cout << n->v << " ";
+        if(n->left) q.push(n->left);
+        if(n->right) q.push(n->right);
+    }
+
+    cout << endl;
+}
+
+void DFS(tnode* &root) {
+    if(!root)  {
+        return;
+    }
+
+    stack<tnode*> q;
+    q.push(root);
+
+    while(!q.empty()) {
+        tnode* n = q.top(); q.pop();
+
+        cout << n->v  << " ";
+        if(n->left) q.push(n->left);
+        if(n->right) q.push(n->right);
+    }
+
+    cout << endl;
+}
+
 //////////////////////
 // DFS variations
 //////////////////////
@@ -144,22 +182,24 @@ void iterativeInorder(tnode* &root) {
     }
 
 	stack<tnode*> s;
-  	tnode *current = root;
-  	bool done = false;
-  	while (!done) {
-        if (current) {
-            s.push(current);
-            current = current->left;
-        } else {
-            if (s.empty()) {
-                done = true;
-            } else {
-                current = s.top();
-                s.pop();
-                cout << current->v << " ";
-                current = current->right;
-            }
-        }
+  	tnode *node = root;
+
+  	while(node) {
+  		s.push(node);
+  		node = node->left;
+  	}
+
+  	while (!s.empty()) {
+  		node = s.top(); s.pop();
+		cout << node->v << " ";
+
+		if(node->right) {
+			node = node->right;
+			while(node) {
+				s.push(node);
+				node = node->left;
+			}
+		}
   	}
 
     cout << endl;
@@ -179,27 +219,27 @@ void iterativePostorder(tnode* &root) {
     if (!root) return;
 
     stack<tnode*> s;
-    stack<tnode*> output;
+    stack<tnode*> out;
 
     s.push(root);
     while (!s.empty()) {
-        tnode *curr = s.top(); s.pop();
-        output.push(curr);
+        tnode *node = s.top(); s.pop();
+        out.push(node);
 
-        if (curr->left) s.push(curr->left);
-        if (curr->right) s.push(curr->right);
+        if (node->left) s.push(node->left);
+        if (node->right) s.push(node->right);
     }
 
-    while (!output.empty()) {
-        cout << output.top()->v << " ";
-        output.pop();
+    while (!out.empty()) {
+  		tnode* node = out.top(); out.pop();
+		cout << node->v << " ";
     }
 
     cout << endl;
 }
 
 int getheight(tnode* root) {
-    if(!root) return 1;
+    if(!root) return 0;
     return max(getheight(root->right), getheight(root->left)) + 1;
 }
 
@@ -219,6 +259,8 @@ int isBST(tnode* root) {
 }
 
 tnode* LowestCommonAcessor(tnode* root, int value1, int value2 ){
+	if(!root) return NULL;
+
     while( root ){
         if( root->v > value1 && root->v > value2 ){
             root = root->left;
@@ -228,48 +270,9 @@ tnode* LowestCommonAcessor(tnode* root, int value1, int value2 ){
             return root;
         }
     }
-    return NULL; // only if empty tree
 }
 
 //////////////////////
-
-void BFS(tnode* &root) {
-    if(!root)  {
-        return;
-    }
-
-    queue<tnode*> q;
-    q.push(root);
-
-    while(!q.empty()) {
-        tnode* n = q.front(); q.pop();
-
-        cout << n->v << " ";
-        if(n->left) q.push(n->left);
-        if(n->right) q.push(n->right);
-    }
-
-    cout << endl;
-}
-
-void DFS(tnode* &root) {
-    if(!root)  {
-        return;
-    }
-
-    stack<tnode*> q;
-    q.push(root);
-
-    while(!q.empty()) {
-        tnode* n = q.top(); q.pop();
-
-        cout << n->v  << " ";
-        if(n->left) q.push(n->left);
-        if(n->right) q.push(n->right);
-    }
-
-    cout << endl;
-}
 
 void insertarray(tnode* &root,int arr[], int start, int end) {
     if (start > end) return;
@@ -405,7 +408,7 @@ bool revert_inplace_ptr(node** head) {
 	node* move = (*head);
 
 	while(move) {
-		node* next = move ->next;
+		node* next = move->next;
 		move->next = prev;
 		prev = move;
 		move = next;
@@ -1749,7 +1752,7 @@ int main() {
  	cout << getheight(root) << endl;
 	cout << isBST(root) << endl;
 
-    cout << "lca :" << LowestCommonAcessor(root, 3, 7)->v << endl;
+    cout << "lca : " << LowestCommonAcessor(root, 3, 7)->v << endl;
 
     cout << endl << endl;
 
