@@ -671,15 +671,6 @@ string revertRec(string s, int l, int r) {
 	return revertRec(s, l, r);
 }
 
-void revertRec2(string &s, int l, int r) {
-	if(l >= r) return;
-
-	swap(s[l], s[r]);
-	l++;
-	r--;
-	revertRec2(s, l, r);
-}
-
 char firstUniqueChar(string s) {
     if(s.empty()) return '\0';
 
@@ -1728,9 +1719,6 @@ int main() {
 	cout << firstNonRepeated("qwertqwefrt") << endl;
 	cout << revertIter("1234qwerty") << endl;
 	cout << revertRec("1234qwerty", 0, 9) << endl;
-	string str1 = "1234qwerty";
-	revertRec2(str1, 0, 9);
-	cout << str1 << endl;
     cout << removeChars("hello world goodby", "hlrg") <<  endl;
     cout << reverseWords("123 456 789") << endl;
     cout << lengthOfLongestUniqueSubstring("abcabcbb") << endl;
