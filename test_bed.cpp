@@ -16,14 +16,14 @@ using namespace std;
 // MEMORY
 ////////////////////////
 
-void mycpy(char **res, const char *str) {
+void my_cpy(char **res, const char *str) {
     if(!str) return;
     if(!*res) *res = (char*)malloc(strlen(str)*sizeof(*str)+1);
     char *ptr = *res;
     while((*ptr++ = *str++) != '\0');
 }
 
-void mycpy_mem(char **res, const char *str) {
+void my_cpy_mem(char **res, const char *str) {
     if(!str) return;
     size_t size = strlen(str)*sizeof(*str)+1;
     if(!*res) *res = (char*)malloc(size);
@@ -31,7 +31,7 @@ void mycpy_mem(char **res, const char *str) {
     memcpy(ptr, str, size);
 }
 
-void mycat(char **res, const char *str) {
+void my_cat(char **res, const char *str) {
     if(!str) return;
     char *ptr = *res;
     size_t size_res = strlen(*res);
@@ -42,7 +42,7 @@ void mycat(char **res, const char *str) {
     while((*ptr++ = *str++) != '\0');
 }
 
-void mycat_mem(char **res, const char *str) {
+void my_cat_mem(char **res, const char *str) {
     if(!str) return;
     char *ptr = *res;
     size_t len_res = strlen(*res);
@@ -53,16 +53,16 @@ void mycat_mem(char **res, const char *str) {
     memcpy(ptr, str, len_str+1);
 }
 
-void mysprintf(char **res, const char *fmt, const char *str) {
+void my_sprintf(char **res, const char *fmt, const char *str) {
     sprintf(*res, fmt, str);
 }
 
-void myfree(char **str) {
+void my_free(char **str) {
     free(*str);
     *str = NULL;
 }
 
-int mycmp(char *str1, char *str2) {
+int my_cmp(char *str1, char *str2) {
     if(!str1 || !str2) return 1;
 
     while(*str1 != '\0' && *str2 != '\0') {
@@ -238,9 +238,9 @@ void iterativePostorder(tnode* &root) {
     cout << endl;
 }
 
-int getheight(tnode* root) {
+int getHeight(tnode* root) {
     if(!root) return 0;
-    return max(getheight(root->right), getheight(root->left)) + 1;
+    return max(getHeight(root->right), getHeight(root->left)) + 1;
 }
 
 int isBST(tnode* root) {
@@ -258,7 +258,7 @@ int isBST(tnode* root) {
   return 1;
 }
 
-tnode* LowestCommonAcessor(tnode* root, int value1, int value2 ){
+tnode* lowestCommonAcessor(tnode* root, int value1, int value2 ){
 	if(!root) return NULL;
 
     while( root ){
@@ -274,17 +274,17 @@ tnode* LowestCommonAcessor(tnode* root, int value1, int value2 ){
 
 //////////////////////
 
-void insertarray(tnode* &root,int arr[], int start, int end) {
-    if (start > end) return;
+void insertArray(tnode* &root,int arr[], int start, int end) {
+    if (start >= end) return;
     // same as (start+end)/2, avoids overflow.
     int mid = start + (end - start) / 2;
     root = new tnode(arr[mid]);
-    insertarray(root->left, arr, start, mid-1);
-    insertarray(root->right, arr, mid+1, end);
+    insertArray(root->left, arr, start, mid-1);
+    insertArray(root->right, arr, mid+1, end);
 }
 
-void insertarray(tnode* &root, int arr[], int n) {
-  return insertarray(root, arr, 0, n-1);
+void insertArray(tnode* &root, int arr[], int n) {
+  return insertArray(root, arr, 0, n-1);
 }
 
 void clean(tnode* &root) {
@@ -323,7 +323,7 @@ void print(node* &head) {
     print(head->next);
 }
 
-void removenode(node* &head) {
+void removeNode(node* &head) {
     if(!head) return;
     if(!head->next) {
         delete head;
@@ -368,7 +368,7 @@ void printKthLast(node* &head, int k) {
 
 }
 
-void append_head(node* &head, node* n) {
+void appendHead(node* &head, node* n) {
     if(!head) {
         head = n;
     }
@@ -532,7 +532,7 @@ vector<int> findCommonElements(const vector<int> &v1, const vector<int> &v2) {
 	return res;
 }
 
-int max_profit(vector<int> v) {
+int maxProfit(vector<int> v) {
 	int max_profit = 0;
 	int min_cost = 99999999;
 
@@ -764,69 +764,7 @@ int base2dec(string s, int base) {
 	return res;
 }
 
-/*****
-Implement atof()
-So given a string like "2.23" your function should return double 2.23. This might seem easy in the first place but this is a highly ambiguous question. Also it has some interesting test cases. So overall a good discussion can revolve around this question. We are not going to support here scientific notation like 1.45e10 etc. We will also not support hex and octal strings just for the sake of simplicity. But these are good assumption to state upfront. Let's write code for this.
-double atof(char* num) {
-     if (!num || !*num) return 0;
-
-     double integerPart = 0;
-     double fractionPart = 0;
-     int divisorForFraction = 1;
-     int sign = 1;
-     bool inFraction = false;
-
-     //Take care of +/- sign
-     if (*num == '-') {
-         ++num;
-         sign = -1;
-     }
-     else if (*num == '+') {
-         ++num;
-     }
-
-     while (*num != '\0') {
-         if (*num >= '0' && *num <= '9') {
-             if (inFraction) {
-                 //See how are we converting a character to integer
-                 fractionPart = fractionPart*10 + (*num - '0');
-                 divisorForFraction *= 10;
-             }
-             else {
-                 integerPart = integerPart*10 + (*num - '0');
-             }
-         }
-         else if (*num == '.') {
-             if (inFraction)
-                 return sign * (integerPart + fractionPart/divisorForFraction);
-             else
-                 inFraction = true;
-         }
-         else {
-             return sign * (integerPart + fractionPart/divisorForFraction);
-         }
-         ++num;
-     }
-     return sign * (integerPart + fractionPart/divisorForFraction);
- }
-
-Fun time - Breaking the code
-1. Pass NULL/empty string
-2. Pass string with +ve and -ve sign, +2.0/-5.5
-3. Pass pure character string. What is expected?
-4. Pass mix of character and numbers, 2.33abc/2abc/2.abc
-5. Check what happens if string passed results in overflow/underflow, our code doesn't take care of it
-6. String with leading/trailing zeroes, +0000.002/-1.0000
-7. Pass all zeroes, 0.000/000
-8. What happens if there are more than one decimal point like 1.234.5/1..2?
-9. Also look for some corner cases like +.1/-.2/etc. These are all valid cases.
-Complexity of the code
-Constant space and O(N) run time considering length of string is N.
-Similar problems
-1. Write atoi(char* str)
-******/
-
-int myatoi(string str) {
+int my_atoi(string str) {
     if(str.empty()) return 0;
 
     int res = 0;
@@ -883,7 +821,7 @@ string reverseWords(string str) {
 	return str;
 }
 
-int lengthOfLongestSubstring(string s) {
+int lengthOfLongestUniqueSubstring(string s) {
     if(s.empty()) return 0;
     int prev = 0;
 
@@ -962,7 +900,7 @@ public:
     };
 };
 
-int fact(int v) {
+int factIter(int v) {
     int res = 1;
     for(int i = 1; i <= v; i++)
         res  = res * i;
@@ -970,9 +908,9 @@ int fact(int v) {
     return res;
 }
 
-int fact2(int v) {
+int factRec(int v) {
     if(v == 0) return 1;
-    return v * fact2(v-1);
+    return v * factRec(v-1);
 }
 
 template<int U, int V>
@@ -991,7 +929,7 @@ public:
     };
 };
 
-int gcd(int u, int v) {
+int gcdIter(int u, int v) {
     if(v == 0) return u;
 
     while(v) {
@@ -1003,10 +941,10 @@ int gcd(int u, int v) {
     return u;
 }
 
-int gcd2(int u, int v) {
+int gcdRec(int u, int v) {
     if(v == 0) return u;
 
-    return gcd2(v, u%v);
+    return gcdRec(v, u%v);
 }
 
 template<int N>
@@ -1033,7 +971,7 @@ public:
     };
 };
 
-int fib(int n) {
+int fibIter(int n) {
     if(n < 1) return 0;
     if(n < 3) return 1;
 
@@ -1048,11 +986,11 @@ int fib(int n) {
     return res;
 }
 
-int fib2(int n)
-{
+int fibRec(int n) {
    if (n <= 1)
       return n;
-   return fib2(n-1) + fib2(n-2);
+
+   return fibRec(n-1) + fibRec(n-2);
 }
 
 int mult(int m, int n) {
@@ -1230,7 +1168,7 @@ void quick_sort_t(vector<T> &A, int l, int r){
 
 
 // O(nlgn)
-// Auxiliary Space: O(n) // buffer
+// Auxiliary Space: O(n) // temp
 // Sorting In Place: No
 // Stable: Yes
 template<class T>
@@ -1363,7 +1301,7 @@ int find_sorted_array_rotation_t(vector<T> &v) {
 // BACKTRAKING/PERMUTATIONS
 /////////////////////////
 
-void breakets_1(string s, int left, int right, int pairs) {
+void breakets(string s, int left, int right, int pairs) {
     if(right == left && left == pairs) {
         cout << s << endl;
         return;
@@ -1372,10 +1310,10 @@ void breakets_1(string s, int left, int right, int pairs) {
     cout << "call " << s << " " << left << " " << right << endl;
 
     if(left < pairs)
-        breakets_1(s+"(", left+1, right, pairs);
+        breakets(s+"(", left+1, right, pairs);
 
     if(right < left)
-        breakets_1(s+")", left, right+1, pairs);
+        breakets(s+")", left, right+1, pairs);
 }
 
 void printPermute(string s, int l, int r) {
@@ -1397,44 +1335,6 @@ void printPermute(string s, int l, int r) {
 // DYNAMIC
 /////////////////////////
 
-// 0(n*n) 0(n*n)
-string longestPalindrome1(string s) {
-    int len = s.size();
-    bool P[len][len];
-
-    memset(P, 0, sizeof(P[0][0]) * len * len);
-
-    int maxL = 0, start = 0, end = 0;
-    for(int i =0; i < s.size(); i++) {
-        for(int j = 0; j < i; j++) {
-            P[j][i] = (s[j] == s[i] && ( i - j < 2 || P[j+1][i-1]));
-            if(P[j][i] && maxL < ( i - j + 1 )) {
-                maxL = i - j + 1;
-                start = j;
-                end = i;
-            }
-        }
-        P[i][i] = true;
-    }
-
-    cout << "  ";
-    for(int i = 0; i < len; i++) {
-        cout << s[i] << " ";
-    }
-
-    cout << endl;
-
-    for(int i = 0; i < len; i++) {
-            cout << s[i] << " ";
-        for(int j = 0; j < len; j++) {
-            cout << P[i][j] << " ";
-        }
-        cout << endl;
-    }
-
-    return s.substr(start, end - start + 1);
-}
-
 // 0(n*n) O(1)
 // Given a center, either one letter or two letter,
 // Find longest palindrome
@@ -1449,7 +1349,7 @@ string expandFrmCenter(string s, int lidx, int ridx) {
     return s.substr(lidx+1, ridx-lidx-1);
 }
 
-string longestPalindrome2(string s) {
+string longestPalindrome(string s) {
     string res("");
     for(int i = 0; i < s.size(); ++i) {
         // get longest palindrome with center of i
@@ -1465,16 +1365,16 @@ string longestPalindrome2(string s) {
 }
 
 // backtracking
-int countCoinChange1(int S[], int m, int n ) {
+int countCoinChangeRec(int S[], int m, int n ) {
     if (n == 0) return 1;
     if (n < 0) return 0;
     if (m <= 0 && n >= 1) return 0;
 
-    return countCoinChange1( S, m - 1, n ) + countCoinChange1( S, m, n - S[m-1] );
+    return countCoinChangeRec( S, m - 1, n ) + countCoinChangeRec( S, m, n - S[m-1] );
 }
 
 // dynamic
-int countCoinChange2(int S[], int m, int n ) {
+int countCoinChangeIter(int S[], int m, int n ) {
     int i, j, x, y;
     int table[n+1][m];
 
@@ -1502,16 +1402,16 @@ int countCoinChange2(int S[], int m, int n ) {
 ///14641
 
 // backtracking
-int Pascal_1(int row, int column) {
+int PascalRec(int row, int column) {
     if(row < 0) return 0;
     if(row == 0) return 1;
     if(column == 0 || column == row-1) return 1;
 
-    return Pascal_1(row-1, column-1) + Pascal_1(row-1, column);
+    return PascalRec(row-1, column-1) + PascalRec(row-1, column);
 }
 
 // dynamic
-vector<vector<int>> Pascal_2(int row) {
+vector<vector<int>> PascalIter(int row) {
     if(row < 0) return {{}};
 
     vector<vector<int>> res;
@@ -1551,6 +1451,7 @@ Graph::Graph(int V) {
 
 void Graph::addEdge(int v, int w) {
     adj[v].push_back(w); // Add w to v's list.
+    adj[w].push_back(v); // Add v to w's list.
 }
 
 void Graph::BFS(int s, int e) {
@@ -1695,26 +1596,26 @@ int main() {
     cout << "// MEMORY" << endl;
     cout << "/////////////////////////////////" << endl;
     char *str = NULL;
-    mycpy_mem(&str, "HELLO WORLD");
-    mycat_mem(&str, " GOODBYE");
-    mycat(&str, "-BYE");
-    mycat_mem(&str, "-BYE");
-    mycat(&str, "-BYE");
-    mycat_mem(&str, "-BYE");
-    mycat(&str, "-BYE");
-    mycat_mem(&str, "-BYE");
-    mycat(&str, "-BYE");
-    mysprintf(&str, "%s!", str);
+    my_cpy_mem(&str, "HELLO WORLD");
+    my_cat_mem(&str, " GOODBYE");
+    my_cat(&str, "-BYE");
+    my_cat_mem(&str, "-BYE");
+    my_cat(&str, "-BYE");
+    my_cat_mem(&str, "-BYE");
+    my_cat(&str, "-BYE");
+    my_cat_mem(&str, "-BYE");
+    my_cat(&str, "-BYE");
+    my_sprintf(&str, "%s!", str);
     puts(str);
-    myfree(&str);
-    cout << mycmp("123", "123") << " ";
-    cout << mycmp("", "123") << " ";
-    cout << mycmp("123", "") << " ";
-    cout << mycmp(NULL, "123") << " ";
-    cout << mycmp("123", NULL) << " ";
-    cout << mycmp("123", "1234567") << " ";
-    cout << mycmp("123qwerty", "123") << " ";
-    cout << mycmp(NULL, NULL) << endl;
+    my_free(&str);
+    cout << my_cmp("123", "123") << " ";
+    cout << my_cmp("", "123") << " ";
+    cout << my_cmp("123", "") << " ";
+    cout << my_cmp(NULL, "123") << " ";
+    cout << my_cmp("123", NULL) << " ";
+    cout << my_cmp("123", "1234567") << " ";
+    cout << my_cmp("123qwerty", "123") << " ";
+    cout << my_cmp(NULL, NULL) << endl;
 
     cout << endl << endl;
 
@@ -1725,7 +1626,7 @@ int main() {
     tnode* root = NULL;
 
     int arr[] = {1,2,3,4,5,6,7,8,9};
-    insertarray(root, arr, 9);
+    insertArray(root, arr, 9);
 
     if(!root) cout << "TREE IS NULL" << endl;
 
@@ -1747,10 +1648,10 @@ int main() {
     postorder(root); cout << endl;
     iterativePostorder(root);
 
- 	cout << getheight(root) << endl;
+ 	cout << getHeight(root) << endl;
 	cout << isBST(root) << endl;
 
-    cout << "lca : " << LowestCommonAcessor(root, 3, 7)->v << endl;
+    cout << "lca : " << lowestCommonAcessor(root, 3, 7)->v << endl;
 
     cout << endl << endl;
 
@@ -1769,7 +1670,7 @@ int main() {
     printKthLast(head, 7);
 
     cout << "remove node :" << endl;
-    removenode(head->next->next->next);
+    removeNode(head->next->next->next);
     print(head);
 
     cout << "revert inplace :" << endl;
@@ -1804,7 +1705,7 @@ int main() {
 	auto res1 = findCommonElements({1,2,3,4,5,6,7}, {8,9,0,3,4,5});
 	for(auto i : res1) cout << i << " "; cout << endl;
 
-	cout << max_profit({2,3,4,1,5,6,8,2,3}) << endl;
+	cout << maxProfit({2,3,4,1,5,6,8,2,3}) << endl;
 
 	auto res2 = multiply({1,2,3});
 	for(auto i : res2) cout << i << " ";
@@ -1832,7 +1733,7 @@ int main() {
 	cout << str1 << endl;
     cout << removeChars("hello world goodby", "hlrg") <<  endl;
     cout << reverseWords("123 456 789") << endl;
-    cout << lengthOfLongestSubstring("abcabcbb") << endl;
+    cout << lengthOfLongestUniqueSubstring("abcabcbb") << endl;
     cout << dec2bin(21) << endl;
     cout << bin2dec("010101") << endl;
 	cout << base2dec("010101", 2) << endl;
@@ -1841,10 +1742,10 @@ int main() {
 	cout << base2dec("0xA", 16) << endl;
 	cout << base2dec("0xE", 16) << endl;
 	cout << base2dec("0xF", 16) << endl;
-    cout << myatoi("-32 hello") <<  " ";
-    cout << myatoi("   -32 hello ") <<  " ";
-    cout << myatoi(" 32 hello ") <<  " ";
-    cout << myatoi(" +64 hello ") << endl;
+    cout << my_atoi("-32 hello") <<  " ";
+    cout << my_atoi("   -32 hello ") <<  " ";
+    cout << my_atoi(" 32 hello ") <<  " ";
+    cout << my_atoi(" +64 hello ") << endl;
 
     cout << endl << endl;
 
@@ -1923,16 +1824,16 @@ int main() {
     cout << mult(9,1000) << endl;
 
     cout << Factorial<5>::value <<  " ";
-    cout << fact(5) <<  " ";
-    cout << fact2(5) << endl;
+    cout << factIter(5) <<  " ";
+    cout << factRec(5) << endl;
 
     cout << Fib<40>::value <<  " ";
-    cout << fib(40) <<  " ";
-    cout << fib2(40) << endl;
+    cout << fibIter(40) <<  " ";
+    cout << fibRec(40) << endl;
 
     cout << GCD<6, 4>::value <<  " ";
-    cout << gcd(6, 4) <<  " ";
-    cout << gcd2(6, 4) << endl;
+    cout << gcdIter(6, 4) <<  " ";
+    cout << gcdRec(6, 4) << endl;
 
     cout << endl;
 
@@ -1990,7 +1891,7 @@ int main() {
     cout << "// BACKTRAKING/PERMUTATIONS" << endl;
     cout << "/////////////////////////////////" << endl;
 
-    breakets_1("", 0, 0, 3);
+    breakets("", 0, 0, 3);
 
     cout << endl;
 
@@ -2003,25 +1904,24 @@ int main() {
     cout << "/////////////////////////////////" << endl;
 
 
-    cout << longestPalindrome1("1qq2qawaq123") << endl;
-    cout << longestPalindrome2("1qq2qawaq123") << endl;
+    cout << longestPalindrome("1qq2qawaq123") << endl;
 
     cout << endl;
 
     int coins[] = {1,2,3};
-    cout << countCoinChange1(coins, 3, 4) << endl;
-    cout << countCoinChange2(coins, 3, 4) << endl;
+    cout << countCoinChangeIter(coins, 3, 4) << endl;
+    cout << countCoinChangeRec(coins, 3, 4) << endl;
 
     for(int i = 0; i < 6; i++) {
         for(int j = 0; j < i; j++) {
-            cout << Pascal_1(i,j);
+            cout << PascalRec(i,j);
         }
         cout << endl;
     }
 
     cout << endl;
 
-    auto res3 = Pascal_2(5);
+    auto res3 = PascalIter(5);
 
     for(auto i : res3) {
         for(auto j : i)
@@ -2035,13 +1935,20 @@ int main() {
     cout << "// GRAPH" << endl;
     cout << "/////////////////////////////////" << endl;
 
+
+    /**********
+    0->[1,2]
+    1->[2,4]
+    2->[0,3]
+    3->[4]
+    ***********/
     Graph g(5);
     g.addEdge(0, 1);
     g.addEdge(0, 2);
     g.addEdge(1, 2);
     g.addEdge(2, 0);
     g.addEdge(2, 3);
-    g.addEdge(3, 3);
+    g.addEdge(3, 4);
     g.addEdge(1, 4);
 
     cout << "Following is BFS : ";
