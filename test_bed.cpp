@@ -1065,8 +1065,8 @@ int mult(int m, int n) {
         swap(m, n);
     }
 
-    int res = 0;
-    for(int i = 0; i < n; i++) {
+    int res = m;
+    for(int i = 2; i <= n; i++) {
         res += m;
     }
 
@@ -1095,14 +1095,12 @@ int PowN(int m, int n) {
 	if(m <= 0) return 1;
 	if(m == 1) return n;
 
-    int mm = m;
-    int nn = n;
+    int res = m;
+    for(int i = 2; i <= n; i++) {
+    	res *= m;
+    }
 
-    while(nn /= 2) mm *= mm;
-
-    if(n & 1 != 0) mm *= m;
-
-    return mm;
+    return res;
 }
 
 bool isPrime(int n) {
@@ -1920,6 +1918,8 @@ int main() {
     cout << mult(-1,0) <<  " ";
     cout << mult(2,1) <<  " ";
     cout << mult(1,2) <<  " ";
+    cout << mult(3,2) <<  " ";
+    cout << mult(4,3) <<  " ";
     cout << mult(9,1000) << endl;
 
     cout << Factorial<5>::value <<  " ";
