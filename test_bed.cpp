@@ -75,6 +75,29 @@ int my_cmp(char *str1, char *str2) {
 
     return *str1 - *str2;
 }
+
+char* my_strstr(char* str1, char* str2) {
+	if(!str1 || !str2) return "-1";
+
+	for(; *str1 != '\0'; str1++) {
+		if(*str1 != *str2) continue;
+
+		char* move1 = str1;
+		char* move2 = str2;
+		while(*move1 != '\0' && *move2 != '\0') {
+			if(*move1 != *move2)
+				break;
+			move1++;
+			move2++;
+		}
+
+		if(*move2 == '\0')
+			return str1;
+	}
+
+	return "-1";
+}
+
 /////////////////////////////////
 // TREE
 /////////////////////////////////
@@ -1607,6 +1630,15 @@ int main() {
     cout << my_cmp("123", "1234567") << " ";
     cout << my_cmp("123qwerty", "123") << " ";
     cout << my_cmp(NULL, NULL) << endl;
+
+    cout << my_strstr("123", "123") << " ";
+    cout << my_strstr("", "123") << " ";
+    cout << my_strstr("123", "") << " ";
+    cout << my_strstr(NULL, "123") << " ";
+    cout << my_strstr("123", NULL) << " ";
+    cout << my_strstr("123", "1234567") << " ";
+    cout << my_strstr("123qwerty", "123") << " ";
+    cout << my_strstr(NULL, NULL) << endl;
 
     cout << endl << endl;
 
