@@ -41,16 +41,30 @@ void connectNeibours(tnode* root) {
         if(!q1.empty()) {
             while(!q1.empty()) {
                 tnode* node = q1.front(); q1.pop();
-                v.push_back(node);
-                if(node->left) q2.push(node->left);
-                if(node->right) q2.push(node->right);
+
+                if(node->left) {
+					v.push_back(node->left);
+                	q2.push(node->left);
+                }
+
+                if(node->right) {
+					v.push_back(node->right);
+                	q2.push(node->right);
+            	}
             }
         } else if(!q2.empty()) {
             while(!q2.empty()) {
                 tnode* node = q2.front(); q2.pop();
-                v.push_back(node);
-                if(node->left) q1.push(node->left);
-                if(node->right) q1.push(node->right);
+
+                if(node->left) {
+					v.push_back(node->left);
+                	q1.push(node->left);
+                }
+
+                if(node->right) {
+					v.push_back(node->right);
+                	q1.push(node->right);
+            	}
             }
         }
 
