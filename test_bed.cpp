@@ -298,16 +298,12 @@ tnode* lowestCommonAcessor(tnode* root, int value1, int value2 ){
 //////////////////////
 
 void insertArray(tnode* &root,int arr[], int start, int end) {
-    if (start >= end) return;
+    if (start > end) return;
     // same as (start+end)/2, avoids overflow.
     int mid = start + (end - start) / 2;
     root = new tnode(arr[mid]);
     insertArray(root->left, arr, start, mid-1);
     insertArray(root->right, arr, mid+1, end);
-}
-
-void insertArray(tnode* &root, int arr[], int n) {
-  return insertArray(root, arr, 0, n-1);
 }
 
 void clean(tnode* &root) {
@@ -1649,7 +1645,7 @@ int main() {
     tnode* root = NULL;
 
     int arr[] = {1,2,3,4,5,6,7,8,9};
-    insertArray(root, arr, 9);
+    insertArray(root, arr, 0, 8);
 
     if(!root) cout << "TREE IS NULL" << endl;
 
