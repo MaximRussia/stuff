@@ -1113,6 +1113,16 @@ void sieveOfEratosthenes(int n) {
 // TEMPLATES
 /////////////////////////////////
 
+/**********
+    Random
+    Heap << Shell << Merge << Quick << Insertion << Bubble << Selection
+    Nearly Sorted
+    Insertion << Bubble << Shell << Heap << Merge << Quick << Selection
+    Reversed
+    Shell << Heap << Merge << Quick << Insertion << Bubble << Selection
+    Few Unique
+    Shell << Heap << Insertion << Merge << Quick << Bubble << Selection
+***********/
 
 // O(n^2)
 // Auxiliary Space: O(1)
@@ -1146,6 +1156,28 @@ void insertion_sort_t(vector<T> &v) {
         while(idx) {
             if(v[idx] < v[idx-1]) swap(v[idx], v[idx-1]);
             idx--;
+        }
+    }
+}
+
+// O(nlgn)
+// Auxiliary Space: O(1)
+// Sorting In Place: Yes
+// Stable: No
+template<typename T>
+void shell_sort_t(vector<T> &v) {
+    // Start with a big gap, then reduce the gap
+    int n = v.size();
+    for (int gap = n/2; gap > 0; gap /= 2) {
+        for (int i = gap; i < n; i += 1) {
+            int temp = v[i];
+
+            int j;
+            for (j = i; j >= gap && v[j - gap] > temp; j -= gap) {
+                    v[j] = v[j - gap];
+            }
+
+            v[j] = temp;
         }
     }
 }
@@ -1582,7 +1614,8 @@ vector<string> transformWord(map<string, vector<string>> &graph, string start, s
         if(currentWord == goal) {
             return currentPath;
         }
-        else if(find(extended.begin(), extended.end(), currentWord) != extended.end()) {
+
+        if(find(extended.begin(), extended.end(), currentWord) != extended.end()) {
             continue;
         }
 
@@ -1871,6 +1904,12 @@ int main() {
 
     a = {6,5,4,7,8,3,2,3,4};
     quick_sort_t(a, 0, a.size()-1);
+    for(auto i : a) cout << i <<  " ";
+
+    cout << endl;
+
+    a = {6,5,4,7,8,3,2,3,4};
+    shell_sort_t(a);
     for(auto i : a) cout << i <<  " ";
 
     cout << endl;
