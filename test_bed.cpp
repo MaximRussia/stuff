@@ -157,6 +157,16 @@ void DFS(tnode* &root) {
     cout << endl;
 }
 
+void DFS_rec(tnode* &root) {
+    if(!root)  {
+        return;
+    }
+
+    cout << root->v << " ";
+    DFS_rec(root->right);
+    DFS_rec(root->left);
+}
+
 //////////////////////
 // DFS variations
 //////////////////////
@@ -1687,6 +1697,9 @@ int main() {
 
     cout << "DFS :" << endl;
     DFS(root);
+    DFS_rec(root);
+
+    cout << endl;
 
     cout << "preorder :" << endl;
     preorder(root); cout << endl;
