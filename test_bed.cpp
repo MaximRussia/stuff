@@ -138,38 +138,14 @@ void BFS(tnode* &root) {
     cout << endl;
 }
 
-void DFS(tnode* &root) {
-    if(!root)  {
-        return;
-    }
-
-    stack<tnode*> q;
-    q.push(root);
-
-    while(!q.empty()) {
-        tnode* n = q.top(); q.pop();
-
-        cout << n->v  << " ";
-        if(n->left) q.push(n->left);
-        if(n->right) q.push(n->right);
-    }
-
-    cout << endl;
-}
-
-void DFS_rec(tnode* &root) {
-    if(!root)  {
-        return;
-    }
-
-    cout << root->v << " ";
-    DFS_rec(root->right);
-    DFS_rec(root->left);
-}
-
 //////////////////////
 // DFS variations
 //////////////////////
+/******
+Preorder  =   V-L-R
+Inorder   =   L-V-R
+Postorder =   L-R-V
+*******/
 void preorder(tnode* &root) {
     if(!root)  {
         return;
@@ -217,22 +193,15 @@ void iterativeInorder(tnode* &root) {
 	stack<tnode*> s;
   	tnode *node = root;
 
-  	while(node) {
-  		s.push(node);
-  		node = node->left;
-  	}
-
-  	while (!s.empty()) {
-  		node = s.top(); s.pop();
-		cout << node->v << " ";
-
-		if(node->right) {
-			node = node->right;
-			while(node) {
-				s.push(node);
-				node = node->left;
-			}
-		}
+  	while(!s.empty() || node) {
+  		if(node) {
+  			s.push(node);
+  			node = node->left;
+  		} else {
+  			node = s.top(); s.pop();
+  			cout << node->v << " ";
+  			node = node->right;
+  		}
   	}
 
     cout << endl;
@@ -279,7 +248,7 @@ int getHeight(tnode* root) {
 int isBST(tnode* root) {
   if (!root) return 1;
 
-  if (root->left != NULL && root->left->v > root->v)
+  if (root->left != NULL && root->left->v >= root->v)
     return 0;
 
   if (root->right != NULL && root->right->v < root->v)
@@ -314,6 +283,34 @@ void insertArray(tnode* &root,int arr[], int start, int end) {
     root = new tnode(arr[mid]);
     insertArray(root->left, arr, start, mid-1);
     insertArray(root->right, arr, mid+1, end);
+}
+
+void printLevelByLevel(tnode* &root) {
+    if(!root)  { cout << "empty" << endl; return; }
+
+    queue<tnode*> q1;
+    queue<tnode*> q2;
+    q1.push(root);
+
+    while(!q1.empty() || !q2.empty()) {
+        if(!q1.empty()) {
+            while(!q1.empty()) {
+                tnode* node = q1.front(); q1.pop();
+                cout << node->v << " ";
+                if(node->left) q2.push(node->left);
+                if(node->right) q2.push(node->right);
+            }
+        } else if(!q2.empty()) {
+            while(!q2.empty()) {
+                tnode* node = q2.front(); q2.pop();
+                cout << node->v << " ";
+                if(node->left) q1.push(node->left);
+                if(node->right) q1.push(node->right);
+            }
+        }
+
+        cout << endl;
+    }
 }
 
 void clean(tnode* &root) {
@@ -400,6 +397,7 @@ void printKthLast(node* &head, int k) {
 void appendHead(node* &head, node* n) {
     if(!head) {
         head = n;
+        return;
     }
 
     n->next = head;
@@ -1689,17 +1687,14 @@ int main() {
 
     int arr[] = {1,2,3,4,5,6,7,8,9};
     insertArray(root, arr, 0, 8);
+    printLevelByLevel(root);
 
     if(!root) cout << "TREE IS NULL" << endl;
 
     cout << "BFS :" << endl;
     BFS(root);
 
-    cout << "DFS :" << endl;
-    DFS(root);
-    DFS_rec(root);
-
-    cout << endl;
+    cout << "DFS" << endl;
 
     cout << "preorder :" << endl;
     preorder(root); cout << endl;
