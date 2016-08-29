@@ -1216,7 +1216,6 @@ void quick_sort_t(vector<T> &A, int l, int r){
     quick_sort_t(A, ll, r);
 }
 
-
 // O(nlgn)
 // Auxiliary Space: O(n) // temp
 // Sorting In Place: No
@@ -1247,12 +1246,12 @@ void merge_t(vector<T> &A, long l, long mid, long r) {
 
 template<class T>
 void merge_sort_t(vector<T> &A, long l, long r) {
-	if (l >= r) return;
+    if (l >= r) return;
 
-  int mid = (l + r)/2;
-  merge_sort_t(A, l, mid);
-  merge_sort_t(A, mid+1, r);
-  merge_t(A, l, mid, r);
+    int mid = l+(r-l)/2;
+    merge_sort_t(A, l, mid);
+    merge_sort_t(A, mid+1, r);
+    merge_t(A, l, mid, r);
 }
 
 
@@ -1265,19 +1264,18 @@ void bucket_sort_t(vector<T> &A) {
 
 	vector< vector<T> > buckets;
 	buckets.resize(10);
-	for (size_t i = 0; i < A.size(); i++)
-	{
+
+	for (int i = 0; i < A.size(); i++) {
 		int pos = (int)(A[i] * 10) % 10;
 		buckets[pos].push_back(A[i]);
 	}
 
 	int l = 0;
 
-	for(size_t i = 0; i < buckets.size(); i++) {
+	for(int i = 0; i < buckets.size(); i++) {
 		insertion_sort_t(buckets[i]);
-
-		size_t size = buckets[i].size();
-		for (size_t j = 0; j < size; j++) {
+		int size = buckets[i].size();
+		for (int j = 0; j < size; j++) {
 			A[l + j] = buckets[i][j];
 		}
 
@@ -1286,14 +1284,14 @@ void bucket_sort_t(vector<T> &A) {
 }
 
 template<typename T>
-size_t bin_search_t(vector<T> &v, T n) {
+int bin_search_t(vector<T> &v, T n) {
     if(v.empty()) return 0;
 
-    size_t l = 0;
-    size_t r = v.size()-1;
+    int l = 0;
+    int r = v.size()-1;
 
     while(l <= r) {
-        size_t mid = l+(r-l)/2;
+        int mid = l+(r-l)/2;
 
         if(v[mid] == n) return mid;
         else
@@ -1306,45 +1304,43 @@ size_t bin_search_t(vector<T> &v, T n) {
 
 template<typename T>
 int bin_search_rotated_t(vector<T> &v, T key) {
-  int l = 0;
-  int r = v.size() - 1;
+    int l = 0;
+    int r = v.size() - 1;
 
-  while (l <= r) {
-    // Avoid overflow, same as M=(L+R)/2
-    int mid = l + ((r - l) / 2);
-    if (v[mid] == key) return mid;
+    while (l <= r) {
+        int mid = l+(r-l)/2;
+        if (v[mid] == key) return mid;
 
-    // the bottom half is sorted
-    if (v[l] <= v[mid]) {
-      if (v[l] <= key && key < v[mid])
-        r = mid - 1;
-      else
-        l = mid + 1;
+        // the bottom half is sorted
+        if (v[l] <= v[mid]) {
+            if (v[l] <= key && key < v[mid])
+                r = mid - 1;
+            else
+            l = mid + 1;
+        }
+        else { // the upper half is sorted
+            if (v[mid] < key && key <= v[r])
+                l = mid + 1;
+            else
+                r = mid - 1;
+        }
     }
-    // the upper half is sorted
-    else {
-      if (v[mid] < key && key <= v[r])
-        l = mid + 1;
-      else
-        r = mid - 1;
-    }
-  }
-  return -1;
+    return -1;
 }
 
 template<typename T>
 int find_sorted_array_rotation_t(vector<T> &v) {
-  int l = 0;
-  int r = v.size() - 1;
+    int l = 0;
+    int r = v.size() - 1;
 
-  while (v[l] > v[r]) {
-    int mid = l + (r - l) / 2;
-    if (v[mid] > v[r])
-      l = mid + 1;
-    else
-      r = mid - 1;
-  }
-  return l;
+    while (v[l] > v[r]) {
+        int mid = l+(r-l)/2;
+        if (v[mid] > v[r])
+            l = mid + 1;
+        else
+            r = mid - 1;
+    }
+    return l;
 }
 
 /////////////////////////
