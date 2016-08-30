@@ -254,10 +254,17 @@ int isBST(tnode* root) {
   if (root->right != NULL && root->right->v < root->v)
     return 0;
 
-  if (!isBST(root->left) || !isBST(root->right))
-    return 0;
+    return isBST(root->left) && isBST(root->right);
+}
 
-  return 1;
+template<typename T = int>
+int isBST2(tnode* root, T min = numeric_limits<T>::min(), T max = numeric_limits<T>::max()) {
+  if (!root) return true;
+
+  if(root->v <= min || root->v > max)
+    return false;
+
+  return isBST2(root->left, min, root->v) && isBST2(root->right, root->v, max);
 }
 
 tnode* lowestCommonAcessor(tnode* root, int value1, int value2 ){
@@ -1706,6 +1713,7 @@ int main() {
 
  	cout << getHeight(root) << endl;
 	cout << isBST(root) << endl;
+    cout << isBST2(root) << endl;
 
     cout << "lca : " << lowestCommonAcessor(root, 3, 7)->v << endl;
 
