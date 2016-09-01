@@ -1137,6 +1137,8 @@ void sieveOfEratosthenes(int n) {
     Shell << Heap << Merge << Quick << Insertion << Bubble << Selection
     Few Unique
     Shell << Heap << Insertion << Merge << Quick << Bubble << Selection
+    Out of memory
+    External Merge Sort
 ***********/
 
 // O(n^2)
@@ -1171,28 +1173,6 @@ void insertion_sort_t(vector<T> &v) {
         while(idx) {
             if(v[idx] < v[idx-1]) swap(v[idx], v[idx-1]);
             idx--;
-        }
-    }
-}
-
-// O(nlgn)
-// Auxiliary Space: O(1)
-// Sorting In Place: Yes
-// Stable: No
-template<typename T>
-void shell_sort_t(vector<T> &v) {
-    // Start with a big gap, then reduce the gap
-    int n = v.size();
-    for (int gap = n/2; gap > 0; gap /= 2) {
-        for (int i = gap; i < n; i += 1) {
-            int temp = v[i];
-
-            int j;
-            for (j = i; j >= gap && v[j - gap] > temp; j -= gap) {
-                    v[j] = v[j - gap];
-            }
-
-            v[j] = temp;
         }
     }
 }
@@ -1259,35 +1239,6 @@ void merge_sort_t(vector<T> &A, long l, long r) {
     merge_sort_t(A, l, mid);
     merge_sort_t(A, mid+1, r);
     merge_t(A, l, mid, r);
-}
-
-
-// O(n)
-// Auxiliary Space: O(n+k) // buckets
-// Sorting In Place: No
-// Stable: Yes
-template<class T>
-void bucket_sort_t(vector<T> &A) {
-
-	vector< vector<T> > buckets;
-	buckets.resize(10);
-
-	for (int i = 0; i < A.size(); i++) {
-		int pos = (int)(A[i] * 10) % 10;
-		buckets[pos].push_back(A[i]);
-	}
-
-	int l = 0;
-
-	for(int i = 0; i < buckets.size(); i++) {
-		insertion_sort_t(buckets[i]);
-		int size = buckets[i].size();
-		for (int j = 0; j < size; j++) {
-			A[l + j] = buckets[i][j];
-		}
-
-		l += size;
-	}
 }
 
 template<typename T>
@@ -1921,19 +1872,7 @@ int main() {
     cout << endl;
 
     a = {6,5,4,7,8,3,2,3,4};
-    shell_sort_t(a);
-    for(auto i : a) cout << i <<  " ";
-
-    cout << endl;
-
-    a = {6,5,4,7,8,3,2,3,4};
     merge_sort_t(a, 0, a.size()-1);
-    for(auto i : a) cout << i <<  " ";
-
-    cout << endl;
-
-    a = {6,5,4,7,8,3,2,3,4};
-    bucket_sort_t(a);
     for(auto i : a) cout << i <<  " ";
 
     cout << endl;
