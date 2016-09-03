@@ -627,27 +627,29 @@ int mostContSubsiquence(vector<int> v) {
 Partition problem is to determine whether a given set can be partitioned
 into two subsets such that the sum of elements in both subsets is same.
 **/
-int findPartition(vector<int> &arr, int n) {
+int findPartition(vector<int> &arr) {
 
     int sum = 0;
-    for (int i = 0; i < n; i++)
+    for (int i = 0; i < arr.size(); i++)
        sum += arr[i];
 
-    if (sum%2 != 0) return false;
+    if (sum%2 != 0) return -1;
 
-    int i = n-1;
-    int buff_sum = sum;
+    int buff_sum = sum/2;
+    int i = arr.size()-1;
     for(; i >= 0; i--) {
         buff_sum -= arr[i];
         if(buff_sum == 0) break;
     }
 
-    for(int j = 0; j <= i; j++) {
-        sum -= arr[j];
+    buff_sum = sum/2;
+    for(int j = 0; j < i; j++) {
+        buff_sum -= arr[j];
     }
 
-    return sum == 0 ? i : -1;
+    return buff_sum == 0 ? i : -1;
 }
+
 
 /////////////////////////////////
 // STRINGS
@@ -1769,8 +1771,8 @@ int main() {
     vector<int> v = {1, 2, 3, 4, -1, 7, 7, 7};
     cout << mostContSubsiquence(v) << endl;
 
-    vector<int> arr2 = {0, 4, -1, 1, -2, 2};
-	cout << findPartition(arr2, arr2.size()) << endl;
+    vector<int> arr2 = {1,2,3,4,6,4,0};
+    cout << findPartition(arr2) << endl;
 
     cout << endl << endl;
 
