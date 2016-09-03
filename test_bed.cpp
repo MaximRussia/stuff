@@ -258,7 +258,9 @@ int isBST(tnode* root) {
 }
 
 template<typename T = int>
-int isBST2(tnode* root, T min = numeric_limits<T>::min(), T max = numeric_limits<T>::max()) {
+int isBST2(tnode* root,
+				T min = numeric_limits<T>::min(),
+				T max = numeric_limits<T>::max()) {
   if (!root) return true;
 
   if(root->v <= min || root->v > max)
@@ -1371,7 +1373,8 @@ int countCoinChangeRec(int S[], int m, int n ) {
     if (n < 0) return 0;
     if (m <= 0 && n >= 1) return 0;
 
-    return countCoinChangeRec( S, m - 1, n ) + countCoinChangeRec( S, m, n - S[m-1] );
+    return countCoinChangeRec( S, m - 1, n )
+    		+ countCoinChangeRec( S, m, n - S[m-1] );
 }
 
 // dynamic
@@ -1521,35 +1524,50 @@ map<string, vector<string>> generateGraph(vector<string> &dict) {
     map<string, vector<string>> graph;
 
     set<char> cached; /// cache characters
+    cout << "dict: ";
     for(auto word : dict) {
+        cout << word << " ";
         for(auto ch : word) {
             cached.insert(ch);
         }
     }
 
+    cout << endl;
+
     cout << "cached size : " << cached.size() << endl;
+    cout << "cached : ";
+
+    for(auto ch : cached) {
+        cout << ch;
+    }
+
+    cout << endl;
 
     for(int i = 0; i < dict.size(); i++) {
+        /// process every single word in dictionary
         for(int j = 0; j < dict[i].size(); j++) {
 
-            /// remove 1 character
-            string remove = dict[i].substr(0, j) + dict[i].substr(j+1, dict[i].size()-1);
+            /// remove j-th char
+            string remove = dict[i].substr(0, j) + dict[i].substr(j+1);
             if(find(dict.begin(), dict.end(), remove) != dict.end()) {
+                // find in dictionary! add this like adjective!
                 graph[dict[i]].push_back(remove);
             }
 
-            /// change 1 character
+            /// change j-th char
              for(auto ch : cached) {
-                string change = dict[i].substr(0, j) + string(1, ch) + dict[i].substr(j+1, dict[i].size()-1);
+                string change = dict[i].substr(0, j) + string(1, ch) + dict[i].substr(j+1);
                 if(find(dict.begin(), dict.end(), change) != dict.end() && change != dict[i]) {
+                    // find in dictionary! add this like adjective!
                     graph[dict[i]].push_back(change);
                 }
             }
 
-            /// add 1 character
+            /// add at j-th char
             for(auto ch : cached) {
-                string add = dict[i].substr(0, j) + string(1, ch) + dict[i].substr(j, dict[i].size()-1);
+                string add = dict[i].substr(0, j) + string(1, ch) + dict[i].substr(j);
                 if(find(dict.begin(), dict.end(), add) != dict.end()) {
+                    // find in dictionary! add this like adjective!
                     graph[dict[i]].push_back(add);
                 }
             }
@@ -1559,31 +1577,56 @@ map<string, vector<string>> generateGraph(vector<string> &dict) {
     return graph;
 }
 
-vector<string> transformWord(map<string, vector<string>> &graph, string start, string goal) {
-    vector<vector<string>> paths(1);
-    paths[0].push_back(start);
+vector<string> transformWordBFS(map<string, vector<string>> &graph,
+                                string start, string goal) {
+    /// Breadth First Search
+    queue<vector<string>> paths;
+    paths.push({start});
     vector<string> extended;
 
-    /// Breadth First Search
     while(!paths.empty()) {
-        vector<string> currentPath = paths.back();
-        paths.pop_back();
+        vector<string> currentPath = paths.front(); paths.pop();
+        string currentWord = currentPath.back();
 
-        string currentWord = currentPath[currentPath.size()-1];
         if(currentWord == goal) {
             return currentPath;
         }
 
-        if(find(extended.begin(), extended.end(), currentWord) != extended.end()) {
-            continue;
-        }
-
-        extended.push_back(currentWord);
         vector<string> transforms = graph[currentWord];
         for(auto word : transforms) {
-            if(find(currentPath.begin(), currentPath.end(), word) == currentPath.end()) {
+            if(find(currentPath.begin(), currentPath.end(), word)
+            								== currentPath.end()) {
                 currentPath.push_back(word);
-                paths.push_back(currentPath);
+                paths.push(currentPath);
+            }
+        }
+    }
+
+    cout << "path is empty" << endl;
+    return vector<string>();
+}
+
+vector<string> transformWordDFS(map<string, vector<string>> &graph,
+                                string start, string goal) {
+    /// Depth First Search
+    stack<vector<string>> paths;
+    paths.push({start});
+    vector<string> extended;
+
+    while(!paths.empty()) {
+        vector<string> currentPath = paths.top(); paths.pop();
+        string currentWord = currentPath.back();
+
+        if(currentWord == goal) {
+            return currentPath;
+        }
+
+        vector<string> transforms = graph[currentWord];
+        for(auto word : transforms) {
+            if(find(currentPath.begin(), currentPath.end(), word)
+            								== currentPath.end()) {
+                currentPath.push_back(word);
+                paths.push(currentPath);
             }
         }
     }
@@ -1593,7 +1636,6 @@ vector<string> transformWord(map<string, vector<string>> &graph, string start, s
 }
 
 int main() {
-
     cout << "/////////////////////////////////" << endl;
     cout << "// MEMORY" << endl;
     cout << "/////////////////////////////////" << endl;
@@ -1968,7 +2010,16 @@ int main() {
 		cout << std::endl ;
 	}
 
-	vector<string> res4 = transformWord(graph, "cat", "bed");
+    cout << endl;
+
+    cout << "DFS : " << endl;
+	vector<string> res4 = transformWordDFS(graph, "cat", "bed");
+	for(string v : res4) cout << v << endl;
+
+    cout << endl;
+
+    cout << "BFS : " << endl;
+	res4 = transformWordBFS(graph, "cat", "bed");
 	for(string v : res4) cout << v << endl;
 
     cout << "Press any key ... " << endl;
