@@ -1343,10 +1343,7 @@ void printPermute(string s, int l, int r) {
 // Given a center, either one letter or two letter,
 // Find longest palindrome
 string expandFrmCenter(string s, int lidx, int ridx) {
-    while(lidx >= 0 && ridx < s.size()) {
-        if(s[lidx] != s[ridx]) {
-            return s.substr(lidx+1, ridx-lidx-1);
-        }
+    while(lidx >= 0 && ridx < s.size() && s[lidx] == s[ridx]) {
         --lidx;
         ++ridx;
     }
@@ -1354,7 +1351,7 @@ string expandFrmCenter(string s, int lidx, int ridx) {
 }
 
 string longestPalindrome(string s) {
-    string res("");
+    string res;
     for(int i = 0; i < s.size(); ++i) {
         // get longest palindrome with center of i
         string s1 = expandFrmCenter(s,i,i);
