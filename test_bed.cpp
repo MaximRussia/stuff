@@ -1388,17 +1388,16 @@ string longestPalindrome(string s) {
 }
 
 // backtracking
-int countCoinChangeRec(int S[], int m, int n ) {
+int countCoinChangeRec(const vector<int>& S, int m, int n ) {
     if (n == 0) return 1;
-    if (n < 0) return 0;
-    if (m <= 0 && n >= 1) return 0;
+    if (n < 0 || m < 0) return 0;
 
     return countCoinChangeRec( S, m - 1, n )
     		+ countCoinChangeRec( S, m, n - S[m-1] );
 }
 
 // dynamic
-int countCoinChangeIter(int S[], int m, int n ) {
+int countCoinChangeIter(const vector<int>& S, int m, int n ) {
     int i, j, x, y;
     int table[n+1][m];
 
@@ -1602,7 +1601,6 @@ vector<string> transformWordBFS(map<string, vector<string>> &graph,
     /// Breadth First Search
     queue<vector<string>> paths;
     paths.push({start});
-    vector<string> extended;
 
     while(!paths.empty()) {
         vector<string> currentPath = paths.front(); paths.pop();
@@ -1631,7 +1629,6 @@ vector<string> transformWordDFS(map<string, vector<string>> &graph,
     /// Depth First Search
     stack<vector<string>> paths;
     paths.push({start});
-    vector<string> extended;
 
     while(!paths.empty()) {
         vector<string> currentPath = paths.top(); paths.pop();
@@ -1973,10 +1970,8 @@ int main() {
     cout << longestPalindrome("1qq2qawaq123") << endl;
 
     cout << endl;
-
-    int coins[] = {1,2,3};
-    cout << countCoinChangeIter(coins, 3, 4) << endl;
-    cout << countCoinChangeRec(coins, 3, 4) << endl;
+    cout << countCoinChangeIter({1,2,3}, 3, 4) << endl;
+    cout << countCoinChangeRec({1,2,3}, 3, 4) << endl;
 
     for(int i = 0; i < 6; i++) {
         for(int j = 0; j < i; j++) {
