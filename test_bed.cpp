@@ -269,18 +269,36 @@ int isBST2(tnode* root,
   return isBST2(root->left, min, root->v) && isBST2(root->right, root->v, max);
 }
 
+/// BST
 tnode* lowestCommonAcessor(tnode* root, int value1, int value2 ){
 	if(!root) return NULL;
+	if(root->v == value1 || root->v == value2 )
+        return root;
 
     while( root ){
-        if( root->v > value1 && root->v > value2 ){
+        if( root->v > max(value1, value2)){
             root = root->left;
-        } else if( root->v < value1 && root->v < value2 ){
+        } else if( root->v < min(value1, value2)){
             root = root->right;
         } else {
             return root;
         }
     }
+}
+
+/// non BST
+tnode* lowestCommonAcessor2(tnode* root, int value1, int value2 ){
+	if(!root) return NULL;
+	if(root->v == value1 || root->v == value2 )
+        return root;
+
+    tnode* left = lowestCommonAcessor2(root->left, value1, value2);
+    tnode* right = lowestCommonAcessor2(root->right, value1, value2);
+
+    if(left && right )
+        return root;
+
+    return left ? left : right;
 }
 
 //////////////////////
@@ -1708,6 +1726,7 @@ int main() {
     cout << isBST2(root) << endl;
 
     cout << "lca : " << lowestCommonAcessor(root, 3, 7)->v << endl;
+    cout << "lca2 : " << lowestCommonAcessor2(root, 3, 7)->v << endl;
 
     cout << endl << endl;
 
