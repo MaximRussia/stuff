@@ -393,32 +393,21 @@ void removeNode(node* &head) {
 void printKthLast(node* &head, int k) {
     if(!head) return;
 
-    int len = 0;
-    node* first = head;
-    node* second = NULL;
-
-    while(first) {
-        len++;
-        first = first->next;
+    node* move = head;
+    while(k && move) {
+        k--;
+        move = move->next;
     }
 
-    if(len < k) return;
+    if(!move) return;
 
-    first = head;
-    second = head;
-
-    while(k--) {
-        first = first->next;
+    node* res = head;
+    while(move) {
+        res = res->next;
+        move = move->next;
     }
 
-    while(first) {
-        first = first->next;
-        second = second->next;
-    }
-
-    cout << second->v << endl;
-
-
+    cout << res->v << endl;
 }
 
 void appendHead(node* &head, node* n) {
