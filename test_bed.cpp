@@ -754,10 +754,12 @@ string removeChars(string str, string rem) {
 
 string dec2bin(int dec) {
     string res;
+    int len = 8 * sizeof(dec);
 
-    while(dec) {
-        res = (dec&1 ? "0" : "1") + res;
+    while(len) {
+        res = (dec&1 ? "1" : "0") + res;
         dec >>= 1;
+        len--;
     }
 
     return res;
