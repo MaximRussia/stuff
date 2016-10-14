@@ -42,7 +42,7 @@ public:
 		int count = min(k, idx);
 
 		for (int i = 0; i < count; ++i) {
-			cout << L[(start+i)%k] << endl;
+			cout << L[(start + i) % k] << endl;
 		}
 	}
 };

@@ -13,7 +13,7 @@ int count_fact_zeros_alternate(int);
 int factors_of_five(int x) {
 
 	int zero_count = 0;
-	while (x%5 == 0) {
+	while (x % 5 == 0) {
 		zero_count++;
 		x /= 5;
 	}
@@ -24,7 +24,7 @@ int count_fact_zeros(int number) {
 
 	if (number < 0) return -1;
 	int zero_count = 0, i;
-	for (i=2; i<=number; i++) {
+	for (i = 2; i <= number; i++) {
 		zero_count += factors_of_five(i);
 	}
 	return zero_count;
@@ -39,8 +39,8 @@ int count_fact_zeros_alternate(int number) {
 	if (number < 0) return -1;
 	int zero_count = 0, i;
 
-	for (i=5; number/i > 0; i=i*5) {
-		zero_count += number/i;
+	for (i = 5; number / i > 0; i = i * 5) {
+		zero_count += number / i;
 	}
 
 	return zero_count;

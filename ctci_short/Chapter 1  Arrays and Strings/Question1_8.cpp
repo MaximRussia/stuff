@@ -11,19 +11,19 @@ tion of "erbottlewat").
 using namespace std;
 
 bool isRotation(const string& s1, const string& s2) {
-    return (s1 + s1).find(s2) != string::npos;
+	return (s1 + s1).find(s2) != string::npos;
 }
 
 int main() {
-    string a = "apple";
-    string b = "leapp";
-    cout << "Checking if string: " << a << " is a rotation of string: " << b << ": "
-         << isRotation(a, b) << endl;
+	string a = "apple";
+	string b = "leapp";
+	cout << "Checking if string: " << a << " is a rotation of string: " << b << ": "
+		<< isRotation(a, b) << endl;
 
-    a = "james";
-    b = "mesje";
-    cout << "Checking if string: " << a << " is a rotation of string: " << b << ": "
-        << isRotation(a, b) << endl;
+	a = "james";
+	b = "mesje";
+	cout << "Checking if string: " << a << " is a rotation of string: " << b << ": "
+		<< isRotation(a, b) << endl;
 
-    return 0;
+	return 0;
 }

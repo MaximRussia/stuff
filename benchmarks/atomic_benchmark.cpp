@@ -28,88 +28,88 @@ QueryPerformanceCounter(&_timer_start);
 #define REPEAT 5
 
 void bench_lock(int Threads){
-    std::mutex mutex;
+	std::mutex mutex;
 
-    TICK();
+	TICK();
 
-    for(int i = 0; i < REPEAT; ++i){
-        std::vector<std::thread> threads;
-        float counter = 0.0f;
+	for (int i = 0; i < REPEAT; ++i){
+		std::vector<std::thread> threads;
+		float counter = 0.0f;
 
-        for(int i = 0; i < Threads; ++i){
-            threads.push_back(std::thread([&](){
-                for(int i = 0; i < OPERATIONS; ++i){
-                    mutex.lock();
-                    counter += pow(i, pow(i, 60));
-                    mutex.unlock();
-                }
-            }));
-        }
+		for (int i = 0; i < Threads; ++i){
+			threads.push_back(std::thread([&](){
+				for (int i = 0; i < OPERATIONS; ++i){
+					mutex.lock();
+					counter += pow(i, pow(i, 60));
+					mutex.unlock();
+				}
+			}));
+		}
 
-        for(auto& thread : threads){
-            thread.join();
-        }
-    }
+		for (auto& thread : threads){
+			thread.join();
+		}
+	}
 
-    TOCK();
+	TOCK();
 
-    std::cout << "lock with " << Threads << " threads, ms = " << DURATION() << std::endl;
+	std::cout << "lock with " << Threads << " threads, ms = " << DURATION() << std::endl;
 }
 
 void bench_lock_guard(int Threads){
-    std::mutex mutex;
+	std::mutex mutex;
 
-    TICK();
+	TICK();
 
-    for(int i = 0; i < REPEAT; ++i){
-        float counter = 0.0f;
+	for (int i = 0; i < REPEAT; ++i){
+		float counter = 0.0f;
 
-        std::vector<std::thread> threads;
+		std::vector<std::thread> threads;
 
-        for(int i = 0; i < Threads; ++i){
-            threads.push_back(std::thread([&](){
-                for(int i = 0; i < OPERATIONS; ++i){
-                    std::lock_guard<std::mutex> guard(mutex);
-                    counter += pow(i, pow(i, 60));
-                }
-            }));
-        }
+		for (int i = 0; i < Threads; ++i){
+			threads.push_back(std::thread([&](){
+				for (int i = 0; i < OPERATIONS; ++i){
+					std::lock_guard<std::mutex> guard(mutex);
+					counter += pow(i, pow(i, 60));
+				}
+			}));
+		}
 
-        for(auto& thread : threads){
-            thread.join();
-        }
-    }
+		for (auto& thread : threads){
+			thread.join();
+		}
+	}
 
-    TOCK();
+	TOCK();
 
-    std::cout << "lock_guard with " << Threads << " threads, ms = " << DURATION() << std::endl;
+	std::cout << "lock_guard with " << Threads << " threads, ms = " << DURATION() << std::endl;
 }
 
 void bench_atomic(int Threads){
-    TICK();
+	TICK();
 
-    for(int i = 0; i < REPEAT; ++i){
-        std::atomic<float> counter;
-        counter.store(0.0f);
+	for (int i = 0; i < REPEAT; ++i){
+		std::atomic<float> counter;
+		counter.store(0.0f);
 
-        std::vector<std::thread> threads;
+		std::vector<std::thread> threads;
 
-        for(int i = 0; i < Threads; ++i){
-            threads.push_back(std::thread([&](){
-                for(int i = 0; i < OPERATIONS; ++i){
-                    counter.store(pow(i, pow(i, 60)));
-                }
-            }));
-        }
+		for (int i = 0; i < Threads; ++i){
+			threads.push_back(std::thread([&](){
+				for (int i = 0; i < OPERATIONS; ++i){
+					counter.store(pow(i, pow(i, 60)));
+				}
+			}));
+		}
 
-        for(auto& thread : threads){
-            thread.join();
-        }
-    }
+		for (auto& thread : threads){
+			thread.join();
+		}
+	}
 
-    TOCK();
+	TOCK();
 
-    std::cout << "atomic with " << Threads << " threads, ms = " << DURATION() << std::endl;
+	std::cout << "atomic with " << Threads << " threads, ms = " << DURATION() << std::endl;
 }
 
 #define bench(name)\
@@ -124,13 +124,13 @@ void bench_atomic(int Threads){
 
 int main(){
 
-    int threads = std::thread::hardware_concurrency();
+	int threads = std::thread::hardware_concurrency();
 
-    cout << "MAX THREADS : " << threads << endl;
+	cout << "MAX THREADS : " << threads << endl;
 
-    bench(bench_atomic);
-    bench(bench_lock);
-    bench(bench_lock_guard);
+	bench(bench_atomic);
+	bench(bench_lock);
+	bench(bench_lock_guard);
 
-    return 0;
+	return 0;
 }

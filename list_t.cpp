@@ -12,203 +12,203 @@ using namespace std;
 template<typename T>
 class SingleLinkedList {
 
-    struct ListNode {
-        T v;
-        ListNode* next;
-        ListNode() : v(0), next(nullptr) {}
-        ListNode(T v) : v(v), next(nullptr) {}
-    };
+	struct ListNode {
+		T v;
+		ListNode* next;
+		ListNode() : v(0), next(nullptr) {}
+		ListNode(T v) : v(v), next(nullptr) {}
+	};
 
-    ListNode *head;
+	ListNode *head;
 
 public:
-    SingleLinkedList() : head(nullptr) {}
-    SingleLinkedList(const SingleLinkedList &list) : head(nullptr) {
-        this->Clone(list.GetHead());
-    }
+	SingleLinkedList() : head(nullptr) {}
+	SingleLinkedList(const SingleLinkedList &list) : head(nullptr) {
+		this->Clone(list.GetHead());
+	}
 
-    SingleLinkedList(SingleLinkedList &&list) : head(nullptr) {
-        this->Clone(list.GetHead());
-    }
+	SingleLinkedList(SingleLinkedList &&list) : head(nullptr) {
+		this->Clone(list.GetHead());
+	}
 
-    virtual ~SingleLinkedList() {
-        this->Clean();
-    }
+	virtual ~SingleLinkedList() {
+		this->Clean();
+	}
 
-    void PushBack(T v) {
-        if(!head) {
-            head = new ListNode(v);
-            return;
-        }
+	void PushBack(T v) {
+		if (!head) {
+			head = new ListNode(v);
+			return;
+		}
 
-        ListNode* first = head;
+		ListNode* first = head;
 
-        while(first->next) {
-            first = first->next;
-        }
+		while (first->next) {
+			first = first->next;
+		}
 
-        first->next = new ListNode(v);
-    }
+		first->next = new ListNode(v);
+	}
 
-    void Reverse() {
-        if(Empty()) return;
+	void Reverse() {
+		if (Empty()) return;
 
-        ListNode* prev = nullptr;
-        ListNode* first = head;
+		ListNode* prev = nullptr;
+		ListNode* first = head;
 
-        while(first) {
-            ListNode* next = first->next;
-            first->next = prev;
-            prev = first;
-            first = next;
-        }
-        head = prev;
-    }
+		while (first) {
+			ListNode* next = first->next;
+			first->next = prev;
+			prev = first;
+			first = next;
+		}
+		head = prev;
+	}
 
-    void SelectionSort() {
-        if(Empty()) return;
+	void SelectionSort() {
+		if (Empty()) return;
 
-        ListNode* first = head;
-        while(first) {
-            ListNode* second = first;
-            ListNode* remove = first;
-            while(second) {
-                if(second->v < first->v) {
-                    remove = second;
-                }
-                second = second->next;
-            }
+		ListNode* first = head;
+		while (first) {
+			ListNode* second = first;
+			ListNode* remove = first;
+			while (second) {
+				if (second->v < first->v) {
+					remove = second;
+				}
+				second = second->next;
+			}
 
-            if(remove != first) {
-                swap(remove->v, first->v);
-            }
+			if (remove != first) {
+				swap(remove->v, first->v);
+			}
 
-            first = first->next;
-        }
-    }
+			first = first->next;
+		}
+	}
 
-    string ToString() {
-        if(Empty()) return "Empty!";
+	string ToString() {
+		if (Empty()) return "Empty!";
 
-        ostringstream res;
-        res << "[ ";
+		ostringstream res;
+		res << "[ ";
 
-        ListNode* first = head;
-        while(first) {
-            res << first->v;
-            first = first->next;
-            if(first) {
-            res << ", ";
-            }
-        }
+		ListNode* first = head;
+		while (first) {
+			res << first->v;
+			first = first->next;
+			if (first) {
+				res << ", ";
+			}
+		}
 
-        res << " ]";
-        return res.str();
-    }
+		res << " ]";
+		return res.str();
+	}
 
-    void Clean() {
-        if(Empty()) return;
+	void Clean() {
+		if (Empty()) return;
 
-        ListNode* tmp = head;
+		ListNode* tmp = head;
 
-        while(tmp) {
-            head = head->next;
-            delete tmp;
-            tmp = nullptr;
-            tmp = head;
-        }
-    }
+		while (tmp) {
+			head = head->next;
+			delete tmp;
+			tmp = nullptr;
+			tmp = head;
+		}
+	}
 
-    ListNode* GetHead() {
-        if(Empty()) return nullptr;
+	ListNode* GetHead() {
+		if (Empty()) return nullptr;
 
-        return head;
-    }
+		return head;
+	}
 
-    size_t GetSize() {
-        if(Empty()) return 0;
+	size_t GetSize() {
+		if (Empty()) return 0;
 
-        size_t i = 0;
-        ListNode* first = head;
+		size_t i = 0;
+		ListNode* first = head;
 
-        while(first) {
-            i++;
-            first = first->next;
-        }
+		while (first) {
+			i++;
+			first = first->next;
+		}
 
-        return i;
-    }
+		return i;
+	}
 
-    bool Empty() const {
-        return nullptr == head;
-    }
+	bool Empty() const {
+		return nullptr == head;
+	}
 
-    void Clone(SingleLinkedList<T> &list) {
-        if(list.Empty()) return;
+	void Clone(SingleLinkedList<T> &list) {
+		if (list.Empty()) return;
 
-        if(head) {
-            Clean();
-        }
+		if (head) {
+			Clean();
+		}
 
-        ListNode* first = list.GetHead();
+		ListNode* first = list.GetHead();
 
-        while(first) {
-            PushBack(first->v);
-            first = first->next;
-        }
-    }
+		while (first) {
+			PushBack(first->v);
+			first = first->next;
+		}
+	}
 
-    ListNode* Get_K_FromLast(size_t k) {
-        if(Empty()) return nullptr;
+	ListNode* Get_K_FromLast(size_t k) {
+		if (Empty()) return nullptr;
 
-        ListNode* first = head;
+		ListNode* first = head;
 
-        while(k && first) {
-            k--;
-            first = first->next;
-        }
+		while (k && first) {
+			k--;
+			first = first->next;
+		}
 
-        if(!first) return nullptr;
+		if (!first) return nullptr;
 
-        ListNode* res = head;
+		ListNode* res = head;
 
-        while(first) {
-            res = res->next;
-            first = first->next;
-        }
+		while (first) {
+			res = res->next;
+			first = first->next;
+		}
 
-        return res;
-    }
+		return res;
+	}
 };
 
 int main() {
 
 
-    SingleLinkedList<int> l1;
-    SingleLinkedList<int> l2;
+	SingleLinkedList<int> l1;
+	SingleLinkedList<int> l2;
 
-    for(int i = 0; i < 10; i++) l1.PushBack(i);
-    for(int i = 10; i > 0; i--) l2.PushBack(i);
+	for (int i = 0; i < 10; i++) l1.PushBack(i);
+	for (int i = 10; i > 0; i--) l2.PushBack(i);
 
-    cout << l1.ToString() << endl;
+	cout << l1.ToString() << endl;
 
-    l1.Clone(l2);
+	l1.Clone(l2);
 
-    cout << l1.ToString() << endl;
+	cout << l1.ToString() << endl;
 
-    l1.SelectionSort();
+	l1.SelectionSort();
 
-    cout << l1.ToString() << endl;
+	cout << l1.ToString() << endl;
 
-    l1.Reverse();
+	l1.Reverse();
 
-    cout << l1.ToString() << endl;
+	cout << l1.ToString() << endl;
 
-    cout << l1.GetSize() << endl;
+	cout << l1.GetSize() << endl;
 
-    cout << l1.Get_K_FromLast(5)->v << endl;
+	cout << l1.Get_K_FromLast(5)->v << endl;
 
-    cout << endl << endl;
+	cout << endl << endl;
 
-    return 0;
+	return 0;
 }

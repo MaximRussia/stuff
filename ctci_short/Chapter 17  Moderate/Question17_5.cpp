@@ -20,12 +20,12 @@ int code(char);
 // Function Def
 
 int code(char ch) {
-	switch(ch) {
-		case 'B' : return 0;
-		case 'G' : return 1;
-		case 'R' : return 2;
-		case 'Y' : return 3;
-		default : return -1;
+	switch (ch) {
+	case 'B': return 0;
+	case 'G': return 1;
+	case 'R': return 2;
+	case 'Y': return 3;
+	default: return -1;
 	}
 }
 
@@ -37,7 +37,7 @@ Result* estimate(string guess, string solution) {
 	int* freq = new int[MAX_COL];
 
 	int i;
-	for (i=0; i<guess.size(); i++) {
+	for (i = 0; i < guess.size(); i++) {
 		if (guess[i] == solution[i]) {
 			res->hits++; // calculating hits
 		}
@@ -50,9 +50,9 @@ Result* estimate(string guess, string solution) {
 	}
 
 	// calculating psuedohits
-	for(i=0; i<guess.size(); i++) {
+	for (i = 0; i < guess.size(); i++) {
 		int dig = code(guess[i]);
-		if (dig >= 0 && freq[dig] > 0 && (guess[i] != solution[i]) ) {
+		if (dig >= 0 && freq[dig] > 0 && (guess[i] != solution[i])) {
 			res->pseudohits++;
 			freq[dig]--;
 		}
@@ -61,8 +61,8 @@ Result* estimate(string guess, string solution) {
 	return res;
 }
 
-void print(Result* res) {	
-	cout << "(h = " << res->hits << ", ph = " << res->pseudohits << ")" << endl; 
+void print(Result* res) {
+	cout << "(h = " << res->hits << ", ph = " << res->pseudohits << ")" << endl;
 }
 
 int main() {

@@ -7,7 +7,7 @@ typedef vector<string> vStr;
 void generateParen(string str, int left, int right){
 	if (left == 0 && right == 0) {
 		//It can be stored into some variable here
-		cout<<str<<'\n';
+		cout << str << '\n';
 		return;
 	}
 	if (left == right) {
@@ -23,7 +23,7 @@ void generateParen(string str, int left, int right){
 }
 
 int main(){
-	int n = 3;	
+	int n = 3;
 	generateParen("", n, n);
 	return 0;
 }

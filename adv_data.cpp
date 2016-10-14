@@ -23,123 +23,123 @@ using namespace std;
 
 // A class for Min Heap
 class MinHeap {
-    int *harr; // pointer to array of elements in heap
-    int capacity; // maximum possible size of min heap
-    int heap_size; // Current number of elements in min heap
+	int *harr; // pointer to array of elements in heap
+	int capacity; // maximum possible size of min heap
+	int heap_size; // Current number of elements in min heap
 public:
-    // Constructor
-    MinHeap(int capacity);
+	// Constructor
+	MinHeap(int capacity);
 
-    // to heapify a subtree with root at given index
-    void MinHeapify(int );
+	// to heapify a subtree with root at given index
+	void MinHeapify(int);
 
-    int parent(int i) { return (i-1)/2; }
+	int parent(int i) { return (i - 1) / 2; }
 
-    // to get index of left child of node at index i
-    int left(int i) { return (2*i + 1); }
+	// to get index of left child of node at index i
+	int left(int i) { return (2 * i + 1); }
 
-    // to get index of right child of node at index i
-    int right(int i) { return (2*i + 2); }
+	// to get index of right child of node at index i
+	int right(int i) { return (2 * i + 2); }
 
-    // to extract the root which is the minimum element
-    int extractMin();
+	// to extract the root which is the minimum element
+	int extractMin();
 
-    // Decreases key value of key at index i to new_val
-    void decreaseKey(int i, int new_val);
+	// Decreases key value of key at index i to new_val
+	void decreaseKey(int i, int new_val);
 
-    // Returns the minimum key (key at root) from min heap
-    int getMin() { return harr[0]; }
+	// Returns the minimum key (key at root) from min heap
+	int getMin() { return harr[0]; }
 
-    // Deletes a key stored at index i
-    void deleteKey(int i);
+	// Deletes a key stored at index i
+	void deleteKey(int i);
 
-    // Inserts a new key 'k'
-    void insertKey(int k);
+	// Inserts a new key 'k'
+	void insertKey(int k);
 
-    void print();
+	void print();
 };
 
 // Constructor: Builds a heap from a given array a[] of given size
 MinHeap::MinHeap(int cap) {
-    heap_size = 0;
-    capacity = cap;
-    harr = new int[cap];
+	heap_size = 0;
+	capacity = cap;
+	harr = new int[cap];
 }
 
 // Inserts a new key 'k'
 void MinHeap::insertKey(int k) {
-    if (heap_size == capacity) {
-        cout << "\nOverflow: Could not insertKey\n";
-        return;
-    }
+	if (heap_size == capacity) {
+		cout << "\nOverflow: Could not insertKey\n";
+		return;
+	}
 
-    // First insert the new key at the end
-    heap_size++;
-    int i = heap_size - 1;
-    harr[i] = k;
+	// First insert the new key at the end
+	heap_size++;
+	int i = heap_size - 1;
+	harr[i] = k;
 
-    // Fix the min heap property if it is violated
-    while (i != 0 && harr[parent(i)] > harr[i]) {
-       swap(harr[i], harr[parent(i)]);
-       i = parent(i);
-    }
+	// Fix the min heap property if it is violated
+	while (i != 0 && harr[parent(i)] > harr[i]) {
+		swap(harr[i], harr[parent(i)]);
+		i = parent(i);
+	}
 }
 
 // Decreases value of key at index 'i' to new_val.  It is assumed that
 // new_val is smaller than harr[i].
 void MinHeap::decreaseKey(int i, int new_val) {
-    harr[i] = new_val;
-    while (i != 0 && harr[parent(i)] > harr[i]) {
-       swap(harr[i], harr[parent(i)]);
-       i = parent(i);
-    }
+	harr[i] = new_val;
+	while (i != 0 && harr[parent(i)] > harr[i]) {
+		swap(harr[i], harr[parent(i)]);
+		i = parent(i);
+	}
 }
 
 // Method to remove minimum element (or root) from min heap
 int MinHeap::extractMin() {
-    if (heap_size <= 0)
-        return INT_MAX;
-    if (heap_size == 1)
-    {
-        heap_size--;
-        return harr[0];
-    }
+	if (heap_size <= 0)
+		return INT_MAX;
+	if (heap_size == 1)
+	{
+		heap_size--;
+		return harr[0];
+	}
 
-    // Store the minimum vakue, and remove it from heap
-    int root = harr[0];
-    harr[0] = harr[heap_size-1];
-    heap_size--;
-    MinHeapify(0);
+	// Store the minimum vakue, and remove it from heap
+	int root = harr[0];
+	harr[0] = harr[heap_size - 1];
+	heap_size--;
+	MinHeapify(0);
 
-    return root;
+	return root;
 }
 
 
 // This function deletes key at index i. It first reduced value to minus
 // infinite, then calls extractMin()
 void MinHeap::deleteKey(int i) {
-    decreaseKey(i, INT_MIN);
-    extractMin();
+	decreaseKey(i, INT_MIN);
+	extractMin();
 }
 
 // A recursive method to heapify a subtree with root at given index
 // This method assumes that the subtrees are already heapified
 void MinHeap::MinHeapify(int i) {
-    int l = left(i);
-    int r = right(i);
-    int smallest = i;
-    if (l < heap_size && harr[l] < harr[i])
-        smallest = l;
-    if (r < heap_size && harr[r] < harr[smallest])
-        smallest = r;
-    if (smallest != i) {
-        swap(harr[i], harr[smallest]);
-        MinHeapify(smallest);
-    }
+	int l = left(i);
+	int r = right(i);
+	int smallest = i;
+	if (l < heap_size && harr[l] < harr[i])
+		smallest = l;
+	if (r < heap_size && harr[r] < harr[smallest])
+		smallest = r;
+	if (smallest != i) {
+		swap(harr[i], harr[smallest]);
+		MinHeapify(smallest);
+	}
 }
 
 void MinHeap::print() {
-	for(int i = 0; i < heap_size; i++)
+	for (int i = 0; i < heap_size; i++)
 		cout << harr[i] << " ";
 	cout << endl;
 
@@ -150,159 +150,159 @@ void MinHeap::print() {
 ////////////////////////
 class Node {
 public:
-    Node() { mContent = ' '; mMarker = false; }
-    ~Node() { for(int i = 0; i < mChildren.size(); i++) { delete mChildren[i]; } mChildren.clear(); }
-    char content() { return mContent; }
-    void setContent(char c) { mContent = c; }
-    bool wordMarker() { return mMarker; }
-    void setWordMarker() { mMarker = true; }
-    Node* findChild(char c);
-    void appendChild(Node* child) { mChildren.push_back(child); }
-    vector<Node*> children() { return mChildren; }
+	Node() { mContent = ' '; mMarker = false; }
+	~Node() { for (int i = 0; i < mChildren.size(); i++) { delete mChildren[i]; } mChildren.clear(); }
+	char content() { return mContent; }
+	void setContent(char c) { mContent = c; }
+	bool wordMarker() { return mMarker; }
+	void setWordMarker() { mMarker = true; }
+	Node* findChild(char c);
+	void appendChild(Node* child) { mChildren.push_back(child); }
+	vector<Node*> children() { return mChildren; }
 
 private:
-    char mContent;
-    bool mMarker;
-    vector<Node*> mChildren;
+	char mContent;
+	bool mMarker;
+	vector<Node*> mChildren;
 };
 
 class Trie {
 public:
-    Trie();
-    ~Trie();
-    void addWord(string s);
-    bool searchWord(string s);
-    void deleteWord(string s);
+	Trie();
+	~Trie();
+	void addWord(string s);
+	bool searchWord(string s);
+	void deleteWord(string s);
 private:
-    Node* root;
+	Node* root;
 };
 
 Node* Node::findChild(char c) {
-    for ( int i = 0; i < mChildren.size(); i++ ) {
-        Node* tmp = mChildren.at(i);
-        if ( tmp->content() == c ) {
-            return tmp;
-        }
-    }
+	for (int i = 0; i < mChildren.size(); i++) {
+		Node* tmp = mChildren.at(i);
+		if (tmp->content() == c) {
+			return tmp;
+		}
+	}
 
-    return NULL;
+	return NULL;
 }
 
 Trie::Trie() {
-    root = new Node();
+	root = new Node();
 }
 
 Trie::~Trie() {
-    // Free memory
-    delete root; root = NULL;
+	// Free memory
+	delete root; root = NULL;
 }
 
 void Trie::addWord(string s) {
-    Node* current = root;
+	Node* current = root;
 
-    if ( s.length() == 0 ) {
-        current->setWordMarker(); // an empty word
-        return;
-    }
+	if (s.length() == 0) {
+		current->setWordMarker(); // an empty word
+		return;
+	}
 
-    for ( int i = 0; i < s.length(); i++ ) {
-        Node* child = current->findChild(s[i]);
-        if ( child != NULL ) {
-            current = child;
-        }
-        else {
-            Node* tmp = new Node();
-            tmp->setContent(s[i]);
-            current->appendChild(tmp);
-            current = tmp;
-        }
-        if ( i == s.length() - 1 )
-            current->setWordMarker();
-    }
+	for (int i = 0; i < s.length(); i++) {
+		Node* child = current->findChild(s[i]);
+		if (child != NULL) {
+			current = child;
+		}
+		else {
+			Node* tmp = new Node();
+			tmp->setContent(s[i]);
+			current->appendChild(tmp);
+			current = tmp;
+		}
+		if (i == s.length() - 1)
+			current->setWordMarker();
+	}
 }
 
 
 bool Trie::searchWord(string s) {
-    Node* current = root;
+	Node* current = root;
 
-    while ( current != NULL ) {
-        for ( int i = 0; i < s.length(); i++ ) {
-            Node* tmp = current->findChild(s[i]);
-            if ( tmp == NULL )
-                return false;
-            current = tmp;
-        }
+	while (current != NULL) {
+		for (int i = 0; i < s.length(); i++) {
+			Node* tmp = current->findChild(s[i]);
+			if (tmp == NULL)
+				return false;
+			current = tmp;
+		}
 
-        if ( current->wordMarker() )
-            return true;
-        else
-            return false;
-    }
+		if (current->wordMarker())
+			return true;
+		else
+			return false;
+	}
 
-    return false;
+	return false;
 }
 ////////////////////////
 
 int main() {
 
-    cout << "/////////////////////////////////" << endl;
-    cout << "// HEAP" << endl;
-    cout << "/////////////////////////////////" << endl;
+	cout << "/////////////////////////////////" << endl;
+	cout << "// HEAP" << endl;
+	cout << "/////////////////////////////////" << endl;
 
-    MinHeap h(6);
-    h.insertKey(3);
-    h.insertKey(2);
-    h.insertKey(15);
-    h.insertKey(5);
-    h.insertKey(4);
-    h.insertKey(45);
-    cout << h.getMin() << endl;
-    h.print();
+	MinHeap h(6);
+	h.insertKey(3);
+	h.insertKey(2);
+	h.insertKey(15);
+	h.insertKey(5);
+	h.insertKey(4);
+	h.insertKey(45);
+	cout << h.getMin() << endl;
+	h.print();
 
-    h.extractMin();
-    cout << h.getMin() << endl;
-    h.print();
+	h.extractMin();
+	cout << h.getMin() << endl;
+	h.print();
 
-    cout << endl;
+	cout << endl;
 
-    cout << "/////////////////////////////////" << endl;
-    cout << "// TRIE" << endl;
-    cout << "/////////////////////////////////" << endl;
+	cout << "/////////////////////////////////" << endl;
+	cout << "// TRIE" << endl;
+	cout << "/////////////////////////////////" << endl;
 
-   /**
-            *
-        H       B
-        E       A
-        L       L
-        L       L^
-        O^      O
-                O
-                N^
-    **/
+	/**
+			 *
+			 H       B
+			 E       A
+			 L       L
+			 L       L^
+			 O^      O
+			 O
+			 N^
+			 **/
 
-    Trie* trie = new Trie();
-    trie->addWord("Hello");
-    trie->addWord("Balloon");
-    trie->addWord("Ball");
+	Trie* trie = new Trie();
+	trie->addWord("Hello");
+	trie->addWord("Balloon");
+	trie->addWord("Ball");
 
-    if ( trie->searchWord("Hell") )
-        cout << "Found Hell" << endl;
+	if (trie->searchWord("Hell"))
+		cout << "Found Hell" << endl;
 
-    if ( trie->searchWord("Hello") )
-        cout << "Found Hello" << endl;
+	if (trie->searchWord("Hello"))
+		cout << "Found Hello" << endl;
 
-    if ( trie->searchWord("Helloo") )
-        cout << "Found Helloo" << endl;
+	if (trie->searchWord("Helloo"))
+		cout << "Found Helloo" << endl;
 
-    if ( trie->searchWord("Ball") )
-        cout << "Found Ball" << endl;
+	if (trie->searchWord("Ball"))
+		cout << "Found Ball" << endl;
 
-    if ( trie->searchWord("Balloon") )
-        cout << "Found Balloon" << endl;
+	if (trie->searchWord("Balloon"))
+		cout << "Found Balloon" << endl;
 
-    delete trie;
+	delete trie;
 
-    cout << endl;
+	cout << endl;
 
 	return 0;
 }

@@ -28,7 +28,7 @@ void placeQueens(int row, vector<int> &colums, vi &result){
 		for (int col = 0; col < GRID_SIZE; ++col) {
 			if (checkValid(colums, row, col)) {
 				colums[row] = col;		//Place Queen
-				placeQueens(row+1, colums, result);
+				placeQueens(row + 1, colums, result);
 			}
 		}
 	}
@@ -41,9 +41,9 @@ int main(){
 	placeQueens(0, colums, v);
 	for (int i = 0; i < v.size(); ++i) {
 		for (int j = 0; j < GRID_SIZE; ++j) {
-			cout<<v[i][j]<<" ";
+			cout << v[i][j] << " ";
 		}
-		cout<<'\n';
+		cout << '\n';
 	}
 	return 0;
 }

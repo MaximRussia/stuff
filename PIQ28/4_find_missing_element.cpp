@@ -1,7 +1,7 @@
 
 /**
-    Find Missing Element.
-**/
+	Find Missing Element.
+	**/
 
 #include <iostream>
 #include <vector>
@@ -32,25 +32,25 @@ int findMissingElement3(vector<int> &v1) {
 }
 
 int findMissingElement2(vector<int> &v1, vector<int> &v2) {
-    map<int, int> hash;
-    for(int i = 0; i < v1.size(); i++) {
-        hash[v1[i]] = 1;
-    }
+	map<int, int> hash;
+	for (int i = 0; i < v1.size(); i++) {
+		hash[v1[i]] = 1;
+	}
 
-    for(int i = 0; i < v2.size(); i++) {
-        if(hash.find(v2[i]) == hash.end()) return v2[i];
-    }
+	for (int i = 0; i < v2.size(); i++) {
+		if (hash.find(v2[i]) == hash.end()) return v2[i];
+	}
 
-    return -1;
+	return -1;
 }
 
 
 int main() {
 
-    vector<int> v1 = {1,2,3,4,5,6};
-    vector<int> v2 = {1,2,3,4,0,6};
+	vector<int> v1 = { 1, 2, 3, 4, 5, 6 };
+	vector<int> v2 = { 1, 2, 3, 4, 0, 6 };
 
-    cout << findMissingElement2(v1, v2) << endl;
+	cout << findMissingElement2(v1, v2) << endl;
 
-    return 0;
+	return 0;
 }

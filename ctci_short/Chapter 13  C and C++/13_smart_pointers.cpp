@@ -20,7 +20,7 @@ public:
 	}
 
 	SmartPtr<T> & operator=(SmartPtr<T> & sptr) {
-		if (this == &sptr) 
+		if (this == &sptr)
 			return *this;
 
 		if (*ref_count > 0) {
@@ -47,9 +47,9 @@ protected:
 		--(*ref_count);
 
 		if (*ref_count == 0) {
-			delete ref; 
+			delete ref;
 			ref = NULL;
-			free(ref_count); 
+			free(ref_count);
 			ref_count = NULL;
 		}
 	}

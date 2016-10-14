@@ -1,8 +1,8 @@
 
 /**
-    Given two lines on a Cartesian plane, determine whether the two lines would inter-
-    sect.
-**/
+	Given two lines on a Cartesian plane, determine whether the two lines would inter-
+	sect.
+	**/
 
 /**
 In problems like these, be aware of the following:
@@ -22,18 +22,18 @@ with ==. Instead, check if the difference is less than an epsilon value.
 ///sect, we just need to check if the slopes are different (or if the lines are identical)
 
 class Line {
-static double epsilon = 0.000001;
+	static double epsilon = 0.000001;
 public:
-    double slope;
-    double yintercept;
+	double slope;
+	double yintercept;
 
-    Line(double s, double y) {
-        slope = s;
-        yintercept = y;
-    }
+	Line(double s, double y) {
+		slope = s;
+		yintercept = y;
+	}
 
-    bool intersect(Line lne2) {
-        return Math.abs(slope - line2.slope) > epsilon ||
-        Math.abs(yintercept - line2.yintercept) < epsilon;
-    }
+	bool intersect(Line lne2) {
+		return Math.abs(slope - line2.slope) > epsilon ||
+			Math.abs(yintercept - line2.yintercept) < epsilon;
+	}
 }

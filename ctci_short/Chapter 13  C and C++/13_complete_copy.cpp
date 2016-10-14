@@ -10,10 +10,10 @@ struct Node {
 };
 
 Node * complete_copy(Node *cur, map<Node *, Node *> nodeMap) {
-	if (!cur) 
+	if (!cur)
 		return NULL;
 
-	if (nodeMap.find(cur) != nodeMap.end()) 
+	if (nodeMap.find(cur) != nodeMap.end())
 		return nodeMap.find(cur)->second;
 
 	Node * node = new Node(cur->val);

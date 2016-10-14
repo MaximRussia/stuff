@@ -3,7 +3,7 @@
 **/
 unsigned int i;
 for (i = 100; i >= 0; --i)
-	printf ("%d\n", i);
+printf("%d\n", i);
 /**
 Solution:
 1) 'unsigned int >= 0' is true all the time (replace by i > 0)

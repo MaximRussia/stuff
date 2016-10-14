@@ -8,9 +8,9 @@ public:
 	int ** alloc_2D(int row, int col) {
 		int **rowptr;
 
-		rowptr = (int **) malloc(row * sizeof(int *));
+		rowptr = (int **)malloc(row * sizeof(int *));
 		for (int i = 0; i < row; ++i)
-			rowptr[i] = (int *) malloc(col * sizeof(int));
+			rowptr[i] = (int *)malloc(col * sizeof(int));
 
 		return rowptr;
 	}
@@ -29,7 +29,7 @@ public:
 
 		cout << "head: " << head << ", data: " << data << endl;
 
-		rowptr = (int **) malloc(head + data);
+		rowptr = (int **)malloc(head + data);
 
 		int *base = (int*)(rowptr + row);
 		for (int i = 0; i < row; ++i)
@@ -52,7 +52,7 @@ int main() {
 
 	for (int i = 0; i < m; ++i)
 		for (int j = 0; j < n; ++j)
-			a[i][j] = (i+1)*(j+1);
+			a[i][j] = (i + 1)*(j + 1);
 
 	for (int i = 0; i < m; ++i) {
 		for (int j = 0; j < n; ++j)

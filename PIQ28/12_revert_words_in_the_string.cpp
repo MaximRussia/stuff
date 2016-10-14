@@ -17,40 +17,40 @@ degree   “, or ”   CS   degree   ” are all the same: “degree CS”.
 using namespace std;
 
 string revert_substring(string &str, int first, int last) {
-    for(int i = first, j = last; i < j; i++, j--) {
-        char tmp = str[i];
-        str[i] = str[j];
-        str[j] = tmp;
-    }
+	for (int i = first, j = last; i < j; i++, j--) {
+		char tmp = str[i];
+		str[i] = str[j];
+		str[j] = tmp;
+	}
 
-    return str;
+	return str;
 }
 
 string revert_words_1(string str) {
-    revert_substring(str, 0, str.size()-1);
+	revert_substring(str, 0, str.size() - 1);
 
-    int first = 0;
-    int last = 0;
-    for(int i = 0; i < str.size(); i++) {
-        if(str[i] != ' ') {
-            first = i;
-            while(str[i] != ' ') {
-                i++;
-                if(i == str.size()-1) break;
-            }
+	int first = 0;
+	int last = 0;
+	for (int i = 0; i < str.size(); i++) {
+		if (str[i] != ' ') {
+			first = i;
+			while (str[i] != ' ') {
+				i++;
+				if (i == str.size() - 1) break;
+			}
 
-            last = i;
+			last = i;
 
-            revert_substring(str, first, last);
-        }
-    }
+			revert_substring(str, first, last);
+		}
+	}
 
-    return str;
+	return str;
 }
 
 int main() {
 
-    cout << revert_words_1("123 456 789") << endl;
+	cout << revert_words_1("123 456 789") << endl;
 
-    return 0;
+	return 0;
 }

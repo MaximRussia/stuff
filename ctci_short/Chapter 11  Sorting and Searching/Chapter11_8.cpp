@@ -38,10 +38,10 @@ int getRank(int x, node* root) {
 
 int main(){
 	node *root = NULL;
-	int arr[] = {12, 15, 12, 11, 10, 10, 11, 10};
+	int arr[] = { 12, 15, 12, 11, 10, 10, 11, 10 };
 	for (int i = 0; i < 8; ++i) {
 		track(arr[i], root);
 	}
-	cout<<getRank(15, root);
+	cout << getRank(15, root);
 	return 0;
 }

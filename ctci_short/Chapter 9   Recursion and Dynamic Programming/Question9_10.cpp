@@ -6,19 +6,19 @@ using namespace std;
 
 class box {
 private:
-	float h, w, d;	
+	float h, w, d;
 public:
 	box(float H, float W, float D){
 		h = H;
 		w = W;
-		d =	D;
+		d = D;
 	}
 	bool canBeAbove(box B);
 	float getDepth();
 };
 
 bool box::canBeAbove(box B){
-	if (h<B.h && w<B.w && d<B.d)
+	if (h < B.h && w < B.w && d < B.d)
 		return true;
 	return false;
 }
@@ -39,11 +39,11 @@ float stackHeight(vb Boxes){
 }
 
 void print(){
-	cout<<"@";
+	cout << "@";
 }
 
 vb createStack(mvb &Map, vb Boxes, int bottom) {
-	if (Map.count(bottom)!= 0 && bottom < Boxes.size()) {
+	if (Map.count(bottom) != 0 && bottom < Boxes.size()) {
 		return Map[bottom];
 	}
 	int max_height = 0;
@@ -64,7 +64,7 @@ vb createStack(mvb &Map, vb Boxes, int bottom) {
 	}
 	//Push Boxes[bottom] to font hee
 	max_stack.push_back(Boxes[bottom]);
-	
+
 	Map[bottom] = max_stack;
 	return max_stack;
 }
@@ -72,17 +72,17 @@ vb createStack(mvb &Map, vb Boxes, int bottom) {
 int main(){
 	freopen("Question9_10.in", "r", stdin);
 	int n;
-	cin>>n;
+	cin >> n;
 	mvb Map;
 	vb Boxes, result;
 	float H, W, D;
 	for (int i = 0; i < n; ++i) {
-		cin>>H>>W>>D;
+		cin >> H >> W >> D;
 		Boxes.push_back(box(H, W, D));
 	}
 	result = createStack(Map, Boxes, 0);
 	for (int i = 0; i < result.size(); ++i) {
-		cout<<result[i].getDepth()<<" ";
+		cout << result[i].getDepth() << " ";
 	}
 	return 0;
 }
