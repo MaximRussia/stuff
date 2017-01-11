@@ -669,31 +669,30 @@ int findPartition(vector<int> &arr) {
 /////////////////////////////////
 // STRINGS
 /////////////////////////////////
-bool isBalanced(char ch1, char ch2) {  
-	if(ch1 == '(' && ch2 == ')') return true;  
-	if(ch1 == '[' && ch2 == ']') return true;  
-	if(ch1 == '{' && ch2 == '}') return true;  
-	return false;  
-}  
-  
-bool checkBreakets(string str) {  
-	if (str.empty()) return false;  
-  
-	stack<char> st;
+bool isBalanced(char ch1, char ch2) {
+	if(ch1 == '(' && ch2 == ')') return true;
+	if(ch1 == '[' && ch2 == ']') return true;
+	if(ch1 == '{' && ch2 == '}') return true;
+	return false;
+}
 
-	for(int i = 0; i < str.size(); i++) {  
-		if(str[i] == '(' || str[i] == '[' || str[i] == '{') {  
-			st.push(str[i]);  
-		}  
-		else if(str[i] == ')' || str[i] == ']' || str[i] == '}') {  
-			if(st.empty()) return false;  
+bool checkBreakets(string str) {
+	if (str.empty()) return false;
+
+	stack<char> st;
+	for(int i = 0; i < str.size(); i++) {
+		if(str[i] == '(' || str[i] == '[' || str[i] == '{') {
+			st.push(str[i]);
+		}
+		else if(str[i] == ')' || str[i] == ']' || str[i] == '}') {
+			if(st.empty()) return false;
 			if(!isBalanced(st.top(), str[i])) return false;
-			st.pop(); 
-		}  
-	}  
-	  
-	return str.empty();  
-} 
+			st.pop();
+		}
+	}
+
+	return str.empty();
+}
 
 
 bool isAnagram(string s1, string s2) {
@@ -1821,7 +1820,8 @@ int main() {
 	cout << "/////////////////////////////////" << endl;
 	cout << "// STRINGS" << endl;
 	cout << "/////////////////////////////////" << endl;
-
+    cout << checkBreakets("(()()())[[[]]]{{}}") << endl;
+    cout << checkBreakets("()(){}{}{}()(())]") << endl;
 	cout << isAnagram("qwerty", "erwqyt") << endl;
 	cout << firstNonRepeated("qwertqwefrt") << endl;
 	cout << revertIter("1234qwerty") << endl;
