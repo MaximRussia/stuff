@@ -1505,6 +1505,30 @@ vector<vector<int>> PascalIter(int row) {
 	return res;
 }
 
+int NumWays(int N) {
+    if(N <= 0 ) return 0;
+    if(N == 1) return 1;
+    
+    vector< vector<int> > cache;
+    cache.resize(N);
+    for(int i = 0; i < cache.size(); i++) {
+        cache[i].resize(N);
+        cache[i][0] = 1;
+    }
+    
+    for(int i = 0; i < N; i++) {
+        cache[0][i] = 1;
+    }
+    
+    for(int i = 1; i < N; i++) {
+        for(int j = 1; j < N; j++) {
+            cache[i][j] = cache[i-1][j] + cache[i][j - 1];
+        }
+    }
+            
+    return cache.back().back();
+}
+
 /////////////////////////
 // GRAPHS
 /////////////////////////
@@ -2047,6 +2071,8 @@ int main() {
 	}
 
 	cout << endl;
+
+	cout << NumWays(5) << endl;
 
 	cout << "/////////////////////////////////" << endl;
 	cout << "// GRAPH" << endl;
