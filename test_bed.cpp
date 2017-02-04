@@ -16,16 +16,22 @@ using namespace std;
 // MEMORY
 ////////////////////////
 
+void* alloc_str(const char *str) {
+    /// strlen(str) == strlen(str) * sizeof(char), char == 1 byte
+    /// +1 for '\0'
+    return malloc(strlen(str) + 1);
+}
+
 void my_cpy(char **res, const char *str) {
 	if (!str) return;
-	if (!*res) *res = (char*)malloc(strlen(str)*sizeof(*str) + 1);
+	if (!*res) *res = (char*)alloc_str(str);
 	char *ptr = *res;
-	while ((*ptr++ = *str++) != '\0');
+	while (*ptr++ = *str++);
 }
 
 void my_cpy_mem(char **res, const char *str) {
 	if (!str) return;
-	size_t size = strlen(str)*sizeof(*str) + 1;
+	size_t size = strlen(str) + 1;
 	if (!*res) *res = (char*)malloc(size);
 	char *ptr = *res;
 	memcpy(ptr, str, size);
@@ -38,8 +44,8 @@ void my_cat(char **res, const char *str) {
 	size_t size_str = strlen(str);
 	size_t size = size_res + size_str + 1;
 	ptr = (char*)realloc(*res, size);
-	ptr += size_res;
-	while ((*ptr++ = *str++) != '\0');
+	ptr += size_res; /// jump at '\0'
+	while (*ptr++ = *str++);
 }
 
 void my_cat_mem(char **res, const char *str) {
@@ -47,8 +53,8 @@ void my_cat_mem(char **res, const char *str) {
 	char *ptr = *res;
 	size_t len_res = strlen(*res);
 	size_t len_str = strlen(str);
-	size_t size = len_res + len_str;
-	ptr = (char*)realloc(*res, size * sizeof(*str));
+	size_t size = len_res + len_str + 1;
+	ptr = (char*)realloc(*res, size);
 	ptr += len_res;
 	memcpy(ptr, str, len_str + 1);
 }
@@ -423,23 +429,23 @@ void removeNode(node* &head) {
 }
 
 void printKthLast(node* &head, int k) {
-	if (!head) return;
+    if(!head) return;
 
-	node* move = head;
-	while (k && move) {
-		k--;
-		move = move->next;
-	}
+    int cnt = 0;
+    node *move = head;
+    while(cnt < k) {
+        if(!move) return;
+        move = move->next;
+        cnt++;
+    }
 
-	if (!move) return;
+    node *res = head;
+    while(move) {
+        move = move->next;
+        res = res->next;
+    }
 
-	node* res = head;
-	while (move) {
-		res = res->next;
-		move = move->next;
-	}
-
-	cout << res->v << endl;
+    cout << res->v << endl;
 }
 
 void appendHead(node* &head, node* n) {
@@ -1508,24 +1514,24 @@ vector<vector<int>> PascalIter(int row) {
 int NumWays(int N) {
     if(N <= 0 ) return 0;
     if(N == 1) return 1;
-    
+
     vector< vector<int> > cache;
     cache.resize(N);
     for(int i = 0; i < cache.size(); i++) {
         cache[i].resize(N);
         cache[i][0] = 1;
     }
-    
+
     for(int i = 0; i < N; i++) {
         cache[0][i] = 1;
     }
-    
+
     for(int i = 1; i < N; i++) {
         for(int j = 1; j < N; j++) {
             cache[i][j] = cache[i-1][j] + cache[i][j - 1];
         }
     }
-            
+
     return cache.back().back();
 }
 
