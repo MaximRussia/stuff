@@ -1416,6 +1416,26 @@ void printPermute(string s, int l, int r) {
 	}
 }
 
+vector< vector<int> > allsubsets(vector<int> v) {
+    vector< vector<int> > res;
+    if(v.empty()) return res;
+
+    size_t max = 1 << v.size();
+
+    for(size_t flag = 1; flag < max; flag++) {
+        size_t idx = 0;
+        size_t t = flag;
+        res.push_back({});
+        while(t) {
+            idx++;
+            if(t & 1) {
+                res.back().push_back(v[v.size()-idx]);
+            }
+            t >>= 1;
+        }
+    }
+}
+
 /////////////////////////
 // DYNAMIC
 /////////////////////////
@@ -2045,6 +2065,14 @@ int main() {
 	cout << endl;
 
 	printPermute("ABC", 0, 2);
+
+	auto res_sub = allsubsets({1,2,3});
+
+	for (auto i : res_sub) {
+		for (auto j : i)
+			cout << j;
+		cout << endl;
+	}
 
 	cout << endl;
 
