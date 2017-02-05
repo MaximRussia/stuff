@@ -481,9 +481,8 @@ void revert_inplace(node* &head) {
 	head = prev;
 }
 
-bool revert_inplace_ptr(node** head) {
-	if (!(*head)) return false;
-	if (!(*head)->next) return true;
+void revert_inplace_ptr(node** head) {
+	if (!(*head) || !(*head)->next) return;
 
 	node* prev = NULL;
 	node* move = (*head);
@@ -496,18 +495,16 @@ bool revert_inplace_ptr(node** head) {
 	}
 
 	(*head) = prev;
-	return true;
 }
 
 void reverse_inpalce_rec(node*& head) {
 	if (!head || !head->next) return;
 
 	node* prev = head->next;
-	node* move = head->next;
 
 	reverse_inpalce_rec(prev);
 
-	move->next = head;
+	head->next->next = head;
 	head->next = NULL;
 
 	head = prev;
