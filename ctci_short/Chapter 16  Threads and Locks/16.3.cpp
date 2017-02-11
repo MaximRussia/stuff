@@ -23,13 +23,13 @@ struct philosopher {
 
 	void eat(std::vector<fork> &table_)
 	{
+	    std::unique_lock<std::mutex> l(table_[left].m);
+		std::unique_lock<std::mutex> r(table_[right].m);
+
 		{
 			std::unique_lock<std::mutex>  cout_lock(cout_mutex);
 			std::cout << "begin from " << std::this_thread::get_id() << std::endl;
 		}
-
-		std::unique_lock<std::mutex> l(table_[left].m);
-		std::unique_lock<std::mutex> r(table_[right].m);
 
 		{
 			std::unique_lock<std::mutex>  cout_lock(cout_mutex);
@@ -54,22 +54,21 @@ struct philosopher {
 
 int main()
 {
-	const int THREAD = 5;
-	std::vector<fork> table(THREAD);
 	std::vector<philosopher> philosophers;
-	philosophers.emplace_back("Judith", 0, 1);
-	philosophers.emplace_back("Gilles", 1, 2);
-	philosophers.emplace_back("Karl  ", 2, 3);
-	philosophers.emplace_back("Emma  ", 3, 4);
-	philosophers.emplace_back("Michel", 0, 4);
+	philosophers.push_back({"Judith", 0, 1});
+	philosophers.push_back({"Gilles", 1, 2});
+	philosophers.push_back({"Karl  ", 2, 3});
+	philosophers.push_back({"Emma  ", 3, 4});
+	philosophers.push_back({"Michel", 0, 4});
 
-	std::vector<std::thread> handles(THREAD);
+	std::vector<fork> table(philosophers.size());
+	std::vector<std::thread> handles(philosophers.size());
 
-	for (auto i = 0; i < THREAD; ++i) {
+	for (auto i = 0; i < philosophers.size(); ++i) {
 		handles[i] = std::thread(&philosopher::eat, &philosophers[i], std::ref(table));
 	}
 
-	for (auto i = 0; i < THREAD; ++i) {
+	for (auto i = 0; i < philosophers.size(); ++i) {
 		handles[i].join();
 	}
 }
