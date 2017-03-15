@@ -1465,33 +1465,34 @@ string longestPalindrome(string s) {
 
 // backtracking
 int countCoinChangeRec(const vector<int>& S, int m, int n) {
-	if (n == 0) return 1;
-	if (n < 0 || m < 0) return 0;
-
-	return countCoinChangeRec(S, m - 1, n)
-		+ countCoinChangeRec(S, m, n - S[m - 1]);
+    if (n == 0) return 1;
+     
+    if (n < 0) return 0;
+ 
+    // If there are no coins and n is greater than 0, then no solution exist
+    if (m <=0 && n >= 1) return 0;
+ 
+    return countCoinChangeRec( S, m - 1, n ) + countCoinChangeRec( S, m, n-S[m-1] );
 }
 
 // dynamic
-int countCoinChangeIter(const vector<int>& S, int m, int n) {
-	int i, j, x, y;
-	int table[n + 1][m];
-
-	for (i = 0; i < m; i++)
-		table[0][i] = 1;
-
-	// Fill rest of the table enteries in bottom up manner
-	for (i = 1; i < n + 1; i++) {
-		for (j = 0; j < m; j++) {
-			// Count of solutions including S[j]
-			x = (i - S[j] >= 0) ? table[i - S[j]][j] : 0;
-			// Count of solutions excluding S[j]
-			y = (j >= 1) ? table[i][j - 1] : 0;
-			// total count
-			table[i][j] = x + y;
-		}
-	}
-	return table[n][m - 1];
+int countCoinChangeIter( const vector<int>& S, int m, int n ) {
+    // table[i] will be storing the number of solutions for
+    // value i. We need n+1 rows as the table is consturcted
+    // in bottom up manner using the base case (n = 0)
+    int table[n+1];
+ 
+    memset(table, 0, sizeof(table));
+    table[0] = 1;
+ 
+    // Pick all coins one by one and update the table[] values
+    // after the index greater than or equal to the value of the
+    // picked coin
+    for(int i=0; i<m; i++)
+        for(int j=S[i]; j<=n; j++)
+            table[j] += table[j-S[i]];
+ 
+    return table[n];
 }
 
 ///1
