@@ -12,9 +12,9 @@
 #include <cstdio>
 using namespace std;
 
-////////////////////////
+/////////////////////////////////
 // MEMORY
-////////////////////////
+/////////////////////////////////
 
 void* alloc_str(const char *str) {
     /// strlen(str) == strlen(str) * sizeof(char), char == 1 byte
@@ -144,9 +144,9 @@ void BFS(tnode* &root) {
 	cout << endl;
 }
 
-//////////////////////
+/////////////////////////////////
 // DFS variations
-//////////////////////
+/////////////////////////////////
 /******
 Preorder  =   V-L-R
 Inorder   =   L-V-R
@@ -338,7 +338,7 @@ tnode* lowestCommonAcessor2(tnode* root, int value1, int value2){
 	return left ? left : right;
 }
 
-//////////////////////
+/////////////////////////////////
 
 void insertArray(tnode* &root, int arr[], int start, int end) {
 	if (start > end) return;
@@ -945,8 +945,6 @@ int lengthOfLongestUniqueSubstring(string s) {
 /////////////////////////////////
 // BIN
 /////////////////////////////////
-
-
 int swp(int v) {
 	int mask1 = 0xaaaaaa; /// 10101010
 	int mask2 = 0x555555; /// 01010101
@@ -1379,9 +1377,9 @@ int find_sorted_array_rotation_t(vector<T> &v) {
 	return l;
 }
 
-/////////////////////////
+/////////////////////////////////
 // BACKTRAKING/PERMUTATIONS
-/////////////////////////
+/////////////////////////////////
 
 void breakets(string s, int left, int right, int pairs) {
 	if (right == left && left == pairs) {
@@ -1433,9 +1431,9 @@ vector< vector<int> > allsubsets(vector<int> v) {
     }
 }
 
-/////////////////////////
+/////////////////////////////////
 // DYNAMIC
-/////////////////////////
+/////////////////////////////////
 
 // 0(n*n) O(1)
 // Given a center, either one letter or two letter,
@@ -1466,12 +1464,12 @@ string longestPalindrome(string s) {
 // backtracking
 int countCoinChangeRec(const vector<int>& S, int m, int n) {
     if (n == 0) return 1;
-     
+
     if (n < 0) return 0;
- 
+
     // If there are no coins and n is greater than 0, then no solution exist
     if (m <=0 && n >= 1) return 0;
- 
+
     return countCoinChangeRec( S, m - 1, n ) + countCoinChangeRec( S, m, n-S[m-1] );
 }
 
@@ -1481,17 +1479,17 @@ int countCoinChangeIter( const vector<int>& S, int m, int n ) {
     // value i. We need n+1 rows as the table is consturcted
     // in bottom up manner using the base case (n = 0)
     int table[n+1];
- 
+
     memset(table, 0, sizeof(table));
     table[0] = 1;
- 
+
     // Pick all coins one by one and update the table[] values
     // after the index greater than or equal to the value of the
     // picked coin
     for(int i=0; i<m; i++)
         for(int j=S[i]; j<=n; j++)
             table[j] += table[j-S[i]];
- 
+
     return table[n];
 }
 
@@ -1553,9 +1551,9 @@ int NumWays(int N) {
     return cache.back().back();
 }
 
-/////////////////////////
+/////////////////////////////////
 // GRAPHS
-/////////////////////////
+/////////////////////////////////
 
 // This class represents a directed graph using adjacency list representation
 class Graph {
