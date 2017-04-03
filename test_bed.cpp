@@ -1463,15 +1463,65 @@ string longestPalindrome(string s) {
 	return res;
 }
 
+// 0(n) O(n*n)
+int longestPalindromeLength(string str) {
+    int n = str.size(); // get length of input string
+    // table[i][j] will be false if substring str[i..j]
+    // is not palindrome.
+    // Else table[i][j] will be true
+    bool table[n][n];
+    memset(table, 0, sizeof(table));
+
+    // All substrings of length 1 are palindromes
+    int maxLength = 1;
+    for (int i = 0; i < n; ++i)
+        table[i][i] = true;
+
+    // All substrings of length 2 are palindromes, too
+    int start = 0;
+    for (int i = 0; i < n-1; ++i) {
+        if (str[i] == str[i+1]) {
+            table[i][i+1] = true;
+            start = i;
+            maxLength = 2;
+        }
+    }
+
+    // Check for lengths greater than 2. k is length
+    // of substring
+    for (int k = 3; k <= n; ++k) {
+        // Fix the starting index
+        for (int i = 0; i < n-k+1 ; ++i) {
+            // Get the ending index of substring from
+            // starting index i and length k
+            int j = i + k - 1;
+            // checking for sub-string from ith index to
+            // jth index iff str[i+1] to str[j-1] is a
+            // palindrome
+            if (table[i+1][j-1] && str[i] == str[j]) {
+                table[i][j] = true;
+                if (k > maxLength) {
+                    start = i;
+                    maxLength = k;
+                }
+            }
+        }
+    }
+
+    printf("Longest palindrome substring is: %s\n", str.substr(start, maxLength).c_str());
+
+    return maxLength; // return length of LPS
+}
+
 // backtracking
 int countCoinChangeRec(const vector<int>& S, int m, int n) {
     if (n == 0) return 1;
-     
+
     if (n < 0) return 0;
- 
+
     // If there are no coins and n is greater than 0, then no solution exist
     if (m <=0 && n >= 1) return 0;
- 
+
     return countCoinChangeRec( S, m - 1, n ) + countCoinChangeRec( S, m, n-S[m-1] );
 }
 
@@ -1481,17 +1531,17 @@ int countCoinChangeIter( const vector<int>& S, int m, int n ) {
     // value i. We need n+1 rows as the table is consturcted
     // in bottom up manner using the base case (n = 0)
     int table[n+1];
- 
+
     memset(table, 0, sizeof(table));
     table[0] = 1;
- 
+
     // Pick all coins one by one and update the table[] values
     // after the index greater than or equal to the value of the
     // picked coin
     for(int i=0; i<m; i++)
         for(int j=S[i]; j<=n; j++)
             table[j] += table[j-S[i]];
- 
+
     return table[n];
 }
 
@@ -2080,6 +2130,7 @@ int main() {
 
 
 	cout << longestPalindrome("1qq2qawaq123") << endl;
+	cout << longestPalindromeLength("1qq2qawaq123") << endl;
 
 	cout << endl;
 	cout << countCoinChangeIter({ 1, 2, 3 }, 3, 4) << endl;
