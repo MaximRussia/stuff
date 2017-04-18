@@ -587,7 +587,7 @@ int findElementOnlyOnce(const vector<int> &v) {
 		}
 	}
 
-	for (auto i : hash) {
+	for (pair<int, int> i : hash) {
 		if (i.second == 1) return i.first;
 	}
 
@@ -617,7 +617,7 @@ int maxProfit(vector<int> v) {
 	int max_profit = 0;
 	int min_cost = 99999999;
 
-	for (auto i : v) {
+	for (int i : v) {
 		min_cost = min(min_cost, i);
 		max_profit = max(i - min_cost, max_profit);
 	}
@@ -1601,6 +1601,41 @@ int NumWays(int N) {
     return cache.back().back();
 }
 
+size_t LevenshteinDistance(std::string src, std::string dst) {
+    size_t m = src.size();
+    size_t n = dst.size();
+    if (m == 0) {
+        return n;
+    }
+    if (n == 0) {
+        return m;
+    }
+
+    std::vector< std::vector<size_t> > matrix(m + 1);
+
+    for (size_t i = 0; i <= m; ++i) {
+        matrix[i].resize(n + 1);
+        matrix[i][0] = i;
+    }
+    for (size_t i = 0; i <= n; ++i) {
+        matrix[0][i] = i;
+    }
+
+    size_t above_cell = 0, left_cell = 0, diagonal_cell = 0, cost = 0;
+
+    for (size_t i = 1; i <= m; ++i) {
+        for (size_t j = 1; j <= n; ++j) {
+            cost = src[i - 1] == dst[j - 1] ? 0 : 1;
+            above_cell = matrix[i - 1][j];
+            left_cell = matrix[i][j - 1];
+            diagonal_cell = matrix[i - 1][j - 1];
+            matrix[i][j] = std::min(std::min(above_cell + 1, left_cell + 1), diagonal_cell + cost);
+        }
+    }
+
+    return matrix[m][n];
+}
+
 /////////////////////////////////
 // GRAPHS
 /////////////////////////////////
@@ -1693,9 +1728,9 @@ map<string, vector<string>> generateGraph(vector<string> &dict) {
 
 	set<char> cached; /// cache characters
 	cout << "dict: ";
-	for (auto word : dict) {
+	for (string word : dict) {
 		cout << word << " ";
-		for (auto ch : word) {
+		for (char ch : word) {
 			cached.insert(ch);
 		}
 	}
@@ -1705,7 +1740,7 @@ map<string, vector<string>> generateGraph(vector<string> &dict) {
 	cout << "cached size : " << cached.size() << endl;
 	cout << "cached : ";
 
-	for (auto ch : cached) {
+	for (char ch : cached) {
 		cout << ch;
 	}
 
@@ -1723,7 +1758,7 @@ map<string, vector<string>> generateGraph(vector<string> &dict) {
 			}
 
 			/// change j-th char
-			for (auto ch : cached) {
+			for (char ch : cached) {
 				string change = dict[i].substr(0, j) + string(1, ch) + dict[i].substr(j + 1);
 				if (find(dict.begin(), dict.end(), change) != dict.end() && change != dict[i]) {
 					// find in dictionary! add this like adjective!
@@ -1732,7 +1767,7 @@ map<string, vector<string>> generateGraph(vector<string> &dict) {
 			}
 
 			/// add at j-th char
-			for (auto ch : cached) {
+			for (char ch : cached) {
 				string add = dict[i].substr(0, j) + string(1, ch) + dict[i].substr(j);
 				if (find(dict.begin(), dict.end(), add) != dict.end()) {
 					// find in dictionary! add this like adjective!
@@ -1760,7 +1795,7 @@ vector<string> transformWordBFS(map<string, vector<string>> &graph,
 		}
 
 		vector<string> transforms = graph[currentWord];
-		for (auto word : transforms) {
+		for (string word : transforms) {
 			if (find(currentPath.begin(), currentPath.end(), word)
 				== currentPath.end()) {
 				currentPath.push_back(word);
@@ -1788,7 +1823,7 @@ vector<string> transformWordDFS(map<string, vector<string>> &graph,
 		}
 
 		vector<string> transforms = graph[currentWord];
-		for (auto word : transforms) {
+		for (string word : transforms) {
 			if (find(currentPath.begin(), currentPath.end(), word)
 				== currentPath.end()) {
 				currentPath.push_back(word);
@@ -1920,18 +1955,18 @@ int main() {
 
 	cout << mostFrequentInt({ 1, 1, 2, 2, 3, 3, 4, 4, 4, 5, 5, 6, 6, 7, 7, 7, 7 }) << endl;
 
-	auto res = pairOfSumm({ 1, 2, 3, 4, 5, 6, 7, 5 }, 10);
-	for (auto i : res) cout << i.first << " " << i.second << endl;
+	vector<pair<int, int>> res = pairOfSumm({ 1, 2, 3, 4, 5, 6, 7, 5 }, 10);
+	for (pair<int,int> i : res) cout << i.first << " " << i.second << endl;
 
 	cout << findElementOnlyOnce({ 1, 1, 2, 2, 3, 3, 4, 5, 5, 6, 6, 7, 8, 9, 9 }) << endl;
 
-	auto res1 = findCommonElements({ 1, 2, 3, 4, 5, 6, 7 }, { 8, 9, 0, 3, 4, 5 });
-	for (auto i : res1) cout << i << " "; cout << endl;
+	vector<int> res1 = findCommonElements({ 1, 2, 3, 4, 5, 6, 7 }, { 8, 9, 0, 3, 4, 5 });
+	for (int i : res1) cout << i << " "; cout << endl;
 
 	cout << maxProfit({ 2, 3, 4, 1, 5, 6, 8, 2, 3 }) << endl;
 
-	auto res2 = multiply({ 1, 2, 3 });
-	for (auto i : res2) cout << i << " ";
+	vector<int> res2 = multiply({ 1, 2, 3 });
+	for (int i : res2) cout << i << " ";
 
 	cout << endl;
 
@@ -2064,25 +2099,25 @@ int main() {
 
 	vector<int> a = { 6, 5, 4, 7, 8, 3, 2, 3, 4 };
 	selection_sort_t(a);
-	for (auto i : a) cout << i << " ";
+	for (int i : a) cout << i << " ";
 
 	cout << endl;
 
 	a = { 6, 5, 4, 7, 8, 3, 2, 3, 4 };
 	insertion_sort_t(a);
-	for (auto i : a) cout << i << " ";
+	for (int i : a) cout << i << " ";
 
 	cout << endl;
 
 	a = { 6, 5, 4, 7, 8, 3, 2, 3, 4 };
 	quick_sort_t(a, 0, a.size() - 1);
-	for (auto i : a) cout << i << " ";
+	for (int i : a) cout << i << " ";
 
 	cout << endl;
 
 	a = { 6, 5, 4, 7, 8, 3, 2, 3, 4 };
 	merge_sort_t(a, 0, a.size() - 1);
-	for (auto i : a) cout << i << " ";
+	for (int i : a) cout << i << " ";
 
 	cout << endl;
 	cout << endl;
@@ -2112,11 +2147,12 @@ int main() {
 
 	printPermute("ABC", 0, 2);
 
-	auto res_sub = allsubsets({1,2,3});
+	vector<vector<int>> res_sub = allsubsets({1,2,3});
 
-	for (auto i : res_sub) {
-		for (auto j : i)
+	for (vector<int> i : res_sub) {
+		for (int j : i) {
 			cout << j;
+		}
 		cout << endl;
 	}
 
@@ -2143,10 +2179,10 @@ int main() {
 
 	cout << endl;
 
-	auto res3 = PascalIter(5);
+	vector<vector<int>> res3 = PascalIter(5);
 
-	for (auto i : res3) {
-		for (auto j : i)
+	for (vector<int> i : res3) {
+		for (int j : i)
 			cout << j;
 		cout << endl;
 	}
@@ -2154,6 +2190,15 @@ int main() {
 	cout << endl;
 
 	cout << NumWays(5) << endl;
+
+	cout << endl;
+
+	cout << LevenshteinDistance("dog", "god") << endl;
+	cout << LevenshteinDistance("puppy", "cat") << endl;
+	cout << LevenshteinDistance("", "") << endl;
+	cout << LevenshteinDistance("wall", "wall") << endl;
+
+	cout << endl;
 
 	cout << "/////////////////////////////////" << endl;
 	cout << "// GRAPH" << endl;
@@ -2183,9 +2228,9 @@ int main() {
 
 	vector<string> dict = { "cat", "bat", "bet", "bed", "at", "ad", "ed" };
 	map<string, vector<string>> graph = generateGraph(dict);
-	for (auto x : graph) {
+	for (pair<string, vector<string>> x : graph) {
 		std::cout << x.first << " : ";
-		for (auto v : x.second) cout << v << " ";
+		for (string & v : x.second) cout << v << " ";
 		cout << std::endl;
 	}
 
