@@ -276,8 +276,8 @@ int main() {
 			 L       L
 			 L       L^
 			 O^      O
-			 O
-			 N^
+			         O
+			         N^
 			 **/
 
 	Trie* trie = new Trie();
