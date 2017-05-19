@@ -94,23 +94,5 @@ int main() {
         cout << (t2 - t1) / 1000.0 << endl;
     }
 
-    {
-        auto t1 = clock();
-        func();
-        func();
-        auto t2 = clock();
-        cout << (t2 - t1) / 1000.0 << endl;
-    }
-
-    {
-        auto t1 = clock();
-        thread first(func);
-        thread second(func);
-        first.join();
-        second.join();
-        auto t2 = clock();
-        cout << (t2 - t1) / 1000.0 << endl;
-    }
-
 	return 0;
 }
