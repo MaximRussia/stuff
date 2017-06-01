@@ -1396,6 +1396,7 @@ void breakets(string s, int left, int right, int pairs) {
 		breakets(s + ")", left, right + 1, pairs);
 }
 
+// OK for vector, array, string
 void printPermute(string s, int l, int r) {
 	if (l == r) {
 		cout << s << endl;
@@ -1411,6 +1412,7 @@ void printPermute(string s, int l, int r) {
 	}
 }
 
+// OK for vector, array, string
 vector< vector<int> > allsubsets(vector<int> v) {
     vector< vector<int> > res;
     if(v.empty()) return res;
