@@ -25,8 +25,7 @@ using namespace std;
  *
  */
 struct compare {
-	bool operator() (const string& lhs, const string& rhs) const
-	{
+	bool operator() (const string& lhs, const string& rhs) const {
 		return lhs.length() >= rhs.length();
 	}
 };
@@ -176,8 +175,7 @@ int main(int argc, char **argv) {
 			cout << "Second Longest Compounded Word  : " << res.back() << endl << endl;
 		}
 		cout << "Total number of compounded words: " << w.findCountofAllCompoundedWords() << endl;
-	}
-	catch (string s) {
+	} catch (string s) {
 		cout << "Exception: " << s << endl;
 	}
 } // end of main function

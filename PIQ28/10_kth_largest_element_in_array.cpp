@@ -28,13 +28,13 @@ void _swap(int &a, int &b) {
 /**
 Find swapIndex
 **/
-int partition2(vector<int> &arr, int left, int right, int pivot){
+int partition2(vector<int> &arr, int left, int right, int pivot) {
 	int pivotValue = arr[pivot];
 	/* Put the pivot value at the end */
 	_swap(arr[pivot], arr[right]);
 	int storePosition = left;
-	for (int i = left; i < right; i++){
-		if (arr[i] < pivotValue){
+	for (int i = left; i < right; i++) {
+		if (arr[i] < pivotValue) {
 			_swap(arr[i], arr[storePosition]);
 			storePosition++;
 		}
@@ -43,7 +43,7 @@ int partition2(vector<int> &arr, int left, int right, int pivot){
 	return storePosition;
 }
 
-int kth_largest_element2(vector<int> &arr, int k){
+int kth_largest_element2(vector<int> &arr, int k) {
 	int left = 0;
 	int right = arr.size();
 	while (true) {

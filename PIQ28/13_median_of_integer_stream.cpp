@@ -28,8 +28,7 @@ int median1(vector<int> &nums) {
 	for (int i = 1; i < nums.size(); i++) {
 		if (nums[i] < median) {
 			maxHeap.push(nums[i]);
-		}
-		else {
+		} else {
 			minHeap.push(-nums[i]);
 		}
 
@@ -37,8 +36,7 @@ int median1(vector<int> &nums) {
 			minHeap.push(-median);
 			median = maxHeap.top();
 			maxHeap.pop();
-		}
-		else if (maxHeap.size() < minHeap.size()) {
+		} else if (maxHeap.size() < minHeap.size()) {
 			maxHeap.push(median);
 			median = -minHeap.top();
 			minHeap.pop();

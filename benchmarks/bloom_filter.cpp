@@ -46,7 +46,7 @@ HashFn defaultHashFns[5] = { HashFn(13), HashFn(17), HashFn(31), HashFn(41), Has
 class BloomFilter {
 public:
 	BloomFilter(unsigned int bitsPerElement = 10, unsigned int estimatedNumElements = 50000, HashFn hashFns[] = defaultHashFns,
-	int numHashFns = sizeof(defaultHashFns) / sizeof(defaultHashFns[0]));
+		int numHashFns = sizeof(defaultHashFns) / sizeof(defaultHashFns[0]));
 	BloomFilter(const char *buffer, int byteBufferSize, HashFn hashFns[] = defaultHashFns, int numHashFns = sizeof(defaultHashFns) / sizeof(defaultHashFns[0]));
 	~BloomFilter();
 	// Used for debuggging
@@ -246,17 +246,19 @@ return 0;
 *****/
 
 #define CHECK(result) { \
-        bool ___result = (result); \
-        if(!___result) { \
-                cout << "FAILED!" << endl; \
-                cout << #result << " is " << ___result << endl; \
-                cout << "---------------" << endl; \
-				        } else { \
-                cout << "OK!" << endl; \
-                cout << #result << " is " << ___result << endl; \
-                cout << "---------------" << endl; \
-				        } \
-			    }
+	bool ___result = (result); \
+if (!___result) {
+\
+	cout << "FAILED!" << endl; \
+	cout << #result << " is " << ___result << endl; \
+	cout << "---------------" << endl; \
+} else {
+	\
+	cout << "OK!" << endl; \
+	cout << #result << " is " << ___result << endl; \
+	cout << "---------------" << endl; \
+} \
+}
 
 int main(int argc, char**argv) {
 
@@ -284,11 +286,11 @@ int main(int argc, char**argv) {
 	}
 
 	{
-		HashFn H(2);
-		uint64_t hash = H("hi", 2);
+	HashFn H(2);
+	uint64_t hash = H("hi", 2);
 
-		CHECK(hash == ((int)'h') * pow(2, 1) + ((int)'i') * pow(2, 0));
-	}
+	CHECK(hash == ((int)'h') * pow(2, 1) + ((int)'i') * pow(2, 0));
+}
 
 	{
 		BloomFilter b;
@@ -349,5 +351,5 @@ int main(int argc, char**argv) {
 		CHECK(!b2.exists("RonaldBondy"));
 	}
 
-	 return 0;
+	return 0;
 }

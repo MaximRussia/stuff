@@ -26,8 +26,8 @@ T eval(const char program[]) {
 	};
 	auto show_err = [&](std::string msg) {
 		std::cout << "ERROR: " << msg << "\n"
-				  << ">>> " << program << "\n"
-				  << "    " << std::setw(p - program) << "" << "^\n";
+			<< ">>> " << program << "\n"
+			<< "    " << std::setw(p - program) << "" << "^\n";
 	};
 	std::function<T()> expr;
 	std::function<T()> term;
@@ -53,7 +53,7 @@ T eval(const char program[]) {
 	auto mul = [&]() {
 		auto result = term();
 		while (int r = moro('*', '/')) {
-			result = r > 0 ? result*term() : result/term();
+			result = r > 0 ? result*term() : result / term();
 		}
 		return result;
 	};

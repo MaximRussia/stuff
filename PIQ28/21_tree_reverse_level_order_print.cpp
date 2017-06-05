@@ -24,14 +24,12 @@ struct TreeNode {
 };
 
 TreeNode* Insert(TreeNode *root, char data) {
-	if (root == NULL){
+	if (root == NULL) {
 		root = new TreeNode(data);
 		return root;
-	}
-	else if (data <= root->val){
+	} else if (data <= root->val) {
 		root->left = Insert(root->left, data);
-	}
-	else {
+	} else {
 		root->right = Insert(root->right, data);
 	}
 }
@@ -45,8 +43,7 @@ void printNodesByReverseLevels(TreeNode *root) {
 
 	if (root == NULL) {
 		return;
-	}
-	else {
+	} else {
 		nodes.push(root);
 		allNodes.push_back(root);
 		currentLevelCount = 1;
@@ -75,8 +72,7 @@ void printNodesByReverseLevels(TreeNode *root) {
 			}
 		}
 
-		while (!countAtLevelI.empty())
-		{
+		while (!countAtLevelI.empty()) {
 			int countAtI = countAtLevelI.top();
 			countAtLevelI.pop();
 

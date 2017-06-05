@@ -23,8 +23,7 @@ vector<pair<int, int>> pairSum1(vector<int> arr, int k) {
 		if (currSumm == k) {
 			res.push_back(pair<int, int>(arr[left], arr[right]));
 			left++;
-		}
-		else if (currSumm < k) left++;
+		} else if (currSumm < k) left++;
 		else right--;
 	}
 

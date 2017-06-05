@@ -22,27 +22,25 @@ struct TreeNode {
 	TreeNode() : val(0), left(NULL), right(NULL) {}
 };
 
-TreeNode* Insert(TreeNode *root, char data){
-	if (root == NULL){
+TreeNode* Insert(TreeNode *root, char data) {
+	if (root == NULL) {
 		root = new TreeNode(data);
 		return root;
-	}
-	else if (data <= root->val){
+	} else if (data <= root->val) {
 		root->left = Insert(root->left, data);
-	}
-	else {
+	} else {
 		root->right = Insert(root->right, data);
 	}
 }
 
-void printBinaryTreeByLevel(TreeNode * node){
+void printBinaryTreeByLevel(TreeNode * node) {
 	if (node == NULL) return;
 	int currentCount = 1, nextCount = 0;
 
 	queue<TreeNode*> q;
 	q.push(node);
 
-	while (!q.empty()){
+	while (!q.empty()) {
 		TreeNode* currentNode = q.front();
 		q.pop();
 		currentCount--;

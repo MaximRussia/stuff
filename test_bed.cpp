@@ -17,9 +17,9 @@ using namespace std;
 /////////////////////////////////
 
 void* alloc_str(const char *str) {
-    /// strlen(str) == strlen(str) * sizeof(char), char == 1 byte
-    /// +1 for '\0'
-    return malloc(strlen(str) + 1);
+	/// strlen(str) == strlen(str) * sizeof(char), char == 1 byte
+	/// +1 for '\0'
+	return malloc(strlen(str) + 1);
 }
 
 void my_cpy(char **res, const char *str) {
@@ -111,8 +111,8 @@ struct tnode {
 	int v;
 	tnode* right;
 	tnode* left;
-	tnode() : v(0), right(NULL), left(NULL){}
-	tnode(int v) : v(v), right(NULL), left(NULL){}
+	tnode() : v(0), right(NULL), left(NULL) {}
+	tnode(int v) : v(v), right(NULL), left(NULL) {}
 };
 
 void insert(tnode* &root, int v) {
@@ -126,7 +126,7 @@ void insert(tnode* &root, int v) {
 }
 
 void BFS(tnode* &root) {
-	if (!root)  {
+	if (!root) {
 		return;
 	}
 
@@ -153,7 +153,7 @@ Inorder   =   L-V-R
 Postorder =   L-R-V
 *******/
 void preorder(tnode* &root) {
-	if (!root)  {
+	if (!root) {
 		return;
 	}
 
@@ -182,7 +182,7 @@ void iterativePreorder(tnode* &root) {
 }
 
 void inorder(tnode* &root) {
-	if (!root)  {
+	if (!root) {
 		return;
 	}
 
@@ -192,7 +192,7 @@ void inorder(tnode* &root) {
 }
 
 void iterativeInorder(tnode* &root) {
-	if (!root)  {
+	if (!root) {
 		return;
 	}
 
@@ -203,8 +203,7 @@ void iterativeInorder(tnode* &root) {
 		if (node) {
 			s.push(node);
 			node = node->left;
-		}
-		else {
+		} else {
 			node = s.top(); s.pop();
 			cout << node->v << " ";
 			node = node->right;
@@ -215,7 +214,7 @@ void iterativeInorder(tnode* &root) {
 }
 
 void postorder(tnode* &root) {
-	if (!root)  {
+	if (!root) {
 		return;
 	}
 
@@ -253,31 +252,31 @@ int getHeight(tnode* root) {
 }
 
 int maxValue(tnode* root) {
-    int result = root->v;
+	int result = root->v;
 
-    if(root->right) {
-        result = std::max(result, maxValue(root->right));
-    }
+	if (root->right) {
+		result = std::max(result, maxValue(root->right));
+	}
 
-    if(root->left) {
-        result = std::max(result, maxValue(root->left));
-    }
+	if (root->left) {
+		result = std::max(result, maxValue(root->left));
+	}
 
-    return result;
+	return result;
 }
 
 int minValue(tnode* root) {
-    int result = root->v;
+	int result = root->v;
 
-    if(root->right) {
-        result = std::min(result, maxValue(root->right));
-    }
+	if (root->right) {
+		result = std::min(result, maxValue(root->right));
+	}
 
-    if(root->left) {
-        result = std::min(result, maxValue(root->left));
-    }
+	if (root->left) {
+		result = std::min(result, maxValue(root->left));
+	}
 
-    return result;
+	return result;
 }
 
 int isBST(tnode* root) {
@@ -305,26 +304,24 @@ int isBST2(tnode* root,
 }
 
 /// BST
-tnode* lowestCommonAcessor(tnode* root, int value1, int value2){
+tnode* lowestCommonAcessor(tnode* root, int value1, int value2) {
 	if (!root) return NULL;
 	if (root->v == value1 || root->v == value2)
 		return root;
 
-	while (root){
-		if (root->v > max(value1, value2)){
+	while (root) {
+		if (root->v > max(value1, value2)) {
 			root = root->left;
-		}
-		else if (root->v < min(value1, value2)){
+		} else if (root->v < min(value1, value2)) {
 			root = root->right;
-		}
-		else {
+		} else {
 			return root;
 		}
 	}
 }
 
 /// non BST
-tnode* lowestCommonAcessor2(tnode* root, int value1, int value2){
+tnode* lowestCommonAcessor2(tnode* root, int value1, int value2) {
 	if (!root) return NULL;
 	if (root->v == value1 || root->v == value2)
 		return root;
@@ -350,7 +347,7 @@ void insertArray(tnode* &root, int arr[], int start, int end) {
 }
 
 void printLevelByLevel(tnode* &root) {
-	if (!root)  { cout << "empty" << endl; return; }
+	if (!root) { cout << "empty" << endl; return; }
 
 	queue<tnode*> q1;
 	queue<tnode*> q2;
@@ -364,8 +361,7 @@ void printLevelByLevel(tnode* &root) {
 				if (node->left) q2.push(node->left);
 				if (node->right) q2.push(node->right);
 			}
-		}
-		else if (!q2.empty()) {
+		} else if (!q2.empty()) {
 			while (!q2.empty()) {
 				tnode* node = q2.front(); q2.pop();
 				cout << node->v << " ";
@@ -392,8 +388,8 @@ void clean(tnode* &root) {
 struct node {
 	int v;
 	node* next;
-	node() : v(0), next(NULL){}
-	node(int v) : v(v), next(NULL){}
+	node() : v(0), next(NULL) {}
+	node(int v) : v(v), next(NULL) {}
 };
 
 void insert(node* &head, int v) {
@@ -429,23 +425,23 @@ void removeNode(node* &head) {
 }
 
 void printKthLast(node* &head, int k) {
-    if(!head) return;
+	if (!head) return;
 
-    int cnt = 0;
-    node *move = head;
-    while(cnt < k) {
-        if(!move) return;
-        move = move->next;
-        cnt++;
-    }
+	int cnt = 0;
+	node *move = head;
+	while (cnt < k) {
+		if (!move) return;
+		move = move->next;
+		cnt++;
+	}
 
-    node *res = head;
-    while(move) {
-        move = move->next;
-        res = res->next;
-    }
+	node *res = head;
+	while (move) {
+		move = move->next;
+		res = res->next;
+	}
 
-    cout << res->v << endl;
+	cout << res->v << endl;
 }
 
 void appendHead(node* &head, node* n) {
@@ -518,7 +514,7 @@ void selectSort(node* &head) {
 	while (first) {
 		node* minn = first;
 		node* fast = first;
-		while (fast){
+		while (fast) {
 			if (fast->v < first->v) minn = fast;
 			fast = fast->next;
 		}
@@ -543,8 +539,7 @@ int mostFrequentInt(const vector<int> &v) {
 	for (int i = 0; i < v.size(); i++) {
 		if (hash.find(v[i]) == hash.end()) {
 			hash[v[i]] = 1;
-		}
-		else {
+		} else {
 			int buff = ++hash[v[i]];
 			if (buff > cnt) {
 				cnt = buff;
@@ -564,8 +559,7 @@ vector<pair<int, int>> pairOfSumm(const vector<int> &v, int summ) {
 	for (int i = 0; i < v.size(); i++) {
 		if (hash.find(v[i]) != hash.end()) {
 			res.push_back(pair<int, int>(v[i], hash[v[i]]));
-		}
-		else {
+		} else {
 			hash[summ - v[i]] = v[i];
 		}
 	}
@@ -581,8 +575,7 @@ int findElementOnlyOnce(const vector<int> &v) {
 	for (int i = 0; i < v.size(); i++) {
 		if (hash.find(v[i]) == hash.end()) {
 			hash[v[i]] = 1;
-		}
-		else {
+		} else {
 			hash[v[i]]++;
 		}
 	}
@@ -658,8 +651,7 @@ int mostContSubsiquence(vector<int> v) {
 		curr += v[i];
 		if (curr > prev) {
 			res = curr;
-		}
-		else {
+		} else {
 			curr = 0;
 		}
 
@@ -701,9 +693,9 @@ int findPartition(vector<int> &arr) {
 // STRINGS
 /////////////////////////////////
 bool isBalanced(char ch1, char ch2) {
-	if(ch1 == '(' && ch2 == ')') return true;
-	if(ch1 == '[' && ch2 == ']') return true;
-	if(ch1 == '{' && ch2 == '}') return true;
+	if (ch1 == '(' && ch2 == ')') return true;
+	if (ch1 == '[' && ch2 == ']') return true;
+	if (ch1 == '{' && ch2 == '}') return true;
 	return false;
 }
 
@@ -711,13 +703,12 @@ bool checkBreakets(string str) {
 	if (str.empty()) return false;
 
 	stack<char> st;
-	for(int i = 0; i < str.size(); i++) {
-		if(str[i] == '(' || str[i] == '[' || str[i] == '{') {
+	for (int i = 0; i < str.size(); i++) {
+		if (str[i] == '(' || str[i] == '[' || str[i] == '{') {
 			st.push(str[i]);
-		}
-		else if(str[i] == ')' || str[i] == ']' || str[i] == '}') {
-			if(st.empty()) return false;
-			if(!isBalanced(st.top(), str[i])) return false;
+		} else if (str[i] == ')' || str[i] == ']' || str[i] == '}') {
+			if (st.empty()) return false;
+			if (!isBalanced(st.top(), str[i])) return false;
 			st.pop();
 		}
 	}
@@ -829,7 +820,7 @@ string dec2bin(int dec) {
 	return res;
 }
 
-int bin2dec(string s){
+int bin2dec(string s) {
 	if (s.empty()) return 0;
 
 	int res = 0;
@@ -931,8 +922,7 @@ int lengthOfLongestUniqueSubstring(string s) {
 	for (int i = 0; i < s.size(); i++) {
 		if (hash.find(s[i]) == hash.end()) {
 			hash[s[i]] = i;
-		}
-		else {
+		} else {
 			prev = max(prev, (int)hash.size());
 			i = hash[s[i]];
 			hash.clear();
@@ -1181,11 +1171,9 @@ void sieveOfEratosthenes(int n) {
 	bool prime[n + 1];
 	memset(prime, true, sizeof(prime));
 
-	for (int p = 2; p*p <= n; p++)
-	{
+	for (int p = 2; p*p <= n; p++) {
 		// If prime[p] is not changed, then it is a prime
-		if (prime[p] == true)
-		{
+		if (prime[p] == true) {
 			// Update all multiples of p
 			for (int i = p * 2; i <= n; i += p)
 				prime[i] = false;
@@ -1194,8 +1182,8 @@ void sieveOfEratosthenes(int n) {
 
 	// Print all prime numbers
 	for (int p = 2; p <= n; p++)
-		if (prime[p])
-			cout << p << " ";
+	if (prime[p])
+		cout << p << " ";
 
 	cout << endl;
 }
@@ -1258,17 +1246,17 @@ void insertion_sort_t(vector<T> &v) {
 // Sorting In Place: Yes
 // Stable: No
 template<typename T>
-void quick_sort_t(vector<T> &A, int l, int r){
+void quick_sort_t(vector<T> &A, int l, int r) {
 	if (l >= r) return;
 
 	int ll = l, rr = r;
 	int mid = A[((ll + rr) >> 1)];
 
-	while (ll <= rr){
+	while (ll <= rr) {
 		while (A[ll] < mid) ll++;
 		while (A[rr] > mid) rr--;
 
-		if (ll <= rr){
+		if (ll <= rr) {
 			swap(A[ll], A[rr]);
 			ll++;
 			rr--;
@@ -1329,8 +1317,8 @@ int bin_search_t(vector<T> &v, T n) {
 
 		if (v[mid] == n) return mid;
 		else
-			if (n < v[mid]) r = mid - 1;
-			else l = mid + 1;
+		if (n < v[mid]) r = mid - 1;
+		else l = mid + 1;
 	}
 
 	return 0;
@@ -1351,8 +1339,7 @@ int bin_search_rotated_t(vector<T> &v, T key) {
 				r = mid - 1;
 			else
 				l = mid + 1;
-		}
-		else { // the upper half is sorted
+		} else { // the upper half is sorted
 			if (v[mid] < key && key <= v[r])
 				l = mid + 1;
 			else
@@ -1414,23 +1401,23 @@ void printPermute(string s, int l, int r) {
 
 // OK for vector, array, string
 vector< vector<int> > allsubsets(vector<int> v) {
-    vector< vector<int> > res;
-    if(v.empty()) return res;
+	vector< vector<int> > res;
+	if (v.empty()) return res;
 
-    size_t max = 1 << v.size();
+	size_t max = 1 << v.size();
 
-    for(size_t flag = 1; flag < max; flag++) {
-        size_t idx = 0;
-        size_t t = flag;
-        res.push_back({});
-        while(t) {
-            idx++;
-            if(t & 1) {
-                res.back().push_back(v[v.size()-idx]);
-            }
-            t >>= 1;
-        }
-    }
+	for (size_t flag = 1; flag < max; flag++) {
+		size_t idx = 0;
+		size_t t = flag;
+		res.push_back({});
+		while (t) {
+			idx++;
+			if (t & 1) {
+				res.back().push_back(v[v.size() - idx]);
+			}
+			t >>= 1;
+		}
+	}
 }
 
 /////////////////////////////////
@@ -1465,84 +1452,84 @@ string longestPalindrome(string s) {
 
 // 0(n) O(n*n)
 int longestPalindromeLength(string str) {
-    int n = str.size(); // get length of input string
-    // table[i][j] will be false if substring str[i..j]
-    // is not palindrome.
-    // Else table[i][j] will be true
-    bool table[n][n];
-    memset(table, 0, sizeof(table));
+	int n = str.size(); // get length of input string
+	// table[i][j] will be false if substring str[i..j]
+	// is not palindrome.
+	// Else table[i][j] will be true
+	bool table[n][n];
+	memset(table, 0, sizeof(table));
 
-    // All substrings of length 1 are palindromes
-    int maxLength = 1;
-    for (int i = 0; i < n; ++i)
-        table[i][i] = true;
+	// All substrings of length 1 are palindromes
+	int maxLength = 1;
+	for (int i = 0; i < n; ++i)
+		table[i][i] = true;
 
-    // All substrings of length 2 are palindromes, too
-    int start = 0;
-    for (int i = 0; i < n-1; ++i) {
-        if (str[i] == str[i+1]) {
-            table[i][i+1] = true;
-            start = i;
-            maxLength = 2;
-        }
-    }
+	// All substrings of length 2 are palindromes, too
+	int start = 0;
+	for (int i = 0; i < n - 1; ++i) {
+		if (str[i] == str[i + 1]) {
+			table[i][i + 1] = true;
+			start = i;
+			maxLength = 2;
+		}
+	}
 
-    // Check for lengths greater than 2. k is length
-    // of substring
-    for (int k = 3; k <= n; ++k) {
-        // Fix the starting index
-        for (int i = 0; i < n-k+1 ; ++i) {
-            // Get the ending index of substring from
-            // starting index i and length k
-            int j = i + k - 1;
-            // checking for sub-string from ith index to
-            // jth index iff str[i+1] to str[j-1] is a
-            // palindrome
-            if (table[i+1][j-1] && str[i] == str[j]) {
-                table[i][j] = true;
-                if (k > maxLength) {
-                    start = i;
-                    maxLength = k;
-                }
-            }
-        }
-    }
+	// Check for lengths greater than 2. k is length
+	// of substring
+	for (int k = 3; k <= n; ++k) {
+		// Fix the starting index
+		for (int i = 0; i < n - k + 1; ++i) {
+			// Get the ending index of substring from
+			// starting index i and length k
+			int j = i + k - 1;
+			// checking for sub-string from ith index to
+			// jth index iff str[i+1] to str[j-1] is a
+			// palindrome
+			if (table[i + 1][j - 1] && str[i] == str[j]) {
+				table[i][j] = true;
+				if (k > maxLength) {
+					start = i;
+					maxLength = k;
+				}
+			}
+		}
+	}
 
-    printf("Longest palindrome substring is: %s\n", str.substr(start, maxLength).c_str());
+	printf("Longest palindrome substring is: %s\n", str.substr(start, maxLength).c_str());
 
-    return maxLength; // return length of LPS
+	return maxLength; // return length of LPS
 }
 
 // backtracking
 int countCoinChangeRec(const vector<int>& S, int m, int n) {
-    if (n == 0) return 1;
+	if (n == 0) return 1;
 
-    if (n < 0) return 0;
+	if (n < 0) return 0;
 
-    // If there are no coins and n is greater than 0, then no solution exist
-    if (m <=0 && n >= 1) return 0;
+	// If there are no coins and n is greater than 0, then no solution exist
+	if (m <= 0 && n >= 1) return 0;
 
-    return countCoinChangeRec( S, m - 1, n ) + countCoinChangeRec( S, m, n-S[m-1] );
+	return countCoinChangeRec(S, m - 1, n) + countCoinChangeRec(S, m, n - S[m - 1]);
 }
 
 // dynamic
-int countCoinChangeIter( const vector<int>& S, int m, int n ) {
-    // table[i] will be storing the number of solutions for
-    // value i. We need n+1 rows as the table is consturcted
-    // in bottom up manner using the base case (n = 0)
-    int table[n+1];
+int countCoinChangeIter(const vector<int>& S, int m, int n) {
+	// table[i] will be storing the number of solutions for
+	// value i. We need n+1 rows as the table is consturcted
+	// in bottom up manner using the base case (n = 0)
+	int table[n + 1];
 
-    memset(table, 0, sizeof(table));
-    table[0] = 1;
+	memset(table, 0, sizeof(table));
+	table[0] = 1;
 
-    // Pick all coins one by one and update the table[] values
-    // after the index greater than or equal to the value of the
-    // picked coin
-    for(int i=0; i<m; i++)
-        for(int j=S[i]; j<=n; j++)
-            table[j] += table[j-S[i]];
+	// Pick all coins one by one and update the table[] values
+	// after the index greater than or equal to the value of the
+	// picked coin
+	for (int i = 0; i < m; i++)
+	for (int j = S[i]; j <= n; j++)
+		table[j] += table[j - S[i]];
 
-    return table[n];
+	return table[n];
 }
 
 ///1
@@ -1580,62 +1567,62 @@ vector<vector<int>> PascalIter(int row) {
 }
 
 int NumWays(int N) {
-    if(N <= 0 ) return 0;
-    if(N == 1) return 1;
+	if (N <= 0) return 0;
+	if (N == 1) return 1;
 
-    vector< vector<int> > cache;
-    cache.resize(N);
-    for(int i = 0; i < cache.size(); i++) {
-        cache[i].resize(N);
-        cache[i][0] = 1;
-    }
+	vector< vector<int> > cache;
+	cache.resize(N);
+	for (int i = 0; i < cache.size(); i++) {
+		cache[i].resize(N);
+		cache[i][0] = 1;
+	}
 
-    for(int i = 0; i < N; i++) {
-        cache[0][i] = 1;
-    }
+	for (int i = 0; i < N; i++) {
+		cache[0][i] = 1;
+	}
 
-    for(int i = 1; i < N; i++) {
-        for(int j = 1; j < N; j++) {
-            cache[i][j] = cache[i-1][j] + cache[i][j - 1];
-        }
-    }
+	for (int i = 1; i < N; i++) {
+		for (int j = 1; j < N; j++) {
+			cache[i][j] = cache[i - 1][j] + cache[i][j - 1];
+		}
+	}
 
-    return cache.back().back();
+	return cache.back().back();
 }
 
 size_t LevenshteinDistance(std::string src, std::string dst) {
-    size_t m = src.size();
-    size_t n = dst.size();
-    if (m == 0) {
-        return n;
-    }
-    if (n == 0) {
-        return m;
-    }
+	size_t m = src.size();
+	size_t n = dst.size();
+	if (m == 0) {
+		return n;
+	}
+	if (n == 0) {
+		return m;
+	}
 
-    std::vector< std::vector<size_t> > matrix(m + 1);
+	std::vector< std::vector<size_t> > matrix(m + 1);
 
-    for (size_t i = 0; i <= m; ++i) {
-        matrix[i].resize(n + 1);
-        matrix[i][0] = i;
-    }
-    for (size_t i = 0; i <= n; ++i) {
-        matrix[0][i] = i;
-    }
+	for (size_t i = 0; i <= m; ++i) {
+		matrix[i].resize(n + 1);
+		matrix[i][0] = i;
+	}
+	for (size_t i = 0; i <= n; ++i) {
+		matrix[0][i] = i;
+	}
 
-    size_t above_cell = 0, left_cell = 0, diagonal_cell = 0, cost = 0;
+	size_t above_cell = 0, left_cell = 0, diagonal_cell = 0, cost = 0;
 
-    for (size_t i = 1; i <= m; ++i) {
-        for (size_t j = 1; j <= n; ++j) {
-            cost = src[i - 1] == dst[j - 1] ? 0 : 1;
-            above_cell = matrix[i - 1][j];
-            left_cell = matrix[i][j - 1];
-            diagonal_cell = matrix[i - 1][j - 1];
-            matrix[i][j] = std::min(std::min(above_cell + 1, left_cell + 1), diagonal_cell + cost);
-        }
-    }
+	for (size_t i = 1; i <= m; ++i) {
+		for (size_t j = 1; j <= n; ++j) {
+			cost = src[i - 1] == dst[j - 1] ? 0 : 1;
+			above_cell = matrix[i - 1][j];
+			left_cell = matrix[i][j - 1];
+			diagonal_cell = matrix[i - 1][j - 1];
+			matrix[i][j] = std::min(std::min(above_cell + 1, left_cell + 1), diagonal_cell + cost);
+		}
+	}
 
-    return matrix[m][n];
+	return matrix[m][n];
 }
 
 /////////////////////////////////
@@ -1958,7 +1945,7 @@ int main() {
 	cout << mostFrequentInt({ 1, 1, 2, 2, 3, 3, 4, 4, 4, 5, 5, 6, 6, 7, 7, 7, 7 }) << endl;
 
 	vector<pair<int, int>> res = pairOfSumm({ 1, 2, 3, 4, 5, 6, 7, 5 }, 10);
-	for (pair<int,int> i : res) cout << i.first << " " << i.second << endl;
+	for (pair<int, int> i : res) cout << i.first << " " << i.second << endl;
 
 	cout << findElementOnlyOnce({ 1, 1, 2, 2, 3, 3, 4, 5, 5, 6, 6, 7, 8, 9, 9 }) << endl;
 
@@ -1983,8 +1970,8 @@ int main() {
 	cout << "/////////////////////////////////" << endl;
 	cout << "// STRINGS" << endl;
 	cout << "/////////////////////////////////" << endl;
-    cout << checkBreakets("(()()())[[[]]]{{}}") << endl;
-    cout << checkBreakets("()(){}{}{}()(())]") << endl;
+	cout << checkBreakets("(()()())[[[]]]{{}}") << endl;
+	cout << checkBreakets("()(){}{}{}()(())]") << endl;
 	cout << isAnagram("qwerty", "erwqyt") << endl;
 	cout << firstNonRepeated("qwertqwefrt") << endl;
 	cout << revertIter("1234qwerty") << endl;
@@ -2149,7 +2136,7 @@ int main() {
 
 	printPermute("ABC", 0, 2);
 
-	vector<vector<int>> res_sub = allsubsets({1,2,3});
+	vector<vector<int>> res_sub = allsubsets({ 1, 2, 3 });
 
 	for (vector<int> i : res_sub) {
 		for (int j : i) {

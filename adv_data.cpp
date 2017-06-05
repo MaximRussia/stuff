@@ -71,8 +71,7 @@ void MinHeap::decreaseKey(int i, int new_val) {
 int MinHeap::extractMin() {
 	if (heap_size <= 0)
 		return INT_MAX;
-	if (heap_size == 1)
-	{
+	if (heap_size == 1) {
 		heap_size--;
 		return harr[0];
 	}
@@ -174,8 +173,7 @@ void Trie::addWord(string s) {
 		Node* child = current->findChild(s[i]);
 		if (child != NULL) {
 			current = child;
-		}
-		else {
+		} else {
 			Node* tmp = new Node();
 			tmp->setContent(s[i]);
 			current->appendChild(tmp);

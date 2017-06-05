@@ -14,11 +14,11 @@ LARGE_INTEGER _timer_stop;
 LARGE_INTEGER _timer_frequency;
 bool _timer_init = QueryPerformanceFrequency(&_timer_frequency);
 #define TICK() if( _timer_init == false ) { \
-cout << "Failed to query the performance frequency." << endl; \
-cout << "Please do not use timer.h" << endl; \
-exit(1); \
+	cout << "Failed to query the performance frequency." << endl; \
+	cout << "Please do not use timer.h" << endl; \
+	exit(1); \
 } \
-QueryPerformanceCounter(&_timer_start);
+	QueryPerformanceCounter(&_timer_start);
 #define TOCK() QueryPerformanceCounter(&_timer_stop);
 #define TICK_ELAPSED() (_timer_stop.QuadPart - _timer_start.QuadPart)
 #define DURATION() ( TICK_ELAPSED() / (double) _timer_frequency.QuadPart)
@@ -27,18 +27,18 @@ QueryPerformanceCounter(&_timer_start);
 #define OPERATIONS 999
 #define REPEAT 5
 
-void bench_lock(int Threads){
+void bench_lock(int Threads) {
 	std::mutex mutex;
 
 	TICK();
 
-	for (int i = 0; i < REPEAT; ++i){
+	for (int i = 0; i < REPEAT; ++i) {
 		std::vector<std::thread> threads;
 		float counter = 0.0f;
 
-		for (int i = 0; i < Threads; ++i){
-			threads.push_back(std::thread([&](){
-				for (int i = 0; i < OPERATIONS; ++i){
+		for (int i = 0; i < Threads; ++i) {
+			threads.push_back(std::thread([&]() {
+				for (int i = 0; i < OPERATIONS; ++i) {
 					mutex.lock();
 					counter += pow(i, pow(i, 60));
 					mutex.unlock();
@@ -46,7 +46,7 @@ void bench_lock(int Threads){
 			}));
 		}
 
-		for (auto& thread : threads){
+		for (auto& thread : threads) {
 			thread.join();
 		}
 	}
@@ -56,26 +56,26 @@ void bench_lock(int Threads){
 	std::cout << "lock with " << Threads << " threads, ms = " << DURATION() << std::endl;
 }
 
-void bench_lock_guard(int Threads){
+void bench_lock_guard(int Threads) {
 	std::mutex mutex;
 
 	TICK();
 
-	for (int i = 0; i < REPEAT; ++i){
+	for (int i = 0; i < REPEAT; ++i) {
 		float counter = 0.0f;
 
 		std::vector<std::thread> threads;
 
-		for (int i = 0; i < Threads; ++i){
-			threads.push_back(std::thread([&](){
-				for (int i = 0; i < OPERATIONS; ++i){
+		for (int i = 0; i < Threads; ++i) {
+			threads.push_back(std::thread([&]() {
+				for (int i = 0; i < OPERATIONS; ++i) {
 					std::lock_guard<std::mutex> guard(mutex);
 					counter += pow(i, pow(i, 60));
 				}
 			}));
 		}
 
-		for (auto& thread : threads){
+		for (auto& thread : threads) {
 			thread.join();
 		}
 	}
@@ -85,24 +85,24 @@ void bench_lock_guard(int Threads){
 	std::cout << "lock_guard with " << Threads << " threads, ms = " << DURATION() << std::endl;
 }
 
-void bench_atomic(int Threads){
+void bench_atomic(int Threads) {
 	TICK();
 
-	for (int i = 0; i < REPEAT; ++i){
+	for (int i = 0; i < REPEAT; ++i) {
 		std::atomic<float> counter;
 		counter.store(0.0f);
 
 		std::vector<std::thread> threads;
 
-		for (int i = 0; i < Threads; ++i){
-			threads.push_back(std::thread([&](){
-				for (int i = 0; i < OPERATIONS; ++i){
+		for (int i = 0; i < Threads; ++i) {
+			threads.push_back(std::thread([&]() {
+				for (int i = 0; i < OPERATIONS; ++i) {
 					counter.store(pow(i, pow(i, 60)));
 				}
 			}));
 		}
 
-		for (auto& thread : threads){
+		for (auto& thread : threads) {
 			thread.join();
 		}
 	}
@@ -113,16 +113,16 @@ void bench_atomic(int Threads){
 }
 
 #define bench(name)\
-    name(1);\
-    name(2);\
-    name(4);\
-    name(8);\
-    name(16);\
-    name(32);\
-    name(64);\
-    name(128);
+	name(1); \
+	name(2); \
+	name(4); \
+	name(8); \
+	name(16); \
+	name(32); \
+	name(64); \
+	name(128);
 
-int main(){
+int main() {
 
 	int threads = std::thread::hardware_concurrency();
 

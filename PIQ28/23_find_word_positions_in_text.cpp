@@ -41,7 +41,7 @@ Node* Node::findChild(char c) {
 }
 
 void Node::printBranch(Node *node, char *word, int count) {
-	if (node->mLetter != ' ')  {
+	if (node->mLetter != ' ') {
 		word[count++] = node->mLetter;
 	}
 	if (node->hasTerminator()) {
@@ -96,8 +96,7 @@ void Trie::addWord(string s) {
 		Node* child = current->findChild(s[i]);
 		if (child != NULL) {
 			current = child;
-		}
-		else {
+		} else {
 			Node* ptr = new Node();
 			ptr->setLetter(s[i]);
 			current->appendChild(ptr);

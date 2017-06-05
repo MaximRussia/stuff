@@ -71,8 +71,7 @@ vector<string> transformWord(map<string, vector<string>> &graph, string start, s
 		string currentWord = currentPath[currentPath.size() - 1];
 		if (currentWord == goal) {
 			return currentPath;
-		}
-		else if (find(extended.begin(), extended.end(), currentWord) != extended.end()) {
+		} else if (find(extended.begin(), extended.end(), currentWord) != extended.end()) {
 			continue;
 		}
 

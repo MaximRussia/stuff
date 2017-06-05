@@ -33,8 +33,7 @@ string next_higher_number(string num) {
 		if (_atoi(num) <= buf) {
 			swap(num[i], num[index]);
 			index = i;
-		}
-		else return num;
+		} else return num;
 	}
 
 	return "";

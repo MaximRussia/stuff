@@ -17,17 +17,16 @@ LARGE_INTEGER _timer_stop;
 LARGE_INTEGER _timer_frequency;
 bool _timer_init = QueryPerformanceFrequency(&_timer_frequency);
 #define TICK() if( _timer_init == false ) { \
-cout << "Failed to query the performance frequency." << endl; \
-cout << "Please do not use timer.h" << endl; \
-exit(1); \
+	cout << "Failed to query the performance frequency." << endl; \
+	cout << "Please do not use timer.h" << endl; \
+	exit(1); \
 } \
-QueryPerformanceCounter(&_timer_start);
+	QueryPerformanceCounter(&_timer_start);
 #define TOCK() QueryPerformanceCounter(&_timer_stop);
 #define TICK_ELAPSED() (_timer_stop.QuadPart - _timer_start.QuadPart)
 #define DURATION() ( TICK_ELAPSED() / (double) _timer_frequency.QuadPart)
 
-struct Point
-{
+struct Point {
 	int x, y;
 };
 
@@ -50,9 +49,9 @@ float dist(Point p1, Point p2) {
 float bruteForce(Point P[], int n) {
 	float min = FLT_MAX;
 	for (int i = 0; i < n; ++i)
-		for (int j = i + 1; j < n; ++j)
-			if (dist(P[i], P[j]) < min)
-				min = dist(P[i], P[j]);
+	for (int j = i + 1; j < n; ++j)
+	if (dist(P[i], P[j]) < min)
+		min = dist(P[i], P[j]);
 	return min;
 }
 
@@ -69,17 +68,16 @@ float stripClosest(Point strip[], int size, float d) {
 	// between y coordinates is smaller than d.
 	// This is a proven fact that this loop runs at most 6 times
 	for (int i = 0; i < size; ++i)
-		for (int j = i + 1; j < size && (strip[j].y - strip[i].y) < min; ++j)
-			if (dist(strip[i], strip[j]) < min)
-				min = dist(strip[i], strip[j]);
+	for (int j = i + 1; j < size && (strip[j].y - strip[i].y) < min; ++j)
+	if (dist(strip[i], strip[j]) < min)
+		min = dist(strip[i], strip[j]);
 
 	return min;
 }
 
 // A recursive function to find the smallest distance. The array P contains
 // all points sorted according to x coordinate
-float closestUtil(Point P[], int n)
-{
+float closestUtil(Point P[], int n) {
 	// If there are 2 or 3 points, then use brute force
 	if (n <= 3)
 		return bruteForce(P, n);
@@ -102,8 +100,8 @@ float closestUtil(Point P[], int n)
 	Point strip[n];
 	int j = 0;
 	for (int i = 0; i < n; i++)
-		if (abs(P[i].x - midPoint.x) < d)
-			strip[j] = P[i], j++;
+	if (abs(P[i].x - midPoint.x) < d)
+		strip[j] = P[i], j++;
 
 	// Find the closest points in strip.  Return the minimum of d and closest
 	// distance is strip[]
@@ -112,8 +110,7 @@ float closestUtil(Point P[], int n)
 
 // The main functin that finds the smallest distance
 // This method mainly uses closestUtil()
-float closest(Point P[], int n)
-{
+float closest(Point P[], int n) {
 	qsort(P, n, sizeof(Point), compareX);
 
 	// Use recursive function closestUtil() to find the smallest distance
@@ -121,15 +118,14 @@ float closest(Point P[], int n)
 }
 
 // Driver program to test above functions
-int main()
-{
+int main() {
 	const int inputsize = 15000;
 
 	srand((unsigned)time(0));
 	cout << "Init arrays ... size " << inputsize << endl;
 	Point P[inputsize];
 
-	for (int i = 0; i < inputsize; i++){
+	for (int i = 0; i < inputsize; i++) {
 		P[i].x = 1 + (rand() % 9999);
 		P[i].y = 1 + (rand() % 9999);
 	}
@@ -140,7 +136,7 @@ int main()
 	printf("The smallest distance is %f (time = %f)\n", res, DURATION());
 
 
-	for (int i = 0; i < inputsize; i++){
+	for (int i = 0; i < inputsize; i++) {
 		P[i].x = 1 + (rand() % 9999);
 		P[i].y = 1 + (rand() % 9999);
 	}

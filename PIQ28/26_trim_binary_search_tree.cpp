@@ -23,15 +23,13 @@ struct TreeNode {
 	TreeNode() : val(0), left(NULL), right(NULL) {}
 };
 
-TreeNode* Insert(TreeNode *root, char data){
-	if (root == NULL){
+TreeNode* Insert(TreeNode *root, char data) {
+	if (root == NULL) {
 		root = new TreeNode(data);
 		return root;
-	}
-	else if (data <= root->val){
+	} else if (data <= root->val) {
 		root->left = Insert(root->left, data);
-	}
-	else {
+	} else {
 		root->right = Insert(root->right, data);
 	}
 }

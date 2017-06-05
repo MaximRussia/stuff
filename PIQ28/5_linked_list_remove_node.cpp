@@ -26,8 +26,7 @@ void RemoveNodesWithValue(Node* head, int k) {
 			toDelete = head;
 			head = head->next;
 			delete toDelete;
-		}
-		else {
+		} else {
 			head = head->next;
 		}
 	}

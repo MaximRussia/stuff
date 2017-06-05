@@ -15,17 +15,17 @@ LARGE_INTEGER _timer_stop;
 LARGE_INTEGER _timer_frequency;
 bool _timer_init = QueryPerformanceFrequency(&_timer_frequency);
 #define TICK() if( _timer_init == false ) { \
-cout << "Failed to query the performance frequency." << endl; \
-cout << "Please do not use timer.h" << endl; \
-exit(1); \
+	cout << "Failed to query the performance frequency." << endl; \
+	cout << "Please do not use timer.h" << endl; \
+	exit(1); \
 } \
-QueryPerformanceCounter(&_timer_start);
+	QueryPerformanceCounter(&_timer_start);
 #define TOCK() QueryPerformanceCounter(&_timer_stop);
 #define TICK_ELAPSED() (_timer_stop.QuadPart - _timer_start.QuadPart)
 #define DURATION() ( TICK_ELAPSED() / (double) _timer_frequency.QuadPart)
 //------------------------------------------------------------------------------------------------------------------
 
-int partition(int* A, int left, int right){
+int partition(int* A, int left, int right) {
 	int pivot = A[right];
 
 	while (left <= right) {
@@ -37,16 +37,14 @@ int partition(int* A, int left, int right){
 		}
 		if (A[left] == A[right]) {
 			left++;
-		}
-		else if (left < right) {
+		} else if (left < right) {
 			swap(A[left], A[right]);
 		}
 	}
 	return right;
 }
 
-int quick_select(int* A, int left, int right, int k)
-{
+int quick_select(int* A, int left, int right, int k) {
 	if (left == right) {
 		return A[left];
 	}
@@ -56,17 +54,14 @@ int quick_select(int* A, int left, int right, int k)
 
 	if (length == k) {
 		return A[pivot];
-	}
-	else if (k < length) {
+	} else if (k < length) {
 		return quick_select(A, left, pivot - 1, k);
-	}
-	else {
+	} else {
 		return quick_select(A, pivot + 1, right, k - length);
 	}
 }
 
-void quick_sort(int* A, int left, int right)
-{
+void quick_sort(int* A, int left, int right) {
 	if (left < right) {
 		int pivot = partition(A, left, right);
 		quick_sort(A, left, pivot - 1);
@@ -74,8 +69,7 @@ void quick_sort(int* A, int left, int right)
 	}
 }
 
-int main()
-{
+int main() {
 	const int inputsize = 500000;
 	const int k = 450000;
 
@@ -84,7 +78,7 @@ int main()
 
 	cout << "Init arrays ... size " << inputsize << endl;
 
-	for (int i = 0; i < inputsize; i++){
+	for (int i = 0; i < inputsize; i++) {
 		A[i] = 1 + (rand() % 9999);
 	}
 

@@ -18,11 +18,11 @@ LARGE_INTEGER _timer_stop;
 LARGE_INTEGER _timer_frequency;
 bool _timer_init = QueryPerformanceFrequency(&_timer_frequency);
 #define TICK() if( _timer_init == false ) { \
-cout << "Failed to query the performance frequency." << endl; \
-cout << "Please do not use timer.h" << endl; \
-exit(1); \
+	cout << "Failed to query the performance frequency." << endl; \
+	cout << "Please do not use timer.h" << endl; \
+	exit(1); \
 } \
-QueryPerformanceCounter(&_timer_start);
+	QueryPerformanceCounter(&_timer_start);
 #define TOCK() QueryPerformanceCounter(&_timer_stop);
 #define TICK_ELAPSED() (_timer_stop.QuadPart - _timer_start.QuadPart)
 #define DURATION() ( TICK_ELAPSED() / (double) _timer_frequency.QuadPart)
@@ -33,8 +33,7 @@ map<string, int> hashing;
 # define MAX_WORD_SIZE 30
 
 // A Trie node
-struct TrieNode
-{
+struct TrieNode {
 	bool isEnd; // indicates end of word
 	unsigned frequency; // the number of occurrences of a word
 	int indexMinHeap; // the index of the word in minHeap
@@ -42,24 +41,21 @@ struct TrieNode
 };
 
 // A Min Heap node
-struct MinHeapNode
-{
+struct MinHeapNode {
 	TrieNode* root; // indicates the leaf node of TRIE
 	unsigned frequency; // number of occurrences
 	char* word; // the actual word stored
 };
 
 // A Min Heap
-struct MinHeap
-{
+struct MinHeap {
 	unsigned capacity; // the total size a min heap
 	int count; // indicates the number of slots filled.
 	MinHeapNode* array; // represents the collection of minHeapNodes
 };
 
 // A utility function to create a new Trie node
-TrieNode* newTrieNode()
-{
+TrieNode* newTrieNode() {
 	// Allocate memory for Trie Node
 	TrieNode* trieNode = new TrieNode;
 
@@ -74,8 +70,7 @@ TrieNode* newTrieNode()
 }
 
 // A utility function to create a Min Heap of given capacity
-MinHeap* createMinHeap(int capacity)
-{
+MinHeap* createMinHeap(int capacity) {
 	MinHeap* minHeap = new MinHeap;
 
 	minHeap->capacity = capacity;
@@ -89,8 +84,7 @@ MinHeap* createMinHeap(int capacity)
 
 // A utility function to swap two min heap nodes. This function
 // is needed in minHeapify
-void swapMinHeapNodes(MinHeapNode* a, MinHeapNode* b)
-{
+void swapMinHeapNodes(MinHeapNode* a, MinHeapNode* b) {
 	MinHeapNode temp = *a;
 	*a = *b;
 	*b = temp;
@@ -99,8 +93,7 @@ void swapMinHeapNodes(MinHeapNode* a, MinHeapNode* b)
 // This is the standard minHeapify function. It does one thing extra.
 // It updates the minHapIndex in Trie when two nodes are swapped in
 // in min heap
-void minHeapify(MinHeap* minHeap, int idx)
-{
+void minHeapify(MinHeap* minHeap, int idx) {
 	int left, right, smallest;
 
 	left = 2 * idx + 1;
@@ -118,8 +111,7 @@ void minHeapify(MinHeap* minHeap, int idx)
 		)
 		smallest = right;
 
-	if (smallest != idx)
-	{
+	if (smallest != idx) {
 		// Update the corresponding index in Trie node.
 		minHeap->array[smallest].root->indexMinHeap = idx;
 		minHeap->array[idx].root->indexMinHeap = smallest;
@@ -132,8 +124,7 @@ void minHeapify(MinHeap* minHeap, int idx)
 }
 
 // A standard function to build a heap
-void buildMinHeap(MinHeap* minHeap)
-{
+void buildMinHeap(MinHeap* minHeap) {
 	int n, i;
 	n = minHeap->count - 1;
 
@@ -142,11 +133,9 @@ void buildMinHeap(MinHeap* minHeap)
 }
 
 // Inserts a word to heap, the function handles the 3 cases explained above
-void insertInMinHeap(MinHeap* minHeap, TrieNode** root, const char* word)
-{
+void insertInMinHeap(MinHeap* minHeap, TrieNode** root, const char* word) {
 	// Case 1: the word is already present in minHeap
-	if ((*root)->indexMinHeap != -1)
-	{
+	if ((*root)->indexMinHeap != -1) {
 		++(minHeap->array[(*root)->indexMinHeap].frequency);
 
 		// percolate down
@@ -154,8 +143,7 @@ void insertInMinHeap(MinHeap* minHeap, TrieNode** root, const char* word)
 	}
 
 	// Case 2: Word is not present and heap is not full
-	else if (minHeap->count < minHeap->capacity)
-	{
+	else if (minHeap->count < minHeap->capacity) {
 		int count = minHeap->count;
 		minHeap->array[count].frequency = (*root)->frequency;
 		minHeap->array[count].word = new char[strlen(word) + 1];
@@ -171,8 +159,7 @@ void insertInMinHeap(MinHeap* minHeap, TrieNode** root, const char* word)
 	// Case 3: Word is not present and heap is full. And frequency of word
 	// is more than root. The root is the least frequent word in heap,
 	// replace root with new word
-	else if ((*root)->frequency > minHeap->array[0].frequency)
-	{
+	else if ((*root)->frequency > minHeap->array[0].frequency) {
 
 		minHeap->array[0].root->indexMinHeap = -1;
 		minHeap->array[0].root = *root;
@@ -190,8 +177,7 @@ void insertInMinHeap(MinHeap* minHeap, TrieNode** root, const char* word)
 
 // Inserts a new word to both Trie and Heap
 void insertUtil(TrieNode** root, MinHeap* minHeap,
-	const char* word, const char* dupWord)
-{
+	const char* word, const char* dupWord) {
 	// Base Case
 	if (*root == NULL)
 		*root = newTrieNode();
@@ -205,8 +191,7 @@ void insertUtil(TrieNode** root, MinHeap* minHeap,
 		// word is already present, increase the frequency
 		if ((*root)->isEnd)
 			++((*root)->frequency);
-		else
-		{
+		else {
 			(*root)->isEnd = 1;
 			(*root)->frequency = 1;
 		}
@@ -218,28 +203,24 @@ void insertUtil(TrieNode** root, MinHeap* minHeap,
 
 
 // add a word to Trie & min heap. A wrapper over the insertUtil
-void insertTrieAndHeap(const char *word, TrieNode** root, MinHeap* minHeap)
-{
+void insertTrieAndHeap(const char *word, TrieNode** root, MinHeap* minHeap) {
 	insertUtil(root, minHeap, word, word);
 }
 
 // A utility function to show results, The min heap
 // contains k most frequent words so far, at any time
-void displayMinHeap(MinHeap* minHeap)
-{
+void displayMinHeap(MinHeap* minHeap) {
 	int i;
 
 	// print top K word with frequency
-	for (i = 0; i < minHeap->count; ++i)
-	{
+	for (i = 0; i < minHeap->count; ++i) {
 		cout << minHeap->array[i].word << " : " << minHeap->array[i].frequency << endl;
 	}
 }
 
 // The main funtion that takes a file as input, add words to heap
 // and Trie, finally shows result from heap
-void printKMostFreq(fstream &fp, int k)
-{
+void printKMostFreq(fstream &fp, int k) {
 	// Create a Min Heap of Size k
 	MinHeap* minHeap = createMinHeap(k);
 
@@ -260,8 +241,7 @@ void printKMostFreq(fstream &fp, int k)
 }
 
 // Driver program to test above functions
-int main()
-{
+int main() {
 	int k = 5;
 	fstream fp("wordsforproblem.txt");
 	if (!fp.good()) {
@@ -290,8 +270,7 @@ int main()
 		fp2 >> buffer;
 		if (hashing.find(buffer) == hashing.end()) {
 			hashing[buffer] = 1;
-		}
-		else {
+		} else {
 			hashing[buffer] += 1;
 		}
 	}

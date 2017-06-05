@@ -16,8 +16,8 @@ struct tnode {
 	tnode* right;
 	tnode* left;
 	tnode* n;
-	tnode() : v(0), right(NULL), left(NULL), n(NULL){}
-	tnode(int v) : v(v), right(NULL), left(NULL), n(NULL){}
+	tnode() : v(0), right(NULL), left(NULL), n(NULL) {}
+	tnode(int v) : v(v), right(NULL), left(NULL), n(NULL) {}
 };
 
 void insertarray(tnode* &root, const vector<int> &v, int start, int end) {
@@ -52,8 +52,7 @@ void connectNeibours(tnode* root) {
 					q2.push(node->right);
 				}
 			}
-		}
-		else if (!q2.empty()) {
+		} else if (!q2.empty()) {
 			while (!q2.empty()) {
 				tnode* node = q2.front(); q2.pop();
 
@@ -80,7 +79,7 @@ void connectNeibours(tnode* root) {
 }
 
 void printLevelByLevelNeibours(tnode* &root) {
-	if (!root)  { cout << "empty" << endl; return; }
+	if (!root) { cout << "empty" << endl; return; }
 
 	queue<tnode*> q1;
 	queue<tnode*> q2;
@@ -97,8 +96,7 @@ void printLevelByLevelNeibours(tnode* &root) {
 				if (node->left) q2.push(node->left);
 				if (node->right) q2.push(node->right);
 			}
-		}
-		else if (!q2.empty()) {
+		} else if (!q2.empty()) {
 			while (!q2.empty()) {
 				tnode* node = q2.front(); q2.pop();
 				if (node->n != NULL)
@@ -116,7 +114,7 @@ void printLevelByLevelNeibours(tnode* &root) {
 }
 
 void printLevelByLevel(tnode* &root) {
-	if (!root)  { cout << "empty" << endl; return; }
+	if (!root) { cout << "empty" << endl; return; }
 
 	queue<tnode*> q1;
 	queue<tnode*> q2;
@@ -130,8 +128,7 @@ void printLevelByLevel(tnode* &root) {
 				if (node->left) q2.push(node->left);
 				if (node->right) q2.push(node->right);
 			}
-		}
-		else if (!q2.empty()) {
+		} else if (!q2.empty()) {
 			while (!q2.empty()) {
 				tnode* node = q2.front(); q2.pop();
 				cout << node->v << " ";

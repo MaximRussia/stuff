@@ -15,11 +15,11 @@ LARGE_INTEGER _timer_stop;
 LARGE_INTEGER _timer_frequency;
 bool _timer_init = QueryPerformanceFrequency(&_timer_frequency);
 #define TICK() if( _timer_init == false ) { \
-cout << "Failed to query the performance frequency." << endl; \
-cout << "Please do not use timer.h" << endl; \
-exit(1); \
+	cout << "Failed to query the performance frequency." << endl; \
+	cout << "Please do not use timer.h" << endl; \
+	exit(1); \
 } \
-QueryPerformanceCounter(&_timer_start);
+	QueryPerformanceCounter(&_timer_start);
 #define TOCK() QueryPerformanceCounter(&_timer_stop);
 #define TICK_ELAPSED() (_timer_stop.QuadPart - _timer_start.QuadPart)
 #define DURATION() ( TICK_ELAPSED() / (double) _timer_frequency.QuadPart)
@@ -30,15 +30,14 @@ QueryPerformanceCounter(&_timer_start);
 ///////////
 size_t naive_strstr(const char *haystack, const char *needle);
 
-size_t naive_strstr(const char *haystack, const char *needle)
-{
+size_t naive_strstr(const char *haystack, const char *needle) {
 	size_t str_sz = strlen(haystack);
 	size_t needle_sz = strlen(needle);
 	for (size_t i = 0; i < str_sz - needle_sz + 1; ++i) {
 		size_t j;
 		for (j = 0; j < needle_sz; ++j)
-			if (haystack[i + j] != needle[j])
-				break;
+		if (haystack[i + j] != needle[j])
+			break;
 		if (j == needle_sz)
 			return i;
 	}
@@ -89,8 +88,7 @@ char *fast_strstr(const char *haystack, const char *needle);
  * Finds the first occurrence of the sub-string needle in the string haystack.
  * Returns NULL if needle was not found.
  */
-char *fast_strstr(const char *haystack, const char *needle)
-{
+char *fast_strstr(const char *haystack, const char *needle) {
 	if (!*needle) // Empty needle.
 		return (char *)haystack;
 
@@ -157,8 +155,7 @@ char *fast_strstr(const char *haystack, const char *needle)
 
 char *volnitsky_strstr(const char *haystack, const char *needle);
 
-char *volnitsky_strstr(const char *haystack, const char *needle)
-{
+char *volnitsky_strstr(const char *haystack, const char *needle) {
 	// Only for little-endian platforms and where access to misaligned W is
 	// allowed.
 
@@ -202,7 +199,7 @@ char *volnitsky_strstr(const char *haystack, const char *needle)
 			}
 			return (char *)R; // found
 
-		next_hash_cell:;
+next_hash_cell:;
 		}
 	}
 

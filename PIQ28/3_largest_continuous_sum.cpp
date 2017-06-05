@@ -22,8 +22,7 @@ int largestContSumm(vector<int> &v) {
 		curr += v[i];
 		if (curr >= prev) {
 			summ = curr;
-		}
-		else {
+		} else {
 			curr = 0;
 		}
 		prev = curr;
