@@ -116,19 +116,17 @@ void MinHeap::print() {
 class Node {
 public:
 	Node() { mContent = ' '; mMarker = false; }
-	~Node() { for (int i = 0; i < mChildren.size(); i++) { delete mChildren[i]; } mChildren.clear(); }
+	Node(char ch) { mContent = ch; mMarker = false; }
+	~Node() { mChildren.clear(); }
 	char content() { return mContent; }
-	void setContent(char c) { mContent = c; }
 	bool wordMarker() { return mMarker; }
 	void setWordMarker() { mMarker = true; }
 	Node* findChild(char c);
-	void appendChild(Node* child) { mChildren.push_back(child); }
-	vector<Node*> children() { return mChildren; }
-
+	void appendChild(Node* child) { mChildren[child->content()] = child; }
 private:
 	char mContent;
 	bool mMarker;
-	vector<Node*> mChildren;
+	map<char, Node*> mChildren;
 };
 
 class Trie {
@@ -137,17 +135,13 @@ public:
 	~Trie();
 	void addWord(string s);
 	bool searchWord(string s);
-	void deleteWord(string s);
 private:
 	Node* root;
 };
 
 Node* Node::findChild(char c) {
-	for (int i = 0; i < mChildren.size(); i++) {
-		Node* tmp = mChildren.at(i);
-		if (tmp->content() == c) {
-			return tmp;
-		}
+	if(mChildren.find(c) != mChildren.end()) {
+        return mChildren[c];
 	}
 
 	return NULL;
@@ -174,8 +168,7 @@ void Trie::addWord(string s) {
 		if (child != NULL) {
 			current = child;
 		} else {
-			Node* tmp = new Node();
-			tmp->setContent(s[i]);
+			Node* tmp = new Node(s[i]);
 			current->appendChild(tmp);
 			current = tmp;
 		}
@@ -241,27 +234,18 @@ int main() {
 			 O^      O
 			         O
 			         N^
-			 **/
+    **/
 
 	Trie* trie = new Trie();
 	trie->addWord("Hello");
 	trie->addWord("Balloon");
 	trie->addWord("Ball");
 
-	if (trie->searchWord("Hell"))
-		cout << "Found Hell" << endl;
-
-	if (trie->searchWord("Hello"))
-		cout << "Found Hello" << endl;
-
-	if (trie->searchWord("Helloo"))
-		cout << "Found Helloo" << endl;
-
-	if (trie->searchWord("Ball"))
-		cout << "Found Ball" << endl;
-
-	if (trie->searchWord("Balloon"))
-		cout << "Found Balloon" << endl;
+    cout << "Found Hell " << trie->searchWord("Hell") << endl;
+    cout << "Found Hello " << trie->searchWord("Hello") << endl;
+    cout << "Found Helloo " << trie->searchWord("Helloo") << endl;
+    cout << "Found Ball " << trie->searchWord("Ball") << endl;
+    cout << "Found Balloon " << trie->searchWord("Balloon") << endl;
 
 	delete trie;
 
