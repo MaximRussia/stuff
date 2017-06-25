@@ -61,11 +61,6 @@ void merge_sort_t(vector<int> &A, long l, long r) {
 	merge_t(A, l, mid, r);
 }
 
-void func() {
-    unique_lock<mutex> lock(m);
-    for(int i = 0; i < INT_MAX; i++) {}
-}
-
 int main() {
 
      {
@@ -78,7 +73,7 @@ int main() {
         auto t1 = clock();
         merge_sort_t(vec, 0, vec.size()-1);
         auto t2 = clock();
-        cout << (t2 - t1) / 1000.0 << endl;
+        cout << float(t2 - t1) / CLOCKS_PER_SEC << endl;
     }
 
     {
@@ -91,7 +86,7 @@ int main() {
         auto t1 = clock();
         merge_sort_t_parallel(vec, 0, vec.size()-1);
         auto t2 = clock();
-        cout << (t2 - t1) / 1000.0 << endl;
+        cout << float(t2 - t1) / CLOCKS_PER_SEC << endl;
     }
 
 	return 0;
