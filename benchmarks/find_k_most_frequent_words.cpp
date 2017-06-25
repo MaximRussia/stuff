@@ -3,31 +3,14 @@
 #include <string.h>
 #include <string>
 #include <ctype.h>
-
 #include <map>
 #include <vector>
 #include <utility>
 #include <iostream>
 #include <fstream>
 #include <string>
-#include <windows.h>
+#include <ctime>
 using namespace std;
-
-LARGE_INTEGER _timer_start;
-LARGE_INTEGER _timer_stop;
-LARGE_INTEGER _timer_frequency;
-bool _timer_init = QueryPerformanceFrequency(&_timer_frequency);
-#define TICK() if( _timer_init == false ) { \
-	cout << "Failed to query the performance frequency." << endl; \
-	cout << "Please do not use timer.h" << endl; \
-	exit(1); \
-} \
-	QueryPerformanceCounter(&_timer_start);
-#define TOCK() QueryPerformanceCounter(&_timer_stop);
-#define TICK_ELAPSED() (_timer_stop.QuadPart - _timer_start.QuadPart)
-#define DURATION() ( TICK_ELAPSED() / (double) _timer_frequency.QuadPart)
-
-map<string, int> hashing;
 
 # define MAX_CHARS 26
 # define MAX_WORD_SIZE 30
@@ -248,10 +231,10 @@ int main() {
 		return 1;
 	}
 
-	TICK();
+	time_t t1 = clock();
 	printKMostFreq(fp, k);
-	TOCK();
-	cout << "time == " << DURATION() << endl;
+	time_t t2 = clock();
+	cout << "time == " << float(t2 - t1) / CLOCKS_PER_SEC << endl;
 
 	////////////////////////
 	/// use standart map
@@ -264,8 +247,9 @@ int main() {
 
 	fstream fp2("wordsforproblem.txt");
 	string buffer;
+	map<string, int> hashing;
 
-	TICK();
+	t1 = clock();
 	while (!fp2.eof()) {
 		fp2 >> buffer;
 		if (hashing.find(buffer) == hashing.end()) {
@@ -287,8 +271,8 @@ int main() {
 		cout << v.first << " : " << v.second << endl;
 	}
 
-	TOCK();
-	cout << "time == " << DURATION() << endl;
+	t2 = clock();
+	cout << "time == " << float(t2 - t1) / CLOCKS_PER_SEC << endl;
 
 	////////////////////////
 
