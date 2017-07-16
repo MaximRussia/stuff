@@ -2,92 +2,109 @@
 #include <thread>
 #include <vector>
 #include <mutex>
+#include <future>
+#include <algorithm>
 using namespace std;
 
-mutex m;
+template<typename Iter>
+void mergesort_mt1(Iter begin, Iter end,
+	unsigned int N = std::thread::hardware_concurrency()) {
+	auto len = std::distance(begin, end);
+	if (len < 2)
+		return;
 
-void merge_t(vector<int> &A, long l, long mid, long r) {
-
-    unique_lock<mutex> lock(m);
-
-	long ll = l;
-	long size = r - l + 1;
-	long rr = mid + 1;
-	vector<int> temp;
-
-	while (ll <= mid && rr <= r) {
-		if (A[ll] < A[rr])
-			temp.push_back(A[ll++]);
-		else
-			temp.push_back(A[rr++]);
+	Iter mid = std::next(begin, len / 2);
+	if (N > 1) {
+		auto fn = std::async(mergesort_mt1<Iter>, begin, mid, N - 2);
+		mergesort_mt1(mid, end, N - 2);
+		fn.wait();
+	} else {
+		mergesort_mt1(begin, mid, 0);
+		mergesort_mt1(mid, end, 0);
 	}
 
-	while (ll <= mid)
-		temp.push_back(A[ll++]);
-
-	while (rr <= r)
-		temp.push_back(A[rr++]);
-
-	for (int i = 0; i < size; i++)
-		A[l + i] = temp[i];
+	std::inplace_merge(begin, mid, end);
 }
 
-void merge_sort_t_parallel(vector<int> &A, long l, long r) {
-	if (l >= r) return;
+template<typename Iter>
+void mergesort_mt2(Iter begin, Iter end,
+	unsigned int N = std::thread::hardware_concurrency()) {
+	auto len = std::distance(begin, end);
+	if (len <= 1024) {
+		std::sort(begin, end);
+		return;
+	}
 
-	int mid = l + (r - l) / 2;
+	Iter mid = std::next(begin, len / 2);
+	if (N > 1) {
+		auto fn = std::async(mergesort_mt2<Iter>, begin, mid, N - 2);
+		mergesort_mt2(mid, end, N - 2);
+		fn.wait();
+	} else {
+		mergesort_mt2(begin, mid, 0);
+		mergesort_mt2(mid, end, 0);
+	}
 
-	// multi-thread version
-	thread first(merge_sort_t_parallel, std::ref(A), l, mid);
-	thread second(merge_sort_t_parallel, std::ref(A), mid + 1, r);
-	first.join();
-	second.join();
-
-	thread third(merge_t, std::ref(A), l, mid, r);
-	third.join();
+	std::inplace_merge(begin, mid, end);
 }
 
-void merge_sort_t(vector<int> &A, long l, long r) {
-	if (l >= r) return;
+template<typename Iter>
+void mergesort_mt3(Iter begin, Iter end,
+	unsigned int N = std::thread::hardware_concurrency()) {
+	auto len = std::distance(begin, end);
+	if (len <= 1024 || N < 2) {
+		std::sort(begin, end);
+		return;
+	}
 
-	int mid = l + (r - l) / 2;
-
-	// multi-thread version
-	thread first(merge_sort_t, std::ref(A), l, mid);
-	thread second(merge_sort_t, std::ref(A), mid + 1, r);
-	first.join();
-	second.join();
-
-	merge_t(A, l, mid, r);
+	Iter mid = std::next(begin, len / 2);
+	auto fn = std::async(mergesort_mt3<Iter>, begin, mid, N - 2);
+	mergesort_mt3(mid, end, N - 2);
+	fn.wait();
+	std::inplace_merge(begin, mid, end);
 }
 
 int main() {
+	using namespace std::chrono;
 
-     {
-        vector<int> vec;
+	std::random_device rd;
+	std::mt19937 rng(rd());
+	std::uniform_int_distribution<unsigned int> dist(0, std::numeric_limits<unsigned int>::max());
 
-        for(int i = 400; i >= 0; i--) {
-            vec.push_back(i);
-        }
+	std::vector<unsigned int> v, back(9999999);
 
-        auto t1 = clock();
-        merge_sort_t(vec, 0, vec.size()-1);
-        auto t2 = clock();
-        cout << float(t2 - t1) / CLOCKS_PER_SEC << endl;
-    }
+	std::cout << "Generating...\n";
+	std::generate_n(back.begin(), back.size(), [&]() {return dist(rng); });
 
-    {
-        vector<int> vec;
+	time_point<system_clock> t0, t1;
 
-        for(int i = 400; i >= 0; i--) {
-            vec.push_back(i);
-        }
+	v = back;
+	std::cout << "std::sort: ";
+	t0 = system_clock::now();
+	std::sort(v.begin(), v.end());
+	t1 = system_clock::now();
+	std::cout << duration_cast<milliseconds>(t1 - t0).count() << "ms\n";
 
-        auto t1 = clock();
-        merge_sort_t_parallel(vec, 0, vec.size()-1);
-        auto t2 = clock();
-        cout << float(t2 - t1) / CLOCKS_PER_SEC << endl;
-    }
+	v = back;
+	std::cout << "mergesort_mt1: ";
+	t0 = system_clock::now();
+	mergesort_mt1(v.begin(), v.end());
+	t1 = system_clock::now();
+	std::cout << duration_cast<milliseconds>(t1 - t0).count() << "ms\n";
+
+	v = back;
+	std::cout << "mergesort_mt2: ";
+	t0 = system_clock::now();
+	mergesort_mt2(v.begin(), v.end());
+	t1 = system_clock::now();
+	std::cout << duration_cast<milliseconds>(t1 - t0).count() << "ms\n";
+
+	v = back;
+	std::cout << "mergesort_mt3: ";
+	t0 = system_clock::now();
+	mergesort_mt3(v.begin(), v.end());
+	t1 = system_clock::now();
+	std::cout << duration_cast<milliseconds>(t1 - t0).count() << "ms\n";
 
 	return 0;
 }
