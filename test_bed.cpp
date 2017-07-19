@@ -1374,8 +1374,6 @@ void breakets(string s, int left, int right, int pairs) {
 		return;
 	}
 
-	cout << "call " << s << " " << left << " " << right << endl;
-
 	if (left < pairs)
 		breakets(s + "(", left + 1, right, pairs);
 
@@ -1390,8 +1388,6 @@ void printPermute(string s, int l, int r) {
 		return;
 	}
 
-	cout << "call " << s << " " << l << " " << r << endl;
-
 	for (int i = l; i <= r; i++) {
 		swap(s[l], s[i]);
 		printPermute(s, l + 1, r);
@@ -1404,19 +1400,21 @@ vector< vector<int> > allsubsets(vector<int> v) {
 	vector< vector<int> > res;
 	if (v.empty()) return res;
 
-	size_t max = 1 << v.size();
+    int ii = 1 << v.size();
+    int i = 0;
 
-	for (size_t flag = 1; flag < max; flag++) {
-		size_t idx = 0;
-		size_t t = flag;
+    while(i != ii) {
+        int m = i;
+        int index = 0;
 		res.push_back({});
-		while (t) {
-			idx++;
-			if (t & 1) {
-				res.back().push_back(v[v.size() - idx]);
+		while (m) {
+			if (m & 1) {
+				res.back().push_back(v[index]);
 			}
-			t >>= 1;
+			m >>= 1;
+			index++;
 		}
+		i++;
 	}
 }
 
