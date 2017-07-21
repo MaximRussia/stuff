@@ -4,85 +4,65 @@ Find kth Smallest using Quick Select O(n) vs QuickSort O(NlogN)
 ***/
 
 #include <iostream>
-#include <iomanip>
-#include <ctime>
-#include <cstdlib>
+#include <vector>
+#include <utility>
 #include <algorithm>
+#include <map>
+#include <set>
+#include <ctime>
 using namespace std;
 
-// Partition using Lomuto partition scheme
-int partition(int a[], int left, int right, int pivotIndex)
-{
-	// Pick pivotIndex as pivot from the array
-	int pivot = a[pivotIndex];
+/**
+Find swapIndex
+**/
+int partition(vector<int> &arr, int left, int right) {
 
-	// Move pivot to end
-	swap(a[pivotIndex], a[right]);
-
-	// elements less than pivot will be pushed to the left of pIndex
-	// elements more than pivot will be pushed to the right of pIndex
-	// equal elements can go either way
-	int pIndex = left;
-	int i;
-
-	// each time we finds an element less than or equal to pivot, pIndex
-	// is incremented and that element would be placed before the pivot.
-	for (i = left; i < right; i++) {
-		if (a[i] <= pivot) {
-			swap(a[i], a[pIndex]);
-			pIndex++;
+    int mid = (left + right) / 2;
+	int mid_value = arr[mid];
+	/* Put the mid value at the end */
+	std::swap(arr[mid], arr[right]);
+	int result = left;
+	for (int i = left; i <= right; i++) {
+		if (arr[i] < mid_value) {
+			std::swap(arr[i], arr[result]);
+			result++;
 		}
 	}
-
-	// Move pivot to its final place
-	swap(a[pIndex], a[right]);
-
-	// return pIndex (index of pivot element)
-	return pIndex;
+	std::swap(arr[result], arr[right]);
+	return result;
 }
 
-// Returns the k-th smallest element of list within left..right inclusive
-// (i.e. left <= k <= right).
-// The search space within the array is changing for each round - but the list
-// is still the same size. Thus, k does not need to be updated with each round.
-int quickSelect(int A[], int left, int right, int k) {
-	// If the array contains only one element, return that element
-	if (left == right)
-		return A[left];
+int QuickSelect(vector<int> &arr, int k) {
+	int l = 0;
+	int r = arr.size();
+	while (l <= r) {
+		int pivot = partition(arr, l, r);
+		if (pivot == k)
+			return arr[k];
+		else if (pivot < k)
+			l = pivot + 1;
+		else
+			r = pivot - 1;
+	}
 
-	// select a pivotIndex between left and right
-	int pivotIndex = (left + right - 1) / 2;
-
-	pivotIndex = partition(A, left, right, pivotIndex);
-
-	// The pivot is in its final sorted position
-	if (k == pivotIndex)
-		return A[k];
-
-	// if k is less than the pivot index
-	else if (k < pivotIndex)
-		return quickSelect(A, left, pivotIndex - 1, k);
-
-	// if k is more than the pivot index
-	else
-		return quickSelect(A, pivotIndex + 1, right, k);
+	return INT_MIN;
 }
 
 int main() {
 	const int inputsize = 500000;
 	const int k = 450000;
 
-	int A[inputsize];
+	vector<int> A;
 	srand((unsigned)time(0));
 
 	cout << "Init arrays ... size " << inputsize << endl;
 
 	for (int i = 0; i < inputsize; i++) {
-		A[i] = 1 + (rand() % 9999);
+		A.push_back(1 + (rand() % 9999));
 	}
 
     time_t t1 = clock();
-	cout << "The Value of " << k << "-th smallest element in QuickSelect is : " << quickSelect(A, 0, inputsize - 1, k) << endl;
+	cout << "The Value of " << k << "-th smallest element in QuickSelect is : " << QuickSelect(A, k) << endl;
     time_t t2 = clock();
 	//Show duration
 	cout << "Duration (QuickSelect): " << float(t2 - t1) / CLOCKS_PER_SEC << " seconds" << endl;

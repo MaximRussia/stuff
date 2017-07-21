@@ -14,55 +14,50 @@
 #include <set>
 using namespace std;
 
-int kth_largest_element1(vector<int> arr, int k) {
-	sort(arr.begin(), arr.end());
-	return arr[k - 1];
-}
-
-void _swap(int &a, int &b) {
-	int tmp = a;
-	a = b;
-	b = tmp;
-}
-
 /**
 Find swapIndex
 **/
-int partition2(vector<int> &arr, int left, int right, int pivot) {
-	int pivotValue = arr[pivot];
-	/* Put the pivot value at the end */
-	_swap(arr[pivot], arr[right]);
-	int storePosition = left;
-	for (int i = left; i < right; i++) {
-		if (arr[i] < pivotValue) {
-			_swap(arr[i], arr[storePosition]);
-			storePosition++;
+int partition(vector<int> &arr, int left, int right) {
+
+    int mid = (left + right) / 2;
+	int mid_value = arr[mid];
+	/* Put the mid value at the end */
+	std::swap(arr[mid], arr[right]);
+	int result = left;
+	for (int i = left; i <= right; i++) {
+		if (arr[i] < mid_value) {
+			std::swap(arr[i], arr[result]);
+			result++;
 		}
 	}
-	_swap(arr[storePosition], arr[right]);
-	return storePosition;
+	std::swap(arr[result], arr[right]);
+	return result;
 }
 
-int kth_largest_element2(vector<int> &arr, int k) {
-	int left = 0;
-	int right = arr.size();
-	while (true) {
-		int pivotIndex = (left + right) / 2;
-		int newPivot = partition2(arr, left, right, pivotIndex);
-		if (newPivot == k)
-			return arr[newPivot];
-		else if (newPivot < k)
-			left = newPivot + 1;
+int QuickSelect(vector<int> &arr, int k) {
+	int l = 0;
+	int r = arr.size();
+	while (l <= r) {
+		int pivot = partition(arr, l, r);
+		if (pivot == k)
+			return arr[k];
+		else if (pivot < k)
+			l = pivot + 1;
 		else
-			right = newPivot - 1;
+			r = pivot - 1;
 	}
+
+	return INT_MIN;
 }
 
 int main() {
 
-	vector<int> arr = { 3, 1, 2, 1, 4 };
-	std::cout << kth_largest_element1(arr, 3) << std::endl;
-	std::cout << kth_largest_element2(arr, 3) << std::endl;
+	vector<int> arr = { 5,3,4,2,1 };
+	std::cout << QuickSelect(arr, 0) << std::endl;
+	std::cout << QuickSelect(arr, 1) << std::endl;
+	std::cout << QuickSelect(arr, 2) << std::endl;
+	std::cout << QuickSelect(arr, 3) << std::endl;
+	std::cout << QuickSelect(arr, 4) << std::endl;
 
 	return 0;
 }
