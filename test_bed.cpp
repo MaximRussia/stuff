@@ -13,48 +13,6 @@
 using namespace std;
 
 /////////////////////////////////
-// BITS
-/////////////////////////////////
-
-void swap_bits(int &a, int &b) {
-	a ^= b ^= a ^= b;
-}
-
-int getBin(int n, int i) {
-	return n & (1 << i);
-}
-
-int setBin(int n, int i) {
-	return n | (1 << i);
-}
-
-int clearBit(int n, int i) {
-	int mask = ~(1 << i);
-	return n & mask;
-}
-
-string toString(int num) {
-	string res;
-	while (num != 0) {
-		res.push_back('0' + (num & 1));
-		num >>= 1;
-	}
-	std::reverse(res.begin(), res.end());
-	return res;
-}
-
-
-int toInt(string str) {
-	if (str.size() > sizeof(int) * 8) return 0;
-	int res = 0;
-	int size = str.size() - 1;
-	for (int i = size; i >= 0; --i) {
-		res |= ((str[i] - '0') << (size - i));
-	}
-	return res;
-}
-
-/////////////////////////////////
 // MEMORY
 /////////////////////////////////
 
@@ -190,9 +148,9 @@ void BFS(tnode* &root) {
 // DFS variations
 /////////////////////////////////
 /******
-Preorder  =   V-L-R
-Inorder   =   L-V-R
-Postorder =   L-R-V
+Preorder =  V-L-R
+Inorder  =  L-V-R
+Postorder =  L-R-V
 *******/
 void preorder(tnode* &root) {
 	if (!root) {
@@ -548,24 +506,35 @@ void reverse_inpalce_rec(node*& head) {
 	head = prev;
 }
 
-void selectSort(node* &head) {
-	if (!head) return;
+node* Split(node* my_node) {
+    if (!my_node || !my_node->next) return NULL;
 
-	node* first = head;
+    node* secondNode = my_node->next;
+    my_node->next = secondNode->next;
+    secondNode->next = Split(secondNode->next);
+    return secondNode;
+}
 
-	while (first) {
-		node* minn = first;
-		node* fast = first;
-		while (fast) {
-			if (fast->v < first->v) minn = fast;
-			fast = fast->next;
-		}
+node* Merge(node* firstNode, node* secondNode) {
+    if (!firstNode) return secondNode;
+    if (!secondNode) return firstNode;
 
-		if (minn != first)
-			swap(minn->v, first->v);
+    if (firstNode->v < secondNode->v) {
+        firstNode->next = Merge(firstNode->next, secondNode);
+        return firstNode;
+    }
+    else {
+        secondNode->next = Merge(firstNode, secondNode->next);
+        return secondNode;
+    }
+}
 
-		first = first->next;
-	}
+node* MergeSort(node *my_node) {
+    if (!my_node) return NULL;
+    if (!my_node->next) return my_node;
+
+    node* secondNode = Split(my_node);
+    return Merge(MergeSort(my_node), MergeSort(secondNode));
 }
 
 /////////////////////////////////
@@ -1014,6 +983,43 @@ bool isPowerOfN2(int i, int n) {
 	return i == pow(n, round((log(i) / log(n))));
 }
 
+void swap_bits(int &a, int &b) {
+	a ^= b ^= a ^= b;
+}
+
+int getBin(int n, int i) {
+	return n & (1 << i);
+}
+
+int setBin(int n, int i) {
+	return n | (1 << i);
+}
+
+int clearBit(int n, int i) {
+	int mask = ~(1 << i);
+	return n & mask;
+}
+
+string toString(int num) {
+	string res;
+	while (num != 0) {
+		res.push_back('0' + (num & 1));
+		num >>= 1;
+	}
+	std::reverse(res.begin(), res.end());
+	return res;
+}
+
+int toInt(string str) {
+	if (str.size() > sizeof(int) * 8) return 0;
+	int res = 0;
+	int size = str.size() - 1;
+	for (int i = size; i >= 0; --i) {
+		res |= ((str[i] - '0') << (size - i));
+	}
+	return res;
+}
+
 /////////////////////////////////
 // MATH
 /////////////////////////////////
@@ -1152,7 +1158,7 @@ int my_sqrt(int n) {
 	int r = n / 2;
 
 	while (l <= r) {
-		int mid = l + (r - l) / 2;
+		int mid = (l + r) / 2;
 		if (mid*mid == n) return mid;
 		if (mid*mid > n) r = mid - 1;
 		else l = mid + 1;
@@ -1291,12 +1297,13 @@ template<typename T>
 void quick_sort_t(vector<T> &A, int l, int r) {
 	if (l >= r) return;
 
-	int ll = l, rr = r;
-	int mid = A[((ll + rr) >> 1)];
+	int ll = l;
+	int rr = r;
+	int mid = (l + r) / 2;
 
 	while (ll <= rr) {
-		while (A[ll] < mid) ll++;
-		while (A[rr] > mid) rr--;
+		while (A[ll] < A[mid]) ll++;
+		while (A[rr] > A[mid]) rr--;
 
 		if (ll <= rr) {
 			swap(A[ll], A[rr]);
@@ -1314,10 +1321,10 @@ void quick_sort_t(vector<T> &A, int l, int r) {
 // Sorting In Place: No
 // Stable: Yes
 template<class T>
-void merge_t(vector<T> &A, long l, long mid, long r) {
-	long ll = l;
-	long size = r - l + 1;
-	long rr = mid + 1;
+void merge_t(vector<T> &A, int l, int r) {
+	int ll = l;
+	int mid = (l+r)/2;
+	int rr = mid + 1;
 	vector<T> temp;
 
 	while (ll <= mid && rr <= r) {
@@ -1333,18 +1340,18 @@ void merge_t(vector<T> &A, long l, long mid, long r) {
 	while (rr <= r)
 		temp.push_back(A[rr++]);
 
-	for (int i = 0; i < size; i++)
+	for (int i = 0; i < temp.size(); i++)
 		A[l + i] = temp[i];
 }
 
 template<class T>
-void merge_sort_t(vector<T> &A, long l, long r) {
+void merge_sort_t(vector<T> &A, int l, int r) {
 	if (l >= r) return;
 
-	int mid = l + (r - l) / 2;
+	int mid = (l + r) / 2;
 	merge_sort_t(A, l, mid);
 	merge_sort_t(A, mid + 1, r);
-	merge_t(A, l, mid, r);
+	merge_t(A, l, r);
 }
 
 template<typename T>
@@ -1355,7 +1362,7 @@ int bin_search_t(vector<T> &v, T n) {
 	int r = v.size() - 1;
 
 	while (l <= r) {
-		int mid = l + (r - l) / 2;
+		int mid = (l + r) / 2;
 
 		if (v[mid] == n) return mid;
 		else
@@ -1372,7 +1379,7 @@ int bin_search_rotated_t(vector<T> &v, T key) {
 	int r = v.size() - 1;
 
 	while (l <= r) {
-		int mid = l + (r - l) / 2;
+		int mid = (l + r) / 2;
 		if (v[mid] == key) return mid;
 
 		// the bottom half is sorted
@@ -1397,7 +1404,7 @@ int find_sorted_array_rotation_t(vector<T> &v) {
 	int r = v.size() - 1;
 
 	while (v[l] > v[r]) {
-		int mid = l + (r - l) / 2;
+		int mid = (l + r) / 2;
 		if (v[mid] > v[r])
 			l = mid + 1;
 		else
@@ -1442,12 +1449,12 @@ vector< vector<int> > allsubsets(vector<int> v) {
 	vector< vector<int> > res;
 	if (v.empty()) return res;
 
-    int ii = 1 << v.size();
-    int i = 0;
+	int ii = 1 << v.size();
+	int i = 0;
 
-    while(i != ii) {
-        int m = i;
-        int index = 0;
+	while(i != ii) {
+    	int m = i;
+    	int index = 0;
 		res.push_back({});
 		while (m) {
 			if (m & 1) {
@@ -1466,7 +1473,7 @@ vector< vector<int> > allsubsets(vector<int> v) {
 
 // 0(n*n) O(1)
 // Given a center, either one letter or two letter,
-// Find longest palindrome
+// Find int est palindrome
 string expandFrmCenter(string s, int lidx, int ridx) {
 	while (lidx >= 0 && ridx < s.size() && s[lidx] == s[ridx]) {
 		--lidx;
@@ -1475,14 +1482,14 @@ string expandFrmCenter(string s, int lidx, int ridx) {
 	return s.substr(lidx + 1, ridx - lidx - 1);
 }
 
-string longestPalindrome(string s) {
+string LongestPalindrome(string s) {
 	string res;
 	for (int i = 0; i < s.size(); ++i) {
-		// get longest palindrome with center of i
+		// get int est palindrome with center of i
 		string s1 = expandFrmCenter(s, i, i);
 		if (s1.size() > res.size()) res = s1;
 		if (i + 1 < s.size()) {
-			// get longest palindrome with center of i, i+1
+			// get int est palindrome with center of i, i+1
 			string s2 = expandFrmCenter(s, i, i + 1);
 			if (s2.size() > res.size()) res = s2;
 		}
@@ -1491,7 +1498,7 @@ string longestPalindrome(string s) {
 }
 
 // 0(n) O(n*n)
-int longestPalindromeLength(string str) {
+int LongestPalindromeLength(string str) {
 	int n = str.size(); // get length of input string
 	// table[i][j] will be false if substring str[i..j]
 	// is not palindrome.
@@ -1535,7 +1542,7 @@ int longestPalindromeLength(string str) {
 		}
 	}
 
-	printf("Longest palindrome substring is: %s\n", str.substr(start, maxLength).c_str());
+	printf("int est palindrome substring is: %s\n", str.substr(start, maxLength).c_str());
 
 	return maxLength; // return length of LPS
 }
@@ -1671,13 +1678,13 @@ size_t LevenshteinDistance(std::string src, std::string dst) {
 
 // This class represents a directed graph using adjacency list representation
 class Graph {
-	int V;    // No. of vertices
-	vector<vector<int>> adj;    // an array containing adjacency lists
+	int V;  // No. of vertices
+	vector<vector<int>> adj;  // an array containing adjacency lists
 public:
-	Graph(int V);  // Constructor
+	Graph(int V); // Constructor
 	void addEdge(int v, int w); // function to add an edge to graph
-	void BFS(int s, int e);  // prints BFS traversal from a given source s
-	void DFS(int s, int e);  // prints DFS traversal from a given source s
+	void BFS(int s, int e); // prints BFS traversal from a given source s
+	void DFS(int s, int e); // prints DFS traversal from a given source s
 };
 
 Graph::Graph(int V) {
@@ -1973,7 +1980,7 @@ int main() {
 	print(head);
 
 	cout << "sort :" << endl;
-	selectSort(head);
+	head = MergeSort(head);
 	print(head);
 
 	cout << endl << endl;
@@ -2028,7 +2035,7 @@ int main() {
 	cout << base2dec("0xE", 16) << endl;
 	cout << base2dec("0xF", 16) << endl;
 	cout << my_atoi("-32 hello") << " ";
-	cout << my_atoi("   -32 hello ") << " ";
+	cout << my_atoi("  -32 hello ") << " ";
 	cout << my_atoi(" 32 hello ") << " ";
 	cout << my_atoi(" +64 hello ") << endl;
 
@@ -2126,25 +2133,25 @@ int main() {
 	cout << "// TEMPLATES" << endl;
 	cout << "/////////////////////////////////" << endl;
 
-	vector<int> a = { 6, 5, 4, 7, 8, 3, 2, 3, 4 };
+	vector<int> a = { 1,3,5,2,4,6,7,9,8 };
 	selection_sort_t(a);
 	for (int i : a) cout << i << " ";
 
 	cout << endl;
 
-	a = { 6, 5, 4, 7, 8, 3, 2, 3, 4 };
+	a = { 1,3,5,2,4,6,7,9,8 };
 	insertion_sort_t(a);
 	for (int i : a) cout << i << " ";
 
 	cout << endl;
 
-	a = { 6, 5, 4, 7, 8, 3, 2, 3, 4 };
+	a = { 1,3,5,2,4,6,7,9,8 };
 	quick_sort_t(a, 0, a.size() - 1);
 	for (int i : a) cout << i << " ";
 
 	cout << endl;
 
-	a = { 6, 5, 4, 7, 8, 3, 2, 3, 4 };
+	a = { 1,3,5,2,4,6,7,9,8 };
 	merge_sort_t(a, 0, a.size() - 1);
 	for (int i : a) cout << i << " ";
 
@@ -2192,8 +2199,8 @@ int main() {
 	cout << "/////////////////////////////////" << endl;
 
 
-	cout << longestPalindrome("1qq2qawaq123") << endl;
-	cout << longestPalindromeLength("1qq2qawaq123") << endl;
+	cout << LongestPalindrome("1qq2qawaq123") << endl;
+	cout << LongestPalindromeLength("1qq2qawaq123") << endl;
 
 	cout << endl;
 	cout << countCoinChangeIter({ 1, 2, 3 }, 3, 4) << endl;
