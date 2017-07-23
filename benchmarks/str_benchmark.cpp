@@ -13,6 +13,7 @@ using namespace std;
 ///////////
 // NAIVE
 ///////////
+// O(n*n), O(1)
 size_t naive_strstr(const char *haystack, const char *needle) {
 	size_t str_sz = strlen(haystack);
 	size_t needle_sz = strlen(needle);
@@ -31,6 +32,7 @@ size_t naive_strstr(const char *haystack, const char *needle) {
 ///////////
 // KMP
 ///////////
+// O(n), O(n)
 size_t kmp_strstr(const char* haystack, const char* needle) {
 	size_t str_sz = strlen(haystack);
 	size_t needle_sz = strlen(needle);
