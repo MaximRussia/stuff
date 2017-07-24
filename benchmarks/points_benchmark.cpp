@@ -1,6 +1,26 @@
 // A divide and conquer program in C/C++ to find the smallest distance from a
 // given set of points.
 
+/**********
+1) We sort all points according to x coordinates.
+
+2) Divide all points in two halves.
+
+3) Recursively find the smallest distances in both subarrays.
+
+4) Take the minimum of two smallest distances. Let the minimum be d.
+
+5) Create an array strip[] that stores all points which are at most d distance away from the middle line dividing the two sets.
+
+6) Find the smallest distance in strip[].
+
+7) Return the minimum of d and the smallest distance calculated in above step 6.
+
+The great thing about the above approach is, if the array strip[] is sorted according to y coordinate, then we can find the smallest distance in strip[] in O(n) time. In the implementation discussed in previous post, strip[] was explicitly sorted in every recursive call that made the time complexity O(n (Logn)^2), assuming that the sorting step takes O(nLogn) time.
+In this post, we discuss an implementation where the time complexity is O(nLogn). The idea is to presort all points according to y coordinates. Let the sorted array be Py[]. When we make recursive calls, we need to divide points of Py[] also according to the vertical line. We can do that by simply processing every point and comparing its x coordinate with x coordinate of middle line.
+
+Following is C++ implementation of O(nLogn) approach.
+***********/
 #include <stdio.h>
 #include <float.h>
 #include <stdlib.h>
