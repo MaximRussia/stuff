@@ -251,33 +251,6 @@ int getHeight(tnode* root) {
 	return max(getHeight(root->right), getHeight(root->left)) + 1;
 }
 
-int maxValue(tnode* root) {
-	int result = root->v;
-
-	if (root->right) {
-		result = std::max(result, maxValue(root->right));
-	}
-
-	if (root->left) {
-		result = std::max(result, maxValue(root->left));
-	}
-
-	return result;
-}
-
-int minValue(tnode* root) {
-	int result = root->v;
-
-	if (root->right) {
-		result = std::min(result, maxValue(root->right));
-	}
-
-	if (root->left) {
-		result = std::min(result, maxValue(root->left));
-	}
-
-	return result;
-}
 
 int isBST(tnode* root) {
 	if (!root) return 1;
@@ -1938,8 +1911,6 @@ int main() {
 	postorder(root); cout << endl;
 	iterativePostorder(root);
 
-	cout << maxValue(root) << endl;
-	cout << minValue(root) << endl;
 	cout << getHeight(root) << endl;
 	cout << isBST(root) << endl;
 	cout << isBST2(root) << endl;
