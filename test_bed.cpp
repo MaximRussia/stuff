@@ -1473,22 +1473,22 @@ string LongestPalindrome(string s) {
 // 0(n) O(n*n)
 int LongestPalindromeLength(string str) {
 	int n = str.size(); // get length of input string
-	// table[i][j] will be false if substring str[i..j]
+	// res[i][j] will be false if substring str[i..j]
 	// is not palindrome.
-	// Else table[i][j] will be true
-	bool table[n][n];
-	memset(table, 0, sizeof(table));
+	// Else res[i][j] will be true
+	bool res[n][n];
+	memset(res, 0, sizeof(res));
 
 	// All substrings of length 1 are palindromes
 	int maxLength = 1;
 	for (int i = 0; i < n; ++i)
-		table[i][i] = true;
+		res[i][i] = true;
 
 	// All substrings of length 2 are palindromes, too
 	int start = 0;
 	for (int i = 0; i < n - 1; ++i) {
 		if (str[i] == str[i + 1]) {
-			table[i][i + 1] = true;
+			res[i][i + 1] = true;
 			start = i;
 			maxLength = 2;
 		}
@@ -1505,8 +1505,8 @@ int LongestPalindromeLength(string str) {
 			// checking for sub-string from ith index to
 			// jth index iff str[i+1] to str[j-1] is a
 			// palindrome
-			if (table[i + 1][j - 1] && str[i] == str[j]) {
-				table[i][j] = true;
+			if (res[i + 1][j - 1] && str[i] == str[j]) {
+				res[i][j] = true;
 				if (k > maxLength) {
 					start = i;
 					maxLength = k;
@@ -1534,22 +1534,22 @@ int countCoinChangeRec(const vector<int>& S, int m, int n) {
 
 // dynamic
 int countCoinChangeIter(const vector<int>& S, int m, int n) {
-	// table[i] will be storing the number of solutions for
-	// value i. We need n+1 rows as the table is consturcted
+	// res[i] will be storing the number of solutions for
+	// value i. We need n+1 rows as the res is consturcted
 	// in bottom up manner using the base case (n = 0)
-	int table[n + 1];
+	int res[n + 1];
 
-	memset(table, 0, sizeof(table));
-	table[0] = 1;
+	memset(res, 0, sizeof(res));
+	res[0] = 1;
 
-	// Pick all coins one by one and update the table[] values
+	// Pick all coins one by one and update the res[] values
 	// after the index greater than or equal to the value of the
 	// picked coin
 	for (int i = 0; i < m; i++)
 	for (int j = S[i]; j <= n; j++)
-		table[j] += table[j - S[i]];
+		res[j] += res[j - S[i]];
 
-	return table[n];
+	return res[n];
 }
 
 ///1
@@ -1590,24 +1590,24 @@ int NumWays(int N) {
 	if (N <= 0) return 0;
 	if (N == 1) return 1;
 
-	vector< vector<int> > cache;
-	cache.resize(N);
-	for (int i = 0; i < cache.size(); i++) {
-		cache[i].resize(N);
-		cache[i][0] = 1;
+	vector< vector<int> > res;
+	res.resize(N);
+	for (int i = 0; i < res.size(); i++) {
+		res[i].resize(N);
+		res[i][0] = 1;
 	}
 
 	for (int i = 0; i < N; i++) {
-		cache[0][i] = 1;
+		res[0][i] = 1;
 	}
 
 	for (int i = 1; i < N; i++) {
 		for (int j = 1; j < N; j++) {
-			cache[i][j] = cache[i - 1][j] + cache[i][j - 1];
+			res[i][j] = res[i - 1][j] + res[i][j - 1];
 		}
 	}
 
-	return cache.back().back();
+	return res.back().back();
 }
 
 size_t LevenshteinDistance(std::string src, std::string dst) {
@@ -1620,29 +1620,24 @@ size_t LevenshteinDistance(std::string src, std::string dst) {
 		return m;
 	}
 
-	std::vector< std::vector<size_t> > matrix(m + 1);
-
+	std::vector< std::vector<size_t> > res;
+	res.resize(m + 1);
 	for (size_t i = 0; i <= m; ++i) {
-		matrix[i].resize(n + 1);
-		matrix[i][0] = i;
+		res[i].resize(n + 1);
+		res[i][0] = i;
 	}
 	for (size_t i = 0; i <= n; ++i) {
-		matrix[0][i] = i;
+		res[0][i] = i;
 	}
-
-	size_t above_cell = 0, left_cell = 0, diagonal_cell = 0, cost = 0;
 
 	for (size_t i = 1; i <= m; ++i) {
 		for (size_t j = 1; j <= n; ++j) {
-			cost = src[i - 1] == dst[j - 1] ? 0 : 1;
-			above_cell = matrix[i - 1][j];
-			left_cell = matrix[i][j - 1];
-			diagonal_cell = matrix[i - 1][j - 1];
-			matrix[i][j] = std::min(std::min(above_cell + 1, left_cell + 1), diagonal_cell + cost);
+			size_t cost = src[i - 1] == dst[j - 1] ? 0 : 1;
+			res[i][j] = std::min(std::min(res[i - 1][j] + 1, res[i][j - 1] + 1), res[i - 1][j - 1] + cost);
 		}
 	}
 
-	return matrix[m][n];
+	return res.back().back();
 }
 
 /////////////////////////////////
