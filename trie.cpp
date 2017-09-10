@@ -1,23 +1,22 @@
 #include <iostream>
-#include <vector>
+#include <map>
 using namespace std;
 
 class Node {
 public:
-    Node() { mContent = ' '; mMarker = false; }
+    Node(char ch) { mContent = ch; mMarker = false; }
     ~Node() {}
     char content() { return mContent; }
     void setContent(char c) { mContent = c; }
     bool wordMarker() { return mMarker; }
     void setWordMarker() { mMarker = true; }
     Node* findChild(char c);
-    void appendChild(Node* child) { mChildren.push_back(child); }
-    vector<Node*> children() { return mChildren; }
+    void appendChild(Node* child) { mChildren[child->content()] = child; }
 
 private:
     char mContent;
     bool mMarker;
-    vector<Node*> mChildren;
+    map<char, Node*> mChildren;
 };
 
 class Trie {
@@ -32,17 +31,16 @@ private:
 };
 
 Node* Node::findChild(char c) {
-    for (int i = 0; i < mChildren.size(); i++) {
-        if (mChildren[i]->content() == c) {
-            return mChildren[i];
-        }
-    }
+
+    map<char, Node*>::const_iterator it = mChildren.find(c);
+    if(it != mChildren.end())
+        return it->second;
 
     return NULL;
 }
 
 Trie::Trie() {
-    root = new Node();
+    root = new Node(' ');
 }
 
 Trie::~Trie() {
@@ -62,8 +60,7 @@ void Trie::addWord(string s) {
         if (child) {
             current = child;
         } else {
-            Node* tmp = new Node();
-            tmp->setContent(s[i]);
+            Node* tmp = new Node(s[i]);
             current->appendChild(tmp);
             current = tmp;
         }
