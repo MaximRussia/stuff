@@ -480,21 +480,21 @@ void reverse_inpalce_rec(node*& head) {
 }
 
 bool is_looped( node*& head ){
- 
-	node *slow = head;
-	node *fast = head->next;
+    if(!head || !head->next) return false;
 
-	while( true ) {
-		if( !fast || !fast->next )
-	 		return false;
-	 
-		if( fast == slow || fast->next == slow )
+	node *slow = head->next;
+	node *fast = head->next->next;
+
+	while( fast->next ) {
+
+		if( fast == slow )
 			return true;
-	 
-	 
+
 		slow = slow->next;
 		fast = fast->next->next;
 	}
+
+	return false;
 }
 
 node* Split(node* my_node) {
