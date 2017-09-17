@@ -620,6 +620,32 @@ int maxProfit(vector<int> v) {
 	return max_profit;
 }
 
+int calculateVolume(vector<int> land) {
+		
+	int leftMax = 0;
+	int rightMax = 0;
+	int left = 0;
+	int right = land.size() - 1;
+	int volume = 0;
+		
+	while(left < right) {
+		if(land[left] > leftMax) {
+			leftMax = land[left];
+		}
+		if(land[right] > rightMax) {
+			rightMax = land[right];
+		}
+		if(leftMax >= rightMax) {
+			volume += rightMax - land[right];
+			right--;
+		} else {
+			volume += leftMax - land[left];
+			left++;
+		}
+	}
+	return volume;
+}
+
 /*
 	CALCULATE SOME MULTIPLY/STATISTICS IN VERY LARGE DATA
 	[1,2,3] -> [2*3, 1*3, 1*2] -> [6, 3, 2]
