@@ -5,8 +5,33 @@
 #include <vector>
 using namespace std;
 
+class SpinLock {
+    std::atomic_flag locked = ATOMIC_FLAG_INIT;
+public:
+    void lock() {
+        while (locked.test_and_set(std::memory_order_acquire)) { ; }
+    }
+    void unlock() {
+        locked.clear(std::memory_order_release);
+    }
+};
+
+class SpinLockRAII {
+    SpinLock& lock;
+
+public:
+    SpinLockRAII(SpinLock& _lock) : lock(_lock) {
+        lock.lock();
+    }
+
+    ~SpinLockRAII() {
+        lock.unlock();
+    }
+};
+
 struct fork {
     fork(){}
+    SpinLock spin_mtx;
     mutex mtx;
 };
 
@@ -14,8 +39,10 @@ mutex out;
 
 void eat(vector<fork> & f, int l, int r) {
 
-    unique_lock<mutex> lk1(f[l].mtx);
-    unique_lock<mutex> lk2(f[r].mtx);
+    /// unique_lock<mutex> lk1(f[l].mtx);
+    /// unique_lock<mutex> lk2(f[r].mtx);
+    SpinLockRAII lk1(f[l].spin_mtx);
+    SpinLockRAII lk2(f[r].spin_mtx);
 
     std::this_thread::sleep_for(std::chrono::seconds(1));
 
