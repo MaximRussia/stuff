@@ -38,7 +38,7 @@ struct fork {
 mutex out;
 
 void eat(vector<fork> & f, int l, int r) {
-
+    /// asm("LOCK")
     /// unique_lock<mutex> lk1(f[l].mtx);
     /// unique_lock<mutex> lk2(f[r].mtx);
     SpinLockRAII lk1(f[l].spin_mtx);
