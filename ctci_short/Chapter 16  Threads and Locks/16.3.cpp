@@ -1,74 +1,52 @@
-#include <mutex>
-#include <string>
+#include <atomic>
+#include <future>
+#include <thread>
 #include <iostream>
 #include <vector>
-#include <thread>
-#include <chrono>
-#include <algorithm>
-
-std::mutex cout_mutex;
+using namespace std;
 
 struct fork {
-	fork(){};
-	std::mutex m;
+    fork(){}
+    mutex mtx;
 };
 
-struct philosopher {
-	std::string name;
-	size_t left;
-	size_t right;
+mutex out;
 
-	philosopher(const std::string &name_, size_t left_, size_t right_)
-		: name(name_), left(left_), right(right_){}
+void eat(vector<fork> & f, int l, int r) {
 
-	void eat(std::vector<fork> &table_)
-	{
-	    std::unique_lock<std::mutex> l(table_[left].m);
-		std::unique_lock<std::mutex> r(table_[right].m);
+    unique_lock<mutex> lk1(f[l].mtx);
+    unique_lock<mutex> lk2(f[r].mtx);
 
-		{
-			std::unique_lock<std::mutex>  cout_lock(cout_mutex);
-			std::cout << "begin from " << std::this_thread::get_id() << std::endl;
-		}
+    std::this_thread::sleep_for(std::chrono::seconds(1));
 
-		{
-			std::unique_lock<std::mutex>  cout_lock(cout_mutex);
-			std::cout << name << " is eating.\n";
-		}
+    {
+        unique_lock<mutex> lk_out(out);
+        cout << "eating ... " << l << " " << r << endl;
+    }
 
-		std::this_thread::sleep_for(std::chrono::seconds(1));
+    std::this_thread::sleep_for(std::chrono::seconds(1));
 
-		{
-			std::unique_lock<std::mutex>  cout_lock(cout_mutex);
-			std::cout << name << " is done eating.\n";
-		}
+    {
+        unique_lock<mutex> lk_out(out);
+        cout << "finish ... " << l << " " << r << endl;
+    }
+}
 
-		std::this_thread::sleep_for(std::chrono::seconds(1));
+int main() {
 
-		{
-			std::unique_lock<std::mutex>  cout_lock(cout_mutex);
-			std::cout << "end from " << std::this_thread::get_id() << std::endl;
-		}
-	}
-};
+    vector<fork> f(6);
 
-int main()
-{
-	std::vector<philosopher> philosophers;
-	philosophers.push_back({"Judith", 0, 1});
-	philosophers.push_back({"Gilles", 1, 2});
-	philosophers.push_back({"Karl  ", 2, 3});
-	philosophers.push_back({"Emma  ", 3, 4});
-	philosophers.push_back({"Michel", 0, 4});
+    vector<thread> t;
+    t.push_back(thread(&eat, ref(f), 0, 1));
+    t.push_back(thread(&eat, ref(f), 1, 2));
+    t.push_back(thread(&eat, ref(f), 2, 3));
+    t.push_back(thread(&eat, ref(f), 3, 4));
+    t.push_back(thread(&eat, ref(f), 4, 5));
+    t.push_back(thread(&eat, ref(f), 5, 0));
 
-	std::vector<fork> table(philosophers.size());
-	std::vector<std::thread> handles(philosophers.size());
+    for(int i = 0; i < t.size(); i++) {
+        t[i].join();
+    }
 
-	for (auto i = 0; i < philosophers.size(); ++i) {
-		handles[i] = std::thread(&philosopher::eat, &philosophers[i], std::ref(table));
-	}
-
-	for (auto i = 0; i < philosophers.size(); ++i) {
-		handles[i].join();
-	}
+    return 0;
 }
