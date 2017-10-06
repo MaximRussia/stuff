@@ -6,8 +6,8 @@
 /**
 	Processes and threads are related to each other but are fundamentally different.
 	A process can be thought of as an instance of a program in execution. A process is an
-	independent entity to which system resources (e.g., CPU time and memory) are allo-
-	cated. Each process is executed in a separate address space, and one process cannot
+	independent entity to which system resources (e.g., CPU time and memory) are allocated. 
+	Each process is executed in a separate address space, and one process cannot
 	access the variables and data structures of another process. If a process wishes to access
 	another process' resources, inter-process communications have to be used. These
 	include pipes, files, sockets, and other forms.
@@ -18,4 +18,12 @@
 	read and write the heap memory.
 	A thread is a particular execution path of a process. When one thread modifies a process
 	resource, the change is immediately visible to sibling threads.
+	Processes share data - socets, server, shared memory. HDD/SDD
+	Threads share data - memory of process
+
+			32-bit OS	64-bit OS
+32-bit 		2 GB		4 GB
+32-bit /3GB	3 GB		N/A
+64-bit 		N/A			16 TB
+
 	**/
