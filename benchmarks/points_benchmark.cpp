@@ -26,25 +26,10 @@ Following is C++ implementation of O(nLogn) approach.
 #include <stdlib.h>
 #include <math.h>
 
-#include <windows.h>
 #include <iostream>
 #include <iomanip>
 #include <ctime>
 using namespace std;
-
-LARGE_INTEGER _timer_start;
-LARGE_INTEGER _timer_stop;
-LARGE_INTEGER _timer_frequency;
-bool _timer_init = QueryPerformanceFrequency(&_timer_frequency);
-#define TICK() if( _timer_init == false ) { \
-	cout << "Failed to query the performance frequency." << endl; \
-	cout << "Please do not use timer.h" << endl; \
-	exit(1); \
-} \
-	QueryPerformanceCounter(&_timer_start);
-#define TOCK() QueryPerformanceCounter(&_timer_stop);
-#define TICK_ELAPSED() (_timer_stop.QuadPart - _timer_start.QuadPart)
-#define DURATION() ( TICK_ELAPSED() / (double) _timer_frequency.QuadPart)
 
 struct Point {
 	int x, y;
@@ -150,21 +135,23 @@ int main() {
 		P[i].y = 1 + (rand() % 9999);
 	}
 
-	TICK();
-	float res = closest(P, inputsize);
-	TOCK();
-	printf("The smallest distance is %f (time = %f)\n", res, DURATION());
-
+	{
+		time_t t1 = clock();
+		float res = closest(P, inputsize);
+		time_t t2 = clock();
+		printf("The smallest distance is %f (time = %f)\n", res, float(t2 - t1) / CLOCKS_PER_SEC);
+	}
 
 	for (int i = 0; i < inputsize; i++) {
 		P[i].x = 1 + (rand() % 9999);
 		P[i].y = 1 + (rand() % 9999);
 	}
 
-	TICK();
-	res = bruteForce(P, inputsize);
-	TOCK();
-	printf("The smallest distance is %f (time = %f)\n", res, DURATION());
-
+	{
+		time_t t1 = clock();
+		float res = bruteForce(P, inputsize);
+		time_t t2 = clock();
+		printf("The smallest distance is %f (time = %f)\n", res, float(t2 - t1) / CLOCKS_PER_SEC);	
+	}
 	return 0;
 }
