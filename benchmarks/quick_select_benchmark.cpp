@@ -10,6 +10,8 @@ Find kth Smallest using Quick Select O(n) vs QuickSort O(NlogN)
 #include <map>
 #include <set>
 #include <ctime>
+#include <climits>
+#include <iterator>
 using namespace std;
 
 /**
@@ -69,7 +71,7 @@ int main() {
 	cout << endl << endl;
 
 	t1 = clock();
-	std::sort(std::begin(A), std::end(A));
+	std::sort(A.begin(), A.end());
 	t2 = clock();
 	cout << "The Value of " << k << "-th smallest element in QuickSort is : " << A[k - 1] << endl;;
 	//Show duration

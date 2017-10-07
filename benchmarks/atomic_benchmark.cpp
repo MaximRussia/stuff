@@ -5,23 +5,9 @@
 #include <thread>
 #include <atomic>
 #include <mutex>
-#include <windows.h>
 #include <cmath>
+#include <ctime>
 using namespace std;
-
-LARGE_INTEGER _timer_start;
-LARGE_INTEGER _timer_stop;
-LARGE_INTEGER _timer_frequency;
-bool _timer_init = QueryPerformanceFrequency(&_timer_frequency);
-#define TICK() if( _timer_init == false ) { \
-	cout << "Failed to query the performance frequency." << endl; \
-	cout << "Please do not use timer.h" << endl; \
-	exit(1); \
-} \
-	QueryPerformanceCounter(&_timer_start);
-#define TOCK() QueryPerformanceCounter(&_timer_stop);
-#define TICK_ELAPSED() (_timer_stop.QuadPart - _timer_start.QuadPart)
-#define DURATION() ( TICK_ELAPSED() / (double) _timer_frequency.QuadPart)
 
 
 #define OPERATIONS 999
@@ -30,7 +16,7 @@ bool _timer_init = QueryPerformanceFrequency(&_timer_frequency);
 void bench_lock(int Threads) {
 	std::mutex mutex;
 
-	TICK();
+	time_t t1 = clock();
 
 	for (int i = 0; i < REPEAT; ++i) {
 		std::vector<std::thread> threads;
@@ -51,15 +37,15 @@ void bench_lock(int Threads) {
 		}
 	}
 
-	TOCK();
+	time_t t2 = clock();
 
-	std::cout << "lock with " << Threads << " threads, ms = " << DURATION() << std::endl;
+	std::cout << "lock with " << Threads << " threads, ms = " << float(t2 - t1) / CLOCKS_PER_SEC << std::endl;
 }
 
 void bench_lock_guard(int Threads) {
 	std::mutex mutex;
 
-	TICK();
+	time_t t1 = clock();
 
 	for (int i = 0; i < REPEAT; ++i) {
 		float counter = 0.0f;
@@ -80,13 +66,14 @@ void bench_lock_guard(int Threads) {
 		}
 	}
 
-	TOCK();
+	time_t t2 = clock();
 
-	std::cout << "lock_guard with " << Threads << " threads, ms = " << DURATION() << std::endl;
+	std::cout << "lock_guard with " << Threads << " threads, ms = " << float(t2 - t1) / CLOCKS_PER_SEC << std::endl;
 }
 
 void bench_atomic(int Threads) {
-	TICK();
+
+	time_t t1 = clock();
 
 	for (int i = 0; i < REPEAT; ++i) {
 		std::atomic<float> counter;
@@ -107,9 +94,9 @@ void bench_atomic(int Threads) {
 		}
 	}
 
-	TOCK();
+	time_t t2 = clock();
 
-	std::cout << "atomic with " << Threads << " threads, ms = " << DURATION() << std::endl;
+	std::cout << "atomic with " << Threads << " threads, ms = " << float(t2 - t1) / CLOCKS_PER_SEC << std::endl;
 }
 
 #define bench(name)\
