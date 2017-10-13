@@ -621,13 +621,13 @@ int maxProfit(vector<int> v) {
 }
 
 int calculateVolume(vector<int> land) {
-		
+
 	int leftMax = 0;
 	int rightMax = 0;
 	int left = 0;
 	int right = land.size() - 1;
 	int volume = 0;
-		
+
 	while(left < right) {
 		if(land[left] > leftMax) {
 			leftMax = land[left];
@@ -1571,9 +1571,9 @@ int countCoinChangeRec(const vector<int>& S, int m, int n) {
 	if (n < 0) return 0;
 
 	// If there are no coins and n is greater than 0, then no solution exist
-	if (m <= 0 && n >= 1) return 0;
+	if (m < 0 && n >= 1) return 0;
 
-	return countCoinChangeRec(S, m - 1, n) + countCoinChangeRec(S, m, n - S[m - 1]);
+	return countCoinChangeRec(S, m - 1, n) + countCoinChangeRec(S, m, n - S[m]);
 }
 
 // dynamic
@@ -1589,7 +1589,7 @@ int countCoinChangeIter(const vector<int>& S, int m, int n) {
 	// Pick all coins one by one and update the res[] values
 	// after the index greater than or equal to the value of the
 	// picked coin
-	for (int i = 0; i < m; i++)
+	for (int i = 0; i <= m; i++)
 	for (int j = S[i]; j <= n; j++)
 		res[j] += res[j - S[i]];
 
@@ -2213,8 +2213,8 @@ int main() {
 	cout << LongestPalindromeLength("1qq2qawaq123") << endl;
 
 	cout << endl;
-	cout << countCoinChangeIter({ 1, 2, 3 }, 3, 4) << endl;
-	cout << countCoinChangeRec({ 1, 2, 3 }, 3, 4) << endl;
+	cout << countCoinChangeIter({ 1, 2, 3 }, 2, 4) << endl;
+	cout << countCoinChangeRec({ 1, 2, 3 }, 2, 4) << endl;
 
 	for (int i = 0; i < 6; i++) {
 		for (int j = 0; j < i; j++) {
