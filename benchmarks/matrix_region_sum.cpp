@@ -13,7 +13,7 @@
 	we can precompute the sum of every possible rectangular region inside the matrix, and
 	store it in a hashtable for later use. Afterwards, when we are asked the sum of a rectangular
 	region, we will just return the precomputed value in constant time. However, the space
-	complexity of this approach would be O(M^2N^2) which is too much. Because there are MN
+	complexity of this approach would be O(M^2*N^2) which is too much. Because there are MN
 	different candidates for both top left and bottom right coordinates of the rectangle.
 	*/
 
@@ -45,11 +45,13 @@ int getSum(vector<vector<int>> &cache, int a, int b, int c, int d) {
 
 int main() {
 
-	vector<vector<int>> v = { { 1, 2, 3, 4, 5 },
+	vector<vector<int>> v = { 
 	{ 1, 2, 3, 4, 5 },
 	{ 1, 2, 3, 4, 5 },
 	{ 1, 2, 3, 4, 5 },
-	{ 1, 2, 3, 4, 5 } };
+	{ 1, 2, 3, 4, 5 },
+	{ 1, 2, 3, 4, 5 } 
+};
 	vector<vector<int>> cache;
 	cache.resize(v.size());
 	for (int i = 0; i < v.size(); i++) cache[i].resize(v[i].size());
