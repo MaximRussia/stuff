@@ -165,31 +165,26 @@ int range_query(fenwick_tree_sq &s, int a, int b) {
 //  data structure.
 //////////////////////////////
 struct union_find {
-    vector<int> p;
-
-    union_find(int n) : p(n, -1) { }
+    vector<int> parent;
+    union_find(int n) {
+        parent = vector<int>(n);
+        for (int i = 0; i < n; i++) {
+            parent[i] = i;
+        }
+    }
 
     int find(int x) {
-        return p[x] < 0 ? x : p[x] = find(p[x]);
+        if (parent[x] == x) {
+            return x;
+        } else {
+            parent[x] = find(parent[x]);
+            return parent[x];
+        }
     }
 
-    bool unite(int x, int y) {
-    	if(x == y) return false;
-        int xp = find(x);
-        int yp = find(y);
-        if (xp == yp) return false;
-        if (p[xp] > p[yp]) swap(xp, yp);
-        p[xp] += p[yp];
-        p[yp] = xp;
-        return true;
+    void unite(int x, int y) {
+        parent[find(x)] = find(y);
     }
-
-    bool connect(int x, int y) {
-    	if(x == y) return true;
-    	return find(x) == find(y);
-    }
-
-    int size(int x) { return -p[find(x)]; }
 };
 
 
