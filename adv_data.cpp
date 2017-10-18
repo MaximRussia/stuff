@@ -174,6 +174,7 @@ struct union_find {
     }
 
     bool unite(int x, int y) {
+    	if(x == y) return false;
         int xp = find(x);
         int yp = find(y);
         if (xp == yp) return false;
@@ -181,6 +182,11 @@ struct union_find {
         p[xp] += p[yp];
         p[yp] = xp;
         return true;
+    }
+
+    bool connect(int x, int y) {
+    	if(x == y) return true;
+    	return find(x) == find(y);
     }
 
     int size(int x) { return -p[find(x)]; }
