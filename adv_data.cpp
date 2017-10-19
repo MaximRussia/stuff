@@ -129,7 +129,7 @@ struct fenwick_tree {
 
     int query(int at) {
         int res = 0;
-        while (at >= 0) res += data[at], at = (at & (at + 1)) - 1; /// tricky around power of 2 (-1 when get pow of 2)
+        while (at >= 0) res += data[at], at = (at & (at + 1)) - 1; /// Clean 1's one-by-one (-1 for nearest pow2)
         return res;
     }
 
