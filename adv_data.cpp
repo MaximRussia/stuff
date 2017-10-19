@@ -129,7 +129,7 @@ struct fenwick_tree {
 
     int query(int at) {
         int res = 0;
-        while (at >= 0) res += data[at], at = (at & (at + 1)) - 1;
+        while (at >= 0) res += data[at], at = (at & (at + 1)) - 1; /// tricky around power of 2 (-1 when get pow of 2)
         return res;
     }
 
@@ -191,6 +191,39 @@ struct union_find {
 
 
 int main() {
+
+    {
+        int a = 10;
+        while(a >= 0) {
+            int b = (a & (a + 1)) - 1;
+            cout << a << " " << b << endl;
+            a = b;
+        }
+    }
+    {
+        int a = 50;
+        while(a >= 0) {
+            int b = (a & (a + 1)) - 1;
+            cout << a << " " << b << endl;
+            a = b;
+        }
+    }
+    {
+        int a = 100;
+        while(a >= 0) {
+            int b = (a & (a + 1)) - 1;
+            cout << a << " " << b << endl;
+            a = b;
+        }
+    }
+    {
+        int a = 1000;
+        while(a >= 0) {
+            int b = (a & (a + 1)) - 1;
+            cout << a << " " << b << endl;
+            a = b;
+        }
+    }
 
 	cout << "/////////////////////////////////" << endl;
 	cout << "// HEAP" << endl;
