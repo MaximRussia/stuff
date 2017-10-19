@@ -124,7 +124,7 @@ struct fenwick_tree {
     fenwick_tree(int _n) : n(_n), data(vector<int>(n)) { }
 
     void update(int at, int by) {
-        while (at < n) data[at] += by, at |= at + 1;
+        while (at < n) data[at] += by, at |= at + 1; /// 2*at + 1
     }
 
     int query(int at) {
@@ -174,16 +174,18 @@ struct union_find {
     }
 
     int find(int x) {
-        if (parent[x] == x) {
-            return x;
-        } else {
+        if (parent[x] != x) {
             parent[x] = find(parent[x]);
-            return parent[x];
         }
+        return parent[x];
     }
 
     void unite(int x, int y) {
         parent[find(x)] = find(y);
+    }
+
+    bool connect(int x, int y) {
+        return find(x) == find(y);
     }
 };
 
