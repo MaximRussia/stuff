@@ -1,65 +1,61 @@
-#include <atomic>
-#include <future>
-#include <thread>
-#include <iostream>
-#include <vector>
-#include <queue>
+
+#include <set>
 #include <map>
+#include <string>
+#include <iostream>
+#include <queue>
 using namespace std;
 
 struct Node {
+    char ch;
+    map<char, Node*> children;
+
     Node(char ch) : ch(ch) {
     }
 
     Node* is(char ch) {
-         map<char, Node*>::const_iterator it = children.find(ch);
-         if(it != children.end()) {
-            return it->second;
-         }
-         return NULL;
+        auto res = children.find(ch);
+        return res == children.end() ? NULL : res->second;
     }
 
     Node* add(char ch) {
-        children[ch] = new Node(ch);
-        return children[ch];
+        Node* tmp = new Node(ch);
+        children[ch] = tmp;
+        return tmp;
     }
-
-    char ch;
-    bool end;
-    map<char, Node*> children;
 };
 
-class Trie {
-    Node *root;
+struct Trie {
+    Node* root;
 
-    public:
-    Trie() : root(NULL){
-        root = new Node('\0');
+    Trie() {
+        root = new Node(' ');
     }
 
-    bool find(string s) {
-        Node* current = root;
-        for(int i = 0; i < s.size(); i++) {
-            Node* find = current->is(s[i]);
+    void add(string str) {
+        Node * curr = root;
+        for(int i = 0; i < str.size(); ++i) {
+            Node *find = curr->is(str[i]);
             if(find) {
-                current = find;
-                continue;
+                curr = find;
+            } else {
+                curr = curr->add(str[i]);
             }
-            return false;
         }
-        return true;
     }
 
-    void add(string s) {
-        Node* current = root;
-        for(int i = 0; i < s.size(); i++) {
-            Node* find = current->is(s[i]);
-            if(!find) {
-                current = current->add(s[i]);
-                continue;
+    bool find(string str) {
+        Node * curr = root;
+        for(int i = 0; i < str.size(); ++i) {
+            Node *find = curr->is(str[i]);
+            if(find) {
+                curr = find;
+            } else {
+                return false;
             }
-            current = find;
         }
+
+        return true;
     }
 
     void BFS() {
@@ -76,7 +72,7 @@ class Trie {
     }
 };
 
-int main(void) {
+int main() {
 
     Trie t;
 
@@ -93,5 +89,4 @@ int main(void) {
     cout << t.find("daaa") << endl;
     cout << t.find("frnd") << endl;
 
-    return 0;
 }
