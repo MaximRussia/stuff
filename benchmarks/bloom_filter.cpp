@@ -211,145 +211,30 @@ bool BloomFilter::substringExists(const char *data, int substringLength) {
 	return substringExists(data, strlen(data), substringLength);
 }
 
-/****
-#include "BloomFilter.h"
-#include <iostream>
-using namespace std;
-
 int main(int argc, char**argv) {
-BloomFilter b;
-b.add("Brian");
-b.add("Ronald");
-b.add("Bondy");
+	BloomFilter b;
+	b.add("Brian");
+	b.add("Ronald");
+	b.add("Bondy");
 
-// Prints true
-cout << (b.exists("Brian") ? "true" : "false") << endl;
+	// Prints true
+	cout << (b.exists("Brian") ? "true" : "false") << endl;
 
-// Prints false
-cout << (b.exists("Brian Ronald") ? "true" : "false") << endl;
+	// Prints false
+	cout << (b.exists("Brian Ronald") ? "true" : "false") << endl;
 
-// Create a new BloomerFilter form a previous serialization
-BloomFilter b2(b.getBuffer(), b.getByteBufferSize());
+	// Create a new BloomerFilter form a previous serialization
+	BloomFilter b2(b.getBuffer(), b.getByteBufferSize());
 
-// Prints the same as above
-cout << (b2.exists("Brian") ? "true" : "false") << endl;
-cout << (b2.exists("Brian Ronald") ? "true" : "false") << endl;
+	// Prints the same as above
+	cout << (b2.exists("Brian") ? "true" : "false") << endl;
+	cout << (b2.exists("Brian Ronald") ? "true" : "false") << endl;
 
-// And you can check if any substring of a passed string exists
-// Prints true
-cout << (b.substringExists("Hello my name is Brian", 5) ? "true" : "false") << endl;
-// Prints false
-cout << (b.substringExists("Hello my name is Bri", 3) ? "true" : "false") << endl;
-
-return 0;
-}
-*****/
-
-#define CHECK(result) { \
-	bool ___result = (result); \
-if (!___result) {
-\
-	cout << "FAILED!" << endl; \
-	cout << #result << " is " << ___result << endl; \
-	cout << "---------------" << endl; \
-} else {
-	\
-	cout << "OK!" << endl; \
-	cout << #result << " is " << ___result << endl; \
-	cout << "---------------" << endl; \
-} \
-}
-
-int main(int argc, char**argv) {
-
-	{
-		BloomFilter b(10, 3);
-		// First bit in a byte
-		CHECK(!b.isBitSet(0));
-		b.setBit(0);
-		CHECK(b.isBitSet(0));
-
-		// Last bit in a byte
-		CHECK(!b.isBitSet(7));
-		b.setBit(7);
-		CHECK(b.isBitSet(7));
-		for (int i = 1; i <= 6; i++) {
-			CHECK(!b.isBitSet(i));
-		}
-		CHECK(b.isBitSet(0));
-
-		// Second bit in non first byte
-		CHECK(!b.isBitSet(9));
-		b.setBit(9);
-		CHECK(b.isBitSet(9));
-		CHECK(!b.isBitSet(1));
-	}
-
-	{
-	HashFn H(2);
-	uint64_t hash = H("hi", 2);
-
-	CHECK(hash == ((int)'h') * pow(2, 1) + ((int)'i') * pow(2, 0));
-}
-
-	{
-		BloomFilter b;
-		b.add("Brian");
-		b.add("Ronald");
-		b.add("Bondy");
-		CHECK(b.exists("Brian"));
-		CHECK(!b.exists("Brian2"));
-		CHECK(!b.exists("Bria"));
-
-		CHECK(b.exists("Ronald"));
-		CHECK(!b.exists("Ronald2"));
-		CHECK(!b.exists("onald2"));
-
-		CHECK(b.exists("Bondy"));
-		CHECK(!b.exists("BrianRonaldBondy"));
-		CHECK(!b.exists("RonaldBondy"));
-	}
-
-	{
-		BloomFilter b;
-		b.add("abc");
-		b.add("hello");
-		b.add("world");
-		CHECK(b.substringExists("hello", 5));
-		// Only substrings of length 5 should exist in the bloom filter
-		CHECK(!b.substringExists("ell", 3));
-		CHECK(b.substringExists("wow ok hello!!!!", 5));
-		CHECK(!b.substringExists("he!lloworl!d", 5));
-	}
-	{
-		BloomFilter b;
-		b.add("googlesy");
-		const char *url1 = "http://tpc.googlesyndication.com/safeframe/1-0-2/html/container.html#xpc=sf-gdn-exp-2&p=http%3A//slashdot.org";
-		const char *url2 = "https://tpc.googlesyndication.com/pagead/gadgets/suggestion_autolayout_V2/suggestion_autolayout_V2.html#t=15174732506449260991&p=http%3A%2F%2Ftpc.googlesyndication.com";
-		CHECK(b.substringExists("googlesy", 8));
-		CHECK(b.substringExists(url1, 8));
-		CHECK(b.substringExists(url2, 8));
-	}
-
-	{
-		BloomFilter b;
-		b.add("Brian");
-		b.add("Ronald");
-		b.add("Bondy");
-
-		BloomFilter b2(b.getBuffer(), b.getByteBufferSize());
-		CHECK(b2.exists("Brian"));
-		CHECK(!b2.exists("Brian2"));
-		CHECK(!b2.exists("Bria"));
-
-		CHECK(b2.exists("Ronald"));
-		CHECK(!b2.exists("Ronald2"));
-		CHECK(!b2.exists("onald2"));
-
-		CHECK(b2.exists("Bondy"));
-		CHECK(!b2.exists("BrianRonaldBondy"));
-		CHECK(!b2.exists("RonaldBondy"));
-	}
+	// And you can check if any substring of a passed string exists
+	// Prints true
+	cout << (b.substringExists("Hello my name is Brian", 5) ? "true" : "false") << endl;
+	// Prints false
+	cout << (b.substringExists("Hello my name is Bri", 3) ? "true" : "false") << endl;
 
 	return 0;
 }

@@ -151,7 +151,7 @@ int main() {
 		time_t t1 = clock();
 		float res = bruteForce(P, inputsize);
 		time_t t2 = clock();
-		printf("The smallest distance is %f (time = %f)\n", res, float(t2 - t1) / CLOCKS_PER_SEC);	
+		printf("The smallest distance is %f (time = %f)\n", res, float(t2 - t1) / CLOCKS_PER_SEC);
 	}
 	return 0;
 }

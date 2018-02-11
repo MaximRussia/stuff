@@ -114,7 +114,7 @@ void MinHeap::print() {
 // Fenwick Tree. A Fenwick Tree is a data structure that represents
 // an array of n numbers. It supports adjusting the i-th element in O(log n)
 // time, and computing the sum of numbers in the range i..j in O(log n)
-// time. It only needs O(n) space.
+// time. It only needs O(n) space. /// Binary Indexed Trees
 //////////////////////////////////
 
 struct fenwick_tree {
@@ -124,12 +124,24 @@ struct fenwick_tree {
     fenwick_tree(int _n) : n(_n), data(vector<int>(n)) { }
 
     void update(int at, int by) {
-        while (at < n) data[at] += by, at |= at + 1; /// 2*at + 1
+        while (at < n) data[at] += by, at = child(at);
+    }
+
+    int parent(int at) {
+    	return (at - 1) / 2; /// (at & (at + 1)) - 1;
+    }
+
+    int child(int at) {
+    	return 2 * at + 1; /// at | at + 1;
+    }
+
+    int _child(int at) {
+    	return 2 * at;
     }
 
     int query(int at) {
         int res = 0;
-        while (at >= 0) res += data[at], at = (at & (at + 1)) - 1; /// Clean 1's one-by-one (-1 for nearest pow2)
+        while (at >= 0) res += data[at], at = parent(at);
         return res;
     }
 
@@ -189,42 +201,7 @@ struct union_find {
     }
 };
 
-
 int main() {
-
-    {
-        int a = 10;
-        while(a >= 0) {
-            int b = (a & (a + 1)) - 1;
-            cout << a << " " << b << endl;
-            a = b;
-        }
-    }
-    {
-        int a = 50;
-        while(a >= 0) {
-            int b = (a & (a + 1)) - 1;
-            cout << a << " " << b << endl;
-            a = b;
-        }
-    }
-    {
-        int a = 100;
-        while(a >= 0) {
-            int b = (a & (a + 1)) - 1;
-            cout << a << " " << b << endl;
-            a = b;
-        }
-    }
-    {
-        int a = 1000;
-        while(a >= 0) {
-            int b = (a & (a + 1)) - 1;
-            cout << a << " " << b << endl;
-            a = b;
-        }
-    }
-
 	cout << "/////////////////////////////////" << endl;
 	cout << "// HEAP" << endl;
 	cout << "/////////////////////////////////" << endl;
