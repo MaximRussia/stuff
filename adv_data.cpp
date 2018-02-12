@@ -132,11 +132,7 @@ struct fenwick_tree {
     }
 
     int child(int at) {
-    	return at | at + 1;
-    }
-
-    int _child(int at) {
-    	return 2 * at;
+    	return at | (at + 1);
     }
 
     int query(int at) {
@@ -289,7 +285,7 @@ void search(char *pat, char *txt, int *suffArr, int n) {
         else l = mid + 1;
     }
 
-    // We reach here if return statement in loop is not executed
+    // We reach cd..here if return statement in loop is not executed
     cout << "Pattern not found";
 }
 
