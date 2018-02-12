@@ -128,11 +128,11 @@ struct fenwick_tree {
     }
 
     int parent(int at) {
-    	return (at - 1) / 2; /// (at & (at + 1)) - 1;
+    	return (at & (at + 1)) - 1;
     }
 
     int child(int at) {
-    	return 2 * at + 1; /// at | at + 1;
+    	return at | at + 1;
     }
 
     int _child(int at) {
@@ -294,6 +294,26 @@ void search(char *pat, char *txt, int *suffArr, int n) {
 }
 
 int main() {
+
+    fenwick_tree f(12);
+    f.update(0, 2);
+    f.update(1, 1);
+    f.update(2, 1);
+    f.update(3, 3);
+    f.update(4, 2);
+    f.update(5, 3);
+    f.update(6, 4);
+    f.update(7, 5);
+    f.update(8, 6);
+    f.update(9, 7);
+    f.update(10, 8);
+    f.update(11, 9);
+
+    for(int i = 0; i < f.data.size(); ++i) {
+        cout << i << " " << f.data[i] << endl;
+    }
+
+    cout << "!!!!!!!" << endl << endl;
 {
 	char txt[] = "banana";
     int n = strlen(txt);
