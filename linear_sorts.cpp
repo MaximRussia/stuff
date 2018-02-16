@@ -10,13 +10,13 @@
 typedef std::chrono::high_resolution_clock Clock;
 typedef std::chrono::milliseconds milliseconds;
 
-static const std::size_t MAX = 5000000;
+static const std::size_t MAX_VALUE = 5000000;
 
 void fill_random(std::vector<std::size_t>& vec) {
     std::mt19937 generator;
-    std::uniform_int_distribution<std::size_t> distribution(0, MAX);
+    std::uniform_int_distribution<std::size_t> distribution(0, MAX_VALUE);
 
-    for (std::size_t i = 0; i < MAX; ++i) {
+    for (std::size_t i = 0; i < MAX_VALUE; ++i) {
         vec.push_back(distribution(generator));
     }
 }
@@ -26,7 +26,7 @@ void std_sort(std::vector<std::size_t>& A) {
 }
 
 void counting_sort(std::vector<std::size_t>& A) {
-    std::vector<std::size_t> C(MAX + 1, 0);
+    std::vector<std::size_t> C(MAX_VALUE + 1, 0);
 
     for (std::size_t i = 0; i < A.size(); ++i) {
         ++C[A[i]];
@@ -41,7 +41,7 @@ void counting_sort(std::vector<std::size_t>& A) {
 }
 
 void bucket_sort(std::vector<std::size_t>& A) {
-    std::vector<std::vector<std::size_t>> B(MAX + 1);
+    std::vector<std::vector<std::size_t>> B(MAX_VALUE + 1);
 
     for (std::size_t i = 0; i < A.size(); ++i) {
         B[A[i]].push_back(A[i]);
@@ -62,7 +62,7 @@ static const std::size_t radix = 1 << r;    //Bins
 static const std::size_t mask = radix - 1;
 
 void radix_sort(std::vector<std::size_t>& A) {
-    std::vector<std::size_t> B(MAX);
+    std::vector<std::size_t> B(MAX_VALUE);
     std::vector<std::size_t> cnt(radix);
 
     for (std::size_t i = 0, shift = 0; i < digits; i++, shift += r) {
